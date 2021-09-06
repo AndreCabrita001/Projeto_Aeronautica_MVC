@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace Projeto_Aeronautica_MVC.Data
 {
-    public class ProductRepository : GenericRepository<Product>, IProductRepository
+    public class FlightRepository : GenericRepository<Flight>, IFlightRepository
     {
         private readonly DataContext _context;
 
-        public ProductRepository(DataContext context) : base(context)
+        public FlightRepository(DataContext context) : base(context)
         {
             _context = context;
         }
@@ -17,7 +17,7 @@ namespace Projeto_Aeronautica_MVC.Data
 
         public IQueryable GetAllWithUsers()
         {
-            return _context.Products.Include(p => p.User);
+            return _context.Flights.Include(p => p.User);
         }
 
     }

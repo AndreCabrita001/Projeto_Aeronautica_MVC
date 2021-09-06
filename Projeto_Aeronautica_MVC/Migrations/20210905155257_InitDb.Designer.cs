@@ -10,7 +10,7 @@ using Projeto_Aeronautica_MVC.Data;
 namespace Projeto_Aeronautica_MVC.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210904103733_InitDb")]
+    [Migration("20210905155257_InitDb")]
     partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -152,35 +152,78 @@ namespace Projeto_Aeronautica_MVC.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Projeto_Aeronautica_MVC.Data.Entities.Product", b =>
+            modelBuilder.Entity("Projeto_Aeronautica_MVC.Data.Entities.City", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<Guid>("ImageId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsAvailable")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastPurchase")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("LastSale")
-                        .HasColumnType("datetime2");
+                    b.Property<int?>("CountryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<decimal>("Price")
+                    b.HasKey("Id");
+
+                    b.HasIndex("CountryId");
+
+                    b.ToTable("Cities");
+                });
+
+            modelBuilder.Entity("Projeto_Aeronautica_MVC.Data.Entities.Country", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Countries");
+                });
+
+            modelBuilder.Entity("Projeto_Aeronautica_MVC.Data.Entities.Flight", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("AdultPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<double>("Stock")
-                        .HasColumnType("float");
+                    b.Property<DateTime?>("ArrivalDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DepartureDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FlightApparatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FlightDestiny")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FlightOrigin")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ImageId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("InfantPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -189,7 +232,7 @@ namespace Projeto_Aeronautica_MVC.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Flights");
                 });
 
             modelBuilder.Entity("Projeto_Aeronautica_MVC.Data.Entities.User", b =>
@@ -198,6 +241,13 @@ namespace Projeto_Aeronautica_MVC.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("CityId")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -212,10 +262,12 @@ namespace Projeto_Aeronautica_MVC.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -251,6 +303,8 @@ namespace Projeto_Aeronautica_MVC.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CityId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -314,13 +368,36 @@ namespace Projeto_Aeronautica_MVC.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Projeto_Aeronautica_MVC.Data.Entities.Product", b =>
+            modelBuilder.Entity("Projeto_Aeronautica_MVC.Data.Entities.City", b =>
+                {
+                    b.HasOne("Projeto_Aeronautica_MVC.Data.Entities.Country", null)
+                        .WithMany("Cities")
+                        .HasForeignKey("CountryId");
+                });
+
+            modelBuilder.Entity("Projeto_Aeronautica_MVC.Data.Entities.Flight", b =>
                 {
                     b.HasOne("Projeto_Aeronautica_MVC.Data.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Projeto_Aeronautica_MVC.Data.Entities.User", b =>
+                {
+                    b.HasOne("Projeto_Aeronautica_MVC.Data.Entities.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("City");
+                });
+
+            modelBuilder.Entity("Projeto_Aeronautica_MVC.Data.Entities.Country", b =>
+                {
+                    b.Navigation("Cities");
                 });
 #pragma warning restore 612, 618
         }

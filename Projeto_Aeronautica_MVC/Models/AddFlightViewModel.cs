@@ -5,19 +5,15 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Projeto_Aeronautica_MVC.Models
 {
-    public class AddItemViewModel
+    public class AddFlightViewModel
     {
-        [Display(Name = "Product")]
-        [Range(1, int.MaxValue, ErrorMessage = "You must select a product.")]
-        public int ProductId { get; set; }
-
-
+        [Display(Name = "Flight")]
+        [Range(1, int.MaxValue, ErrorMessage = "You must select a flight.")]
+        public int FlightId { get; set; }
 
         [Range(0.0001, double.MaxValue, ErrorMessage = "The quantity must be a positive number.")]
         public double Quantity { get; set; }
 
-
-
-        public IEnumerable<SelectListItem> Products { get; set; }
+        public IEnumerable<SelectListItem> Flights { get; set; }
     }
 }

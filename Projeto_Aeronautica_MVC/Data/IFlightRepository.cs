@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Projeto_Aeronautica_MVC.Data
 {
-    public interface IProductRepository : IGenericRepository<Product>
+    public interface IFlightRepository : IGenericRepository<Flight>
     {
         public IQueryable GetAllWithUsers();
     }

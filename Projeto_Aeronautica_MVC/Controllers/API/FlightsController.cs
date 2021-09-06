@@ -8,20 +8,20 @@ namespace Projeto_Aeronautica_MVC.Controllers.API
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class ProductsController : Controller
+    public class FlightsController : Controller
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IFlightRepository _flightRepository;
 
-        public ProductsController(IProductRepository productRepository)
+        public FlightsController(IFlightRepository flightRepository)
         {
-            _productRepository = productRepository;
+            _flightRepository = flightRepository;
         }
 
 
         [HttpGet]
-        public IActionResult GetProducts()
+        public IActionResult GetFlights()
         {
-            return Ok(_productRepository.GetAllWithUsers());
+            return Ok(_flightRepository.GetAllWithUsers());
         }
     }
 }

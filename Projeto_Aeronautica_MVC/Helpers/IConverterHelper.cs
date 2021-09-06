@@ -7,8 +7,8 @@ namespace Projeto_Aeronautica_MVC.Helpers
 {
     public interface IConverterHelper
     {
-        Product ToProduct(ProductViewModel model, bool isNew);
+        Flight ToFlight(FlightViewModel model, bool isNew);
 
-        ProductViewModel ToProductViewModel(Product product);
+        FlightViewModel ToFlightViewModel(Flight flight);
     }
 }

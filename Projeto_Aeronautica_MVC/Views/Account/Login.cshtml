@@ -1,5 +1,7 @@
 ﻿@model Projeto_Aeronautica_MVC.Models.LoginViewModel
-@{ ViewData["Title"] = "Login"; }
+@{
+    ViewData["Title"] = "Login";
+}
 
 <h2>Login</h2>
 
@@ -27,6 +29,7 @@
             <div class="form-group">
                 <input type="submit" value="Login" class="btn btn-success" />
                 <a asp-action="Register" class="btn btn-primary">Register New User</a>
+                <a asp-action="RecoverPassword" class="btn btn-link">Forgot your password?</a>
             </div>
         </form>
     </div>
@@ -35,4 +38,3 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-

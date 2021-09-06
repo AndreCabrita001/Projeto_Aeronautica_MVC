@@ -50,7 +50,9 @@ namespace Projeto_Aeronautica_MVC
 
             services.AddScoped<IConverterHelper, ConverterHelper>();
 
-            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IFlightRepository, FlightRepository>();
+
+            services.AddScoped<ICountryRepository, CountryRepository>();
 
             services.AddControllersWithViews();
         }

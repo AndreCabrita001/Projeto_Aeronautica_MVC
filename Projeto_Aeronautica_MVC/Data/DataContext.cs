@@ -6,9 +6,16 @@ namespace Projeto_Aeronautica_MVC.Data
 {
     public class DataContext : IdentityDbContext<User>
     {
-        public DbSet<Product> Products { get; set; }
+        public DbSet<Flight> Flights { get; set; }
+
+        public DbSet<City> Cities { get; set; }
+
+        public DbSet<Country> Countries { get; set; }
+
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
         }
+
+
     }
 }

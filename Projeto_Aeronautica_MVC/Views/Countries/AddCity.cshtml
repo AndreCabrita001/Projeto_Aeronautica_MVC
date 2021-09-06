@@ -1,18 +1,18 @@
-﻿@model Projeto_Aeronautica_MVC.Models.ProductViewModel
+﻿@model Projeto_Aeronautica_MVC.Models.CityViewModel
 
-@{
-    ViewData["Title"] = "Create new product";
-}
-
-<h1>New Product</h1>
-
+<h4>City</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create" enctype="multipart/form-data">
+        <form asp-action="AddCity">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-           
-            <partial name="_Products"/>
+            <input type="hidden" asp-for="CountryId" />
+
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
 
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -25,3 +25,4 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+

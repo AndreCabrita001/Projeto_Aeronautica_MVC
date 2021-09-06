@@ -11,20 +11,20 @@ using Projeto_Aeronautica_MVC.Models;
 namespace Projeto_Aeronautica_MVC.Controllers
 {
    
-    public class ProductsController : Controller
+    public class FlightsController : Controller
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IFlightRepository _flightRepository;
         private readonly IUserHelper _userHelper;
         //private readonly IBlobHelper _blobHelper;
         private readonly IConverterHelper _converterHelper;
 
-        public ProductsController(
-            IProductRepository productRepository,
+        public FlightsController(
+            IFlightRepository flightRepository,
             IUserHelper userHelper,
             //IBlobHelper blobHelper,
             IConverterHelper converterHelper)
         {
-            _productRepository = productRepository;
+            _flightRepository = flightRepository;
             _userHelper = userHelper;
             //_blobHelper = blobHelper;
             _converterHelper = converterHelper;
@@ -33,7 +33,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
         // GET: Products
         public IActionResult Index()
         {
-            return View(_productRepository.GetAll().OrderBy(p => p.Name));
+            return View(_flightRepository.GetAll().OrderBy(p => p.FlightApparatus));
         }
 
         // GET: Products/Details/5
@@ -44,18 +44,18 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 return NotFound();
             }
 
-            var product = await _productRepository.GetByIdAsync(id.Value);
-            if (product == null)
+            var flight = await _flightRepository.GetByIdAsync(id.Value);
+            if (flight == null)
             {
                 return NotFound();
             }
 
-            return View(product);
+            return View(flight);
         }
 
 
         // GET: Products/Create
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -66,7 +66,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ProductViewModel model)
+        public async Task<IActionResult> Create(FlightViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -76,13 +76,13 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 //{
 
                 //    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "products");
-                //}
+                //} 
 
 
-                var product = _converterHelper.ToProduct(model, true);
+                var flight = _converterHelper.ToFlight(model, true);
 
-                product.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
-                await _productRepository.CreateAsync(product);
+                flight.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+                await _flightRepository.CreateAsync(flight);
                 return RedirectToAction(nameof(Index));
             }
             return View(model);
@@ -99,14 +99,14 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 return NotFound();
             }
 
-            var product = await _productRepository.GetByIdAsync(id.Value);
-            if (product == null)
+            var flight = await _flightRepository.GetByIdAsync(id.Value);
+            if (flight == null)
             {
                 return NotFound();
             }
 
 
-            var model = _converterHelper.ToProductViewModel(product);
+            var model = _converterHelper.ToFlightViewModel(flight);
             return View(model);
         }
 
@@ -116,7 +116,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ProductViewModel model)
+        public async Task<IActionResult> Edit(FlightViewModel model)
         {
 
             if (ModelState.IsValid)
@@ -131,17 +131,17 @@ namespace Projeto_Aeronautica_MVC.Controllers
                     //    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "products");
                     //}
 
-                    var product = _converterHelper.ToProduct(model, false);
+                    var flight = _converterHelper.ToFlight(model, false);
 
 
                     //TODO: Modificar para o user que tiver logado
-                    product.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
-                    await _productRepository.UpdateAsync(product);
+                    flight.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+                    await _flightRepository.UpdateAsync(flight);
 
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!await _productRepository.ExistAsync(model.Id))
+                    if (!await _flightRepository.ExistAsync(model.Id))
                     {
                         return NotFound();
                     }
@@ -164,13 +164,13 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 return NotFound();
             }
 
-            var product = await _productRepository.GetByIdAsync(id.Value);
-            if (product == null)
+            var flight = await _flightRepository.GetByIdAsync(id.Value);
+            if (flight == null)
             {
                 return NotFound();
             }
 
-            return View(product);
+            return View(flight);
         }
 
         // POST: Products/Delete/5
@@ -178,8 +178,8 @@ namespace Projeto_Aeronautica_MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _productRepository.GetByIdAsync(id);
-            await _productRepository.DeleteAsync(product);
+            var flight = await _flightRepository.GetByIdAsync(id);
+            await _flightRepository.DeleteAsync(flight);
             return RedirectToAction(nameof(Index));
         }
 
