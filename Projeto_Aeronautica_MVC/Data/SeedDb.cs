@@ -66,7 +66,10 @@ namespace Projeto_Aeronautica_MVC.Data
                     throw new InvalidOperationException("Could not create the user in seeder");
                 }
 
+
                 await _userHelper.AddUserToRoleAsync(user, "Admin");
+                var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                await _userHelper.ConfirmEmailAsync(user, token);
             }
 
             var isInRole = await _userHelper.IsUserInRoleAsync(user, "Admin");
@@ -78,9 +81,7 @@ namespace Projeto_Aeronautica_MVC.Data
             if (!_context.Flights.Any())
             {
                 AddFlight("Airbus 300", user);
-                AddFlight("Airbus 301", user);
-                AddFlight("Airbus 302", user);
-                AddFlight("Airbus 303", user);
+
                 await _context.SaveChangesAsync();
             }
         }

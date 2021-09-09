@@ -6,12 +6,12 @@ namespace Projeto_Aeronautica_MVC.Helpers
 {
     public class ConverterHelper : IConverterHelper
     {
-        public Flight ToFlight(FlightViewModel model, bool isNew)
+        public Flight ToFlight(FlightViewModel model, string path, bool isNew)
         {
             return new Flight
             {
                 Id = isNew ? 0 : model.Id,
-                //ImageId = imageId,
+                ImageUrl = path,
                 FlightApparatus = model.FlightApparatus,
                 IsAvailable = model.IsAvailable,
                 FlightOrigin = model.FlightOrigin,
@@ -29,7 +29,7 @@ namespace Projeto_Aeronautica_MVC.Helpers
             return new FlightViewModel
             {
                 Id = flight.Id,
-                //ImageId = imageId,
+                ImageUrl = flight.ImageUrl,
                 FlightApparatus = flight.FlightApparatus,
                 IsAvailable = flight.IsAvailable,
                 FlightOrigin = flight.FlightOrigin,

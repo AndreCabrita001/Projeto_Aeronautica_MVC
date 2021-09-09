@@ -16,17 +16,20 @@ namespace Projeto_Aeronautica_MVC.Controllers
         private readonly IFlightRepository _flightRepository;
         private readonly IUserHelper _userHelper;
         //private readonly IBlobHelper _blobHelper;
+        private readonly IImageHelper _imageHelper;
         private readonly IConverterHelper _converterHelper;
 
         public FlightsController(
             IFlightRepository flightRepository,
             IUserHelper userHelper,
             //IBlobHelper blobHelper,
+            IImageHelper imageHelper,
             IConverterHelper converterHelper)
         {
             _flightRepository = flightRepository;
             _userHelper = userHelper;
             //_blobHelper = blobHelper;
+            _imageHelper = imageHelper;
             _converterHelper = converterHelper;
         }
 
@@ -54,14 +57,14 @@ namespace Projeto_Aeronautica_MVC.Controllers
         }
 
 
-        // GET: Products/Create
-        [Authorize(Roles = "Admin")]
+        // GET: Flights/Create
+        [Authorize(Roles = "Employee")]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Products/Create
+        // POST: Flights/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -70,16 +73,15 @@ namespace Projeto_Aeronautica_MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                //Guid imageId = Guid.Empty;
+                var path = string.Empty;
 
-                //if (model.ImageFile != null && model.ImageFile.Length > 0)
-                //{
+                if (model.ImageFile != null && model.ImageFile.Length > 0)
+                {
+                    path = await _imageHelper.UploadImageAsync(model.ImageFile, "airplane_images");
+                }
 
-                //    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "products");
-                //} 
 
-
-                var flight = _converterHelper.ToFlight(model, true);
+                var flight = _converterHelper.ToFlight(model, path, true);
 
                 flight.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                 await _flightRepository.CreateAsync(flight);
@@ -90,8 +92,8 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
 
 
-        // GET: Products/Edit/5
-        [Authorize]
+        // GET: Flights/Edit/5
+        [Authorize(Roles = "Employee")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -111,7 +113,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
         }
 
 
-        // POST: Products/Edit/5
+        // POST: Flights/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -124,17 +126,17 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 try
                 {
 
-                    //Guid imageId = model.ImageId;
+                    var path = string.Empty;
 
-                    //if (model.ImageFile != null && model.ImageFile.Length > 0)
-                    //{
-                    //    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "products");
-                    //}
+                    if (model.ImageFile != null && model.ImageFile.Length > 0)
+                    {
+                        path = await _imageHelper.UploadImageAsync(model.ImageFile, "airplane_images");
+                    }
 
-                    var flight = _converterHelper.ToFlight(model, false);
+                    var flight = _converterHelper.ToFlight(model, path, false);
 
 
-                    //TODO: Modificar para o user que tiver logado
+                    //TODO: Modificar para o user que estiver logado
                     flight.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                     await _flightRepository.UpdateAsync(flight);
 
@@ -155,8 +157,8 @@ namespace Projeto_Aeronautica_MVC.Controllers
             return View(model);
         }
 
-        // GET: Products/Delete/5
-        [Authorize]
+        // GET: Flights/Delete/5
+        [Authorize(Roles = "Employee")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -173,7 +175,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
             return View(flight);
         }
 
-        // POST: Products/Delete/5
+        // POST: Flights/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

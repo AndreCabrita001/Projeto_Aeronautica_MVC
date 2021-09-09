@@ -10,6 +10,7 @@ using Projeto_Aeronautica_MVC.Data;
 using Projeto_Aeronautica_MVC.Data.Entities;
 using Projeto_Aeronautica_MVC.Helpers;
 using System.Text;
+using Vereyon.Web;
 
 namespace Projeto_Aeronautica_MVC
 {
@@ -27,6 +28,8 @@ namespace Projeto_Aeronautica_MVC
         {
             services.AddIdentity<User, IdentityRole>(cfg =>
             {
+                cfg.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
+                cfg.SignIn.RequireConfirmedEmail = true;
                 cfg.User.RequireUniqueEmail = true;
                 cfg.Password.RequireDigit = false;
                 cfg.Password.RequiredUniqueChars = 0;
@@ -35,12 +38,29 @@ namespace Projeto_Aeronautica_MVC
                 cfg.Password.RequireNonAlphanumeric = false;
                 cfg.Password.RequiredLength = 6;
             })
+              .AddDefaultTokenProviders()
               .AddEntityFrameworkStores<DataContext>();
+
+
+            services.AddAuthentication()
+                .AddCookie()
+                .AddJwtBearer(cfg =>
+                {
+                    cfg.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidIssuer = this.Configuration["Tokens:Issuer"],
+                        ValidAudience = this.Configuration["Tokens:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(this.Configuration["Tokens:Key"]))
+                    };
+                });
 
             services.AddDbContext<DataContext>(cfg =>
             {
                 cfg.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            services.AddFlashMessage();
 
             services.AddTransient<SeedDb>();
 
@@ -48,11 +68,21 @@ namespace Projeto_Aeronautica_MVC
 
             //services.AddScoped<IBlobHelper, BlobHelper>();
 
+            services.AddScoped<IMailHelper, MailHelper>();
+
+            services.AddScoped<IImageHelper, ImageHelper>();
+
             services.AddScoped<IConverterHelper, ConverterHelper>();
 
             services.AddScoped<IFlightRepository, FlightRepository>();
 
             services.AddScoped<ICountryRepository, CountryRepository>();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/NotAuthorized";
+                options.AccessDeniedPath = "/Account/NotAuthorized";
+            });
 
             services.AddControllersWithViews();
         }
@@ -66,10 +96,13 @@ namespace Projeto_Aeronautica_MVC
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Errors/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseStatusCodePagesWithReExecute("/error/{0}");
+
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();

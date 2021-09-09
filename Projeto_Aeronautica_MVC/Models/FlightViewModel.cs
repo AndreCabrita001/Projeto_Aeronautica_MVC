@@ -6,6 +6,7 @@ namespace Projeto_Aeronautica_MVC.Models
 {
     public class FlightViewModel : Flight
     {
+        [Required]
         [Display(Name ="Image")]
         public IFormFile ImageFile { get; set; }
     }

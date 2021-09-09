@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Projeto_Aeronautica_MVC.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Projeto_Aeronautica_MVC.Models
 {
@@ -20,6 +20,7 @@ namespace Projeto_Aeronautica_MVC.Models
         [Required]
         [DataType(DataType.EmailAddress)]
         public string Username { get; set; }
+
 
         [MaxLength(100, ErrorMessage = "The field {0} only can contain {1} characters length.")]
         public string Address { get; set; }
@@ -42,7 +43,6 @@ namespace Projeto_Aeronautica_MVC.Models
         [Required]
         [MinLength(6)]
         public string Password { get; set; }
-
 
         [Required]
         [Compare("Password")]

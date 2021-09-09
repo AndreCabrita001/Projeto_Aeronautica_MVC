@@ -15,12 +15,16 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
         [Display(Name = "Child Price")]
         public decimal ChildPrice { get; set; }
 
-        [Display(Name = "Image")]
-        public Guid ImageId { get; set; }
+        //[Display(Name = "Image")]
+        //public Guid ImageId { get; set; }
 
+        
+
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = false)]
         [Display(Name = "Departure Date")]
         public DateTime? DepartureDate { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = false)]
         [Display(Name = "Arrival Date")]
         public DateTime? ArrivalDate { get; set; }
 
@@ -38,8 +42,20 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
 
         public User User { get; set; }
 
-        public string ImageFullPath => ImageId == Guid.Empty
-            ? $"https://supershoptpsi.azurewebsites.net/images/noimage.png"
-            : $"https://supershoptpsi.blob.core.windows.net/products/{ImageId}";
+        [Display(Name = "Image")]
+        public string ImageUrl { get; set; }
+
+        public string ImageFullPath
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(ImageUrl))
+                {
+                    return null;
+                }
+
+                return $"https://localhost:44398{ImageUrl.Substring(1)}";
+            }
+        }
     }
 }

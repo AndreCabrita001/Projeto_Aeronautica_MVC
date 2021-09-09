@@ -1,9 +1,14 @@
 ﻿using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Projeto_Aeronautica_MVC.Data;
 using Projeto_Aeronautica_MVC.Data.Entities;
 using Projeto_Aeronautica_MVC.Helpers;
@@ -14,18 +19,18 @@ namespace Projeto_Aeronautica_MVC.Controllers
     public class AccountController : Controller
     {
         private readonly IUserHelper _userHelper;
-        //private readonly IMailHelper _mailHelper;
+        private readonly IMailHelper _mailHelper;
         private readonly IConfiguration _configuration;
         private readonly ICountryRepository _countryRepository;
 
         public AccountController(
             IUserHelper userHelper,
-            //IMailHelper mailHelper,
+            IMailHelper mailHelper,
             IConfiguration configuration,
             ICountryRepository countryRepository)
         {
             _userHelper = userHelper;
-            //_mailHelper = mailHelper;
+            _mailHelper = mailHelper;
             _configuration = configuration;
             _countryRepository = countryRepository;
         }
@@ -63,13 +68,11 @@ namespace Projeto_Aeronautica_MVC.Controllers
             return View(model);
         }
 
-
         public async Task<IActionResult> Logout()
         {
             await _userHelper.LogoutAsync();
             return RedirectToAction("Index", "Home");
         }
-
 
         public IActionResult Register()
         {
@@ -82,10 +85,11 @@ namespace Projeto_Aeronautica_MVC.Controllers
             return View(model);
         }
 
-
+        
         [HttpPost]
         public async Task<IActionResult> Register(RegisterNewUserViewModel model)
         {
+
             if (ModelState.IsValid)
             {
                 var user = await _userHelper.GetUserByEmailAsync(model.Username);
@@ -105,39 +109,56 @@ namespace Projeto_Aeronautica_MVC.Controllers
                         City = city
                     };
 
-                    var result = await _userHelper.AddUserAsync(user, model.Password);
-                    if (result != IdentityResult.Success)
+                    if (this.User.Identity.Name != null && this.User.IsInRole("Admin"))
+                    {
+                        var result = await _userHelper.AddUserAsync(user, model.Password);
+                        await _userHelper.AddUserToRoleAsync(user, "Employee");
+
+                        string myToken = await _userHelper.GeneratePasswordResetTokenAsync(user);
+                        //await _userHelper.ConfirmEmailAsync(user, myToken);
+
+                        string tokenLink = Url.Action("ResetPassword", "Account", new
+                        {
+                            token = myToken
+                        }, protocol: HttpContext.Request.Scheme);
+
+                        Response response = _mailHelper.SendEmail(model.Username, "Password Change", $"<h1>Email Confirmation</h1>" +
+                            $"Your account has been created by an admin. You are now required to change your password." +
+                            $"Please click this link to do so:</br></br><a href = \"{tokenLink}\">Change password</a>");
+
+
+                        if (response.IsSuccess)
+                        {
+                            ViewBag.Message = "The authentication instructions have been sent to the employee's email.";
+                            return View(model);
+                        }
+                    }
+                    var result2 = await _userHelper.AddUserAsync(user, model.Password);
+                    if (result2 != IdentityResult.Success)
                     {
                         ModelState.AddModelError(string.Empty, "The user couldn't be created.");
                         return View(model);
                     }
 
-                    //string myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
-                    //string tokenLink = Url.Action("ConfirmEmail", "Account", new
-                    //{
-                    //    userid = user.Id,
-                    //    token = myToken
-                    //}, protocol: HttpContext.Request.Scheme);
-
-                    //Response response = _mailHelper.SendEmail(model.Username, "Email confirmation", $"<h1>Email Confirmation</h1>" +
-                    //    $"To allow the user, " +
-                    //    $"plase click in this link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
-
-                    var loginViewModel = new LoginViewModel
+                    string myToken2 = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                    string tokenLink2 = Url.Action("ConfirmEmail", "Account", new
                     {
-                        Password = model.Password,
-                        RememberMe = false,
-                        Username = model.Username
-                    };
+                        userid = user.Id,
+                        token = myToken2
+                    }, protocol: HttpContext.Request.Scheme);
 
-                    var result2 = await _userHelper.LoginAsync(loginViewModel);
-                    if (result2.Succeeded)
+                    Response response2 = _mailHelper.SendEmail(model.Username, "Email confirmation", $"<h1>Email Confirmation</h1>" +
+                        $"To allow the user, " +
+                        $"plase click in this link:</br></br><a href = \"{tokenLink2}\">Confirm Email</a>");
+
+
+                    if (response2.IsSuccess)
                     {
-                        return RedirectToAction("Index", "Home");
+                        ViewBag.Message = "The instructions to allow you user has been sent to email";
+                        return View(model);
                     }
 
                     ModelState.AddModelError(string.Empty, "The user couldn't be logged.");
-
                 }
             }
 
@@ -241,48 +262,48 @@ namespace Projeto_Aeronautica_MVC.Controllers
         }
 
 
-        //[HttpPost]
-        //public async Task<IActionResult> CreateToken([FromBody] LoginViewModel model)
-        //{
-        //    if (this.ModelState.IsValid)
-        //    {
-        //        var user = await _userHelper.GetUserByEmailAsync(model.Username);
-        //        if (user != null)
-        //        {
-        //            var result = await _userHelper.ValidatePasswordAsync(
-        //                user,
-        //                model.Password);
+        [HttpPost]
+        public async Task<IActionResult> CreateToken([FromBody] LoginViewModel model)
+        {
+            if (this.ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserByEmailAsync(model.Username);
+                if (user != null)
+                {
+                    var result = await _userHelper.ValidatePasswordAsync(
+                        user,
+                        model.Password);
 
-        //            if (result.Succeeded)
-        //            {
-        //                var claims = new[]
-        //                {
-        //                    new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-        //                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        //                };
+                    if (result.Succeeded)
+                    {
+                        var claims = new[]
+                        {
+                            new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                        };
 
-        //                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
-        //                var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        //                var token = new JwtSecurityToken(
-        //                    _configuration["Tokens:Issuer"],
-        //                    _configuration["Tokens:Audience"],
-        //                    claims,
-        //                    expires: DateTime.UtcNow.AddDays(15),
-        //                    signingCredentials: credentials);
-        //                var results = new
-        //                {
-        //                    token = new JwtSecurityTokenHandler().WriteToken(token),
-        //                    expiration = token.ValidTo
-        //                };
+                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
+                        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                        var token = new JwtSecurityToken(
+                            _configuration["Tokens:Issuer"],
+                            _configuration["Tokens:Audience"],
+                            claims,
+                            expires: DateTime.UtcNow.AddDays(15),
+                            signingCredentials: credentials);
+                        var results = new
+                        {
+                            token = new JwtSecurityTokenHandler().WriteToken(token),
+                            expiration = token.ValidTo
+                        };
 
-        //                return this.Created(string.Empty, results);
+                        return this.Created(string.Empty, results);
 
-        //            }
-        //        }
-        //    }
+                    }
+                }
+            }
 
-        //    return BadRequest();
-        //}
+            return BadRequest();
+        }
 
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
@@ -315,40 +336,40 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
 
 
-        //[HttpPost]
-        //public async Task<IActionResult> RecoverPassword(RecoverPasswordViewModel model)
-        //{
-        //    if (this.ModelState.IsValid)
-        //    {
-        //        var user = await _userHelper.GetUserByEmailAsync(model.Email);
-        //        if (user == null)
-        //        {
-        //            ModelState.AddModelError(string.Empty, "The email doesn't correspont to a registered user.");
-        //            return View(model);
-        //        }
+        [HttpPost]
+        public async Task<IActionResult> RecoverPassword(RecoverPasswordViewModel model)
+        {
+            if (this.ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserByEmailAsync(model.Email);
+                if (user == null)
+                {
+                    ModelState.AddModelError(string.Empty, "The email doesn't correspont to a registered user.");
+                    return View(model);
+                }
 
-        //        var myToken = await _userHelper.GeneratePasswordResetTokenAsync(user);
+                var myToken = await _userHelper.GeneratePasswordResetTokenAsync(user);
 
-        //        var link = this.Url.Action(
-        //            "ResetPassword",
-        //            "Account",
-        //            new { token = myToken }, protocol: HttpContext.Request.Scheme);
+                var link = this.Url.Action(
+                    "ResetPassword",
+                    "Account",
+                    new { token = myToken }, protocol: HttpContext.Request.Scheme);
 
-        //        Response response = _mailHelper.SendEmail(model.Email, "Shop Password Reset", $"<h1>Shop Password Reset</h1>" +
-        //        $"To reset the password click in this link:</br></br>" +
-        //        $"<a href = \"{link}\">Reset Password</a>");
+                Response response = _mailHelper.SendEmail(model.Email, "Shop Password Reset", $"<h1>Shop Password Reset</h1>" +
+                $"To reset the password click in this link:</br></br>" +
+                $"<a href = \"{link}\">Reset Password</a>");
 
-        //        if (response.IsSuccess)
-        //        {
-        //            this.ViewBag.Message = "The instructions to recover your password has been sent to email.";
-        //        }
+                if (response.IsSuccess)
+                {
+                    this.ViewBag.Message = "The instructions to recover your password has been sent to email.";
+                }
 
-        //        return this.View();
+                return this.View();
 
-        //    }
+            }
 
-        //    return this.View(model);
-        //}
+            return this.View(model);
+        }
 
         public IActionResult ResetPassword(string token)
         {
@@ -360,12 +381,19 @@ namespace Projeto_Aeronautica_MVC.Controllers
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
             var user = await _userHelper.GetUserByEmailAsync(model.UserName);
+
+            await _userHelper.LogoutAsync();
+
             if (user != null)
             {
                 var result = await _userHelper.ResetPasswordAsync(user, model.Token, model.Password);
                 if (result.Succeeded)
                 {
-                    this.ViewBag.Message = "Password reset successful.";
+                    this.ViewBag.Message = "Password reset successfully.";
+
+                    string myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                    await _userHelper.ConfirmEmailAsync(user, myToken);
+
                     return View();
                 }
 
@@ -376,7 +404,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
             this.ViewBag.Message = "User not found.";
             return View(model);
         }
-
 
 
         public IActionResult NotAuthorized()
