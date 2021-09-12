@@ -15,21 +15,18 @@ namespace Projeto_Aeronautica_MVC.Controllers
     {
         private readonly IFlightRepository _flightRepository;
         private readonly IUserHelper _userHelper;
-        //private readonly IBlobHelper _blobHelper;
-        private readonly IImageHelper _imageHelper;
+        private readonly IBlobHelper _blobHelper;
         private readonly IConverterHelper _converterHelper;
 
         public FlightsController(
             IFlightRepository flightRepository,
             IUserHelper userHelper,
-            //IBlobHelper blobHelper,
-            IImageHelper imageHelper,
+            IBlobHelper blobHelper,
             IConverterHelper converterHelper)
         {
             _flightRepository = flightRepository;
             _userHelper = userHelper;
-            //_blobHelper = blobHelper;
-            _imageHelper = imageHelper;
+            _blobHelper = blobHelper;
             _converterHelper = converterHelper;
         }
 
@@ -73,18 +70,20 @@ namespace Projeto_Aeronautica_MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                var path = string.Empty;
+                Guid imageId = Guid.Empty;
 
                 if (model.ImageFile != null && model.ImageFile.Length > 0)
                 {
-                    path = await _imageHelper.UploadImageAsync(model.ImageFile, "airplane_images");
+
+                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "flights");
                 }
 
 
-                var flight = _converterHelper.ToFlight(model, path, true);
+                var flight = _converterHelper.ToFlight(model, imageId, true);
 
                 flight.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                 await _flightRepository.CreateAsync(flight);
+
                 return RedirectToAction(nameof(Index));
             }
             return View(model);
@@ -125,18 +124,15 @@ namespace Projeto_Aeronautica_MVC.Controllers
             {
                 try
                 {
-
-                    var path = string.Empty;
+                    Guid imageId = model.ImageId;
 
                     if (model.ImageFile != null && model.ImageFile.Length > 0)
                     {
-                        path = await _imageHelper.UploadImageAsync(model.ImageFile, "airplane_images");
+                        imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "flights");
                     }
 
-                    var flight = _converterHelper.ToFlight(model, path, false);
+                    var flight = _converterHelper.ToFlight(model, imageId, false);
 
-
-                    //TODO: Modificar para o user que estiver logado
                     flight.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                     await _flightRepository.UpdateAsync(flight);
 

@@ -11,6 +11,11 @@ using Projeto_Aeronautica_MVC.Data.Entities;
 using Projeto_Aeronautica_MVC.Helpers;
 using System.Text;
 using Vereyon.Web;
+using Microsoft.Extensions.Azure;
+using Azure.Storage.Queues;
+using Azure.Storage.Blobs;
+using Azure.Core.Extensions;
+using System;
 
 namespace Projeto_Aeronautica_MVC
 {
@@ -66,11 +71,9 @@ namespace Projeto_Aeronautica_MVC
 
             services.AddScoped<IUserHelper, UserHelper>();
 
-            //services.AddScoped<IBlobHelper, BlobHelper>();
+            services.AddScoped<IBlobHelper, BlobHelper>();
 
             services.AddScoped<IMailHelper, MailHelper>();
-
-            services.AddScoped<IImageHelper, ImageHelper>();
 
             services.AddScoped<IConverterHelper, ConverterHelper>();
 
@@ -85,6 +88,11 @@ namespace Projeto_Aeronautica_MVC
             });
 
             services.AddControllersWithViews();
+            services.AddAzureClients(builder =>
+            {
+                builder.AddBlobServiceClient(Configuration["ConnectionStrings:DefaultEndpointsProtocol=https;AccountName=projaeromvcstorage;AccountKey=qxPIEExFCGGjiZ66TnZoTqNs8Hj05OuQteQmybPC0CNWZTK89OKsLpgTn5EyEudknyBU9DFDeFy+gPo2E/j/Ug==;EndpointSuffix=core.windows.net:blob"], preferMsi: true);
+                builder.AddQueueServiceClient(Configuration["ConnectionStrings:DefaultEndpointsProtocol=https;AccountName=projaeromvcstorage;AccountKey=qxPIEExFCGGjiZ66TnZoTqNs8Hj05OuQteQmybPC0CNWZTK89OKsLpgTn5EyEudknyBU9DFDeFy+gPo2E/j/Ug==;EndpointSuffix=core.windows.net:queue"], preferMsi: true);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -119,6 +127,31 @@ namespace Projeto_Aeronautica_MVC
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+    }
+    internal static class StartupExtensions
+    {
+        public static IAzureClientBuilder<BlobServiceClient, BlobClientOptions> AddBlobServiceClient(this AzureClientFactoryBuilder builder, string serviceUriOrConnectionString, bool preferMsi)
+        {
+            if (preferMsi && Uri.TryCreate(serviceUriOrConnectionString, UriKind.Absolute, out Uri serviceUri))
+            {
+                return builder.AddBlobServiceClient(serviceUri);
+            }
+            else
+            {
+                return builder.AddBlobServiceClient(serviceUriOrConnectionString);
+            }
+        }
+        public static IAzureClientBuilder<QueueServiceClient, QueueClientOptions> AddQueueServiceClient(this AzureClientFactoryBuilder builder, string serviceUriOrConnectionString, bool preferMsi)
+        {
+            if (preferMsi && Uri.TryCreate(serviceUriOrConnectionString, UriKind.Absolute, out Uri serviceUri))
+            {
+                return builder.AddQueueServiceClient(serviceUri);
+            }
+            else
+            {
+                return builder.AddQueueServiceClient(serviceUriOrConnectionString);
+            }
         }
     }
 }

@@ -46,7 +46,8 @@ namespace Projeto_Aeronautica_MVC.Data
             }
 
             var user = await _userHelper.GetUserByEmailAsync("aandrecaldeira15@gmail.com");
-            if(user == null)
+            var user2 = await _userHelper.GetUserByEmailAsync("aandrecaldeira30@gmail.com");
+            if (user == null && user2 == null)
             {
                 user = new User
                 {
@@ -60,22 +61,54 @@ namespace Projeto_Aeronautica_MVC.Data
                     City = _context.Countries.FirstOrDefault().Cities.FirstOrDefault()
                 };
 
+                user2 = new User
+                {
+                    FirstName = "André2",
+                    LastName = "Cabrita2",
+                    Email = "aandrecaldeira30@gmail.com",
+                    UserName = "aandrecaldeira30@gmail.com",
+                    PhoneNumber = "424686000",
+                    Address = "Rua Jau 66",
+                    CityId = _context.Countries.FirstOrDefault().Cities.FirstOrDefault().Id,
+                    City = _context.Countries.FirstOrDefault().Cities.FirstOrDefault()
+                };
+
+
                 var result = await _userHelper.AddUserAsync(user, "123456");
-                if(result != IdentityResult.Success)
+                var result2 = await _userHelper.AddUserAsync(user2, "123456");
+
+                if (result != IdentityResult.Success)
                 {
                     throw new InvalidOperationException("Could not create the user in seeder");
                 }
 
+                if (result2 != IdentityResult.Success)
+                {
+                    throw new InvalidOperationException("Could not create the user2 in seeder");
+                }
+
 
                 await _userHelper.AddUserToRoleAsync(user, "Admin");
+                await _userHelper.AddUserToRoleAsync(user2, "Employee");
+
                 var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                var token2 = await _userHelper.GenerateEmailConfirmationTokenAsync(user2);
+
                 await _userHelper.ConfirmEmailAsync(user, token);
+                await _userHelper.ConfirmEmailAsync(user2, token2);
             }
 
             var isInRole = await _userHelper.IsUserInRoleAsync(user, "Admin");
-            if(!isInRole)
+            var isInRole2 = await _userHelper.IsUserInRoleAsync(user2, "Employee");
+
+            if (!isInRole)
             {
                 await _userHelper.AddUserToRoleAsync(user, "Admin");
+            }
+
+            if (!isInRole2)
+            {
+                await _userHelper.AddUserToRoleAsync(user2, "Employee");
             }
 
             if (!_context.Flights.Any())

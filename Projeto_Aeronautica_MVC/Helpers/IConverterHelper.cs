@@ -7,7 +7,7 @@ namespace Projeto_Aeronautica_MVC.Helpers
 {
     public interface IConverterHelper
     {
-        Flight ToFlight(FlightViewModel model, string path, bool isNew);
+        Flight ToFlight(FlightViewModel model, Guid imageId, bool isNew);
 
         FlightViewModel ToFlightViewModel(Flight flight);
     }
