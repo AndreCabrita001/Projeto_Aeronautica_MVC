@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Projeto_Aeronautica_MVC.Data.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace Projeto_Aeronautica_MVC.Models
 {
-    public class LoginViewModel
+    public class LoginViewModel : User
     {
         [Required]
         [EmailAddress]

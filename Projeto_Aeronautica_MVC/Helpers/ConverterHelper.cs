@@ -19,7 +19,7 @@ namespace Projeto_Aeronautica_MVC.Helpers
                 DepartureDate = model.DepartureDate,
                 ArrivalDate = model.ArrivalDate,
                 AdultPrice = model.AdultPrice,
-                ChildPrice = model.ChildPrice,
+                //ChildPrice = model.ChildPrice,
                 User = model.User
             };
         }
@@ -37,8 +37,61 @@ namespace Projeto_Aeronautica_MVC.Helpers
                 DepartureDate = flight.DepartureDate,
                 ArrivalDate = flight.ArrivalDate,
                 AdultPrice = flight.AdultPrice,
-                ChildPrice = flight.ChildPrice,
+                //ChildPrice = flight.ChildPrice,
                 User = flight.User
+            };
+        }
+
+        public User ToUser(RegisterNewUserViewModel model, Guid imageId, bool isNew)
+        {
+            return new User
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                ImageId = imageId,
+                Email = model.Username,
+                UserName = model.Username,
+                Address = model.Address,
+                PhoneNumber = model.PhoneNumber,
+                CityId = model.CityId,
+            };
+        }
+
+        public RegisterNewUserViewModel ToUserViewModel(User user)
+        {
+            return new RegisterNewUserViewModel
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Username = user.UserName,
+                Address = user.Address,
+                PhoneNumber = user.PhoneNumber,
+                CityId = user.CityId,
+            };
+        }
+
+        public User ToChangeUser(RegisterNewUserViewModel model, Guid imageId, bool isNew)
+        {
+            return new User
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                ImageId = imageId,
+                Address = model.Address,
+                PhoneNumber = model.PhoneNumber,
+                CityId = model.CityId
+            };
+        }
+
+        public RegisterNewUserViewModel ToChangeUserViewModel(User user, Guid imageId)
+        {
+            return new RegisterNewUserViewModel
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                ImageId = imageId,
+                Address = user.Address,
+                PhoneNumber = user.PhoneNumber,
             };
         }
     }

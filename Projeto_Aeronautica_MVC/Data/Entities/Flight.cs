@@ -11,13 +11,6 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
         [Display(Name = "Adult Price")]
         public decimal AdultPrice { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
-        [Display(Name = "Child Price")]
-        public decimal ChildPrice { get; set; }
-
-        [Display(Name = "Image")]
-        public Guid ImageId { get; set; }
-
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = false)]
         [Display(Name = "Departure Date")]
         public DateTime? DepartureDate { get; set; }
@@ -39,6 +32,9 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
         public bool IsAvailable { get; set; }
 
         public User User { get; set; }
+
+        [Display(Name = "Image")]
+        public Guid ImageId { get; set; }
 
         public string ImageFullPath => ImageId == Guid.Empty
             ? $"https://projetoaeronautica.azurewebsites.net/images/noimage.png"

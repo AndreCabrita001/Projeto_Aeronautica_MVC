@@ -36,7 +36,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
             return View(_flightRepository.GetAll().OrderBy(p => p.FlightApparatus));
         }
 
-        // GET: Products/Details/5
+        // GET: Flights/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -74,10 +74,8 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
                 if (model.ImageFile != null && model.ImageFile.Length > 0)
                 {
-
                     imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "flights");
                 }
-
 
                 var flight = _converterHelper.ToFlight(model, imageId, true);
 
@@ -163,6 +161,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
             }
 
             var flight = await _flightRepository.GetByIdAsync(id.Value);
+
             if (flight == null)
             {
                 return NotFound();

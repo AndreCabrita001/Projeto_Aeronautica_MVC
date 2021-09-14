@@ -22,39 +22,74 @@ namespace Projeto_Aeronautica_MVC.Controllers
         private readonly IMailHelper _mailHelper;
         private readonly IConfiguration _configuration;
         private readonly ICountryRepository _countryRepository;
+        private readonly IBlobHelper _blobHelper;
+        private readonly IConverterHelper _converterHelper;
+        //private readonly IUserRepository _userRepository;
 
         public AccountController(
             IUserHelper userHelper,
             IMailHelper mailHelper,
             IConfiguration configuration,
-            ICountryRepository countryRepository)
+            ICountryRepository countryRepository,
+            IBlobHelper blobHelper,
+            IConverterHelper converterHelper
+            /*IUserRepository userRepository*/)
         {
             _userHelper = userHelper;
             _mailHelper = mailHelper;
+            _blobHelper = blobHelper;
             _configuration = configuration;
             _countryRepository = countryRepository;
+            _converterHelper = converterHelper;
+            /*_userRepository = userRepository*/;
         }
 
-
-        public IActionResult Login()
+        public async Task<IActionResult> Login()
         {
-            if (User.Identity.IsAuthenticated)
+            if (this.User.Identity.IsAuthenticated)
             {
+                var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+
+                TempData["Redirect"] = "Redirected";
+
+                if (user.ImageId != Guid.Empty)
+                {
+                    var imgId = user.ImageId.ToString();
+                    TempData["ImageId"] = "https://projetoaerostorage.blob.core.windows.net/users/" + $"{imgId}";
+                }
+                else
+                {
+                    TempData["ImageId"] = "https://projetoaeronautica.azurewebsites.net/images/noimage.png";
+                }
+
                 return RedirectToAction("Index", "Home");
             }
 
             return View();
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (ModelState.IsValid)
             {
+                var user = await _userHelper.GetUserByEmailAsync(model.UserName);
+
                 var result = await _userHelper.LoginAsync(model);
+                
                 if (result.Succeeded)
                 {
+
+                    if (user.ImageId != Guid.Empty)
+                    {
+                        var imgId = user.ImageId.ToString();
+                        TempData["ImageId"] = "https://projetoaerostorage.blob.core.windows.net/users/" + $"{imgId}";
+                    }
+                    else
+                    {
+                        TempData["ImageId"] = "https://projetoaeronautica.azurewebsites.net/images/noimage.png";
+                    }
+
                     if (this.Request.Query.Keys.Contains("ReturnUrl"))
                     {
                         return Redirect(this.Request.Query["ReturnUrl"].First());
@@ -85,11 +120,9 @@ namespace Projeto_Aeronautica_MVC.Controllers
             return View(model);
         }
 
-        
         [HttpPost]
         public async Task<IActionResult> Register(RegisterNewUserViewModel model)
         {
-
             if (ModelState.IsValid)
             {
                 var user = await _userHelper.GetUserByEmailAsync(model.Username);
@@ -97,17 +130,15 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 {
                     var city = await _countryRepository.GetCityAsync(model.CityId);
 
-                    user = new User
+                    Guid imageId = Guid.Empty;
+
+                    if (model.ImageFile != null && model.ImageFile.Length > 0)
                     {
-                        FirstName = model.FirstName,
-                        LastName = model.LastName,
-                        Email = model.Username,
-                        UserName = model.Username,
-                        Address = model.Address,
-                        PhoneNumber = model.PhoneNumber,
-                        CityId = model.CityId,
-                        City = city
-                    };
+                        imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "users");
+                    }
+
+                    user = _converterHelper.ToUser(model, imageId, true);
+                    user.City = city;
 
                     if (this.User.Identity.Name != null && this.User.IsInRole("Admin"))
                     {
@@ -151,7 +182,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
                         $"To allow the user, " +
                         $"plase click in this link:</br></br><a href = \"{tokenLink2}\">Confirm Email</a>");
 
-
                     if (response2.IsSuccess)
                     {
                         ViewBag.Message = "The instructions to allow you user has been sent to email";
@@ -168,13 +198,17 @@ namespace Projeto_Aeronautica_MVC.Controllers
         public async Task<IActionResult> ChangeUser()
         {
             var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
-            var model = new ChangeUserViewModel();
+            var model = new RegisterNewUserViewModel();
             if (user != null)
             {
-                model.FirstName = user.FirstName;
-                model.LastName = user.LastName;
-                model.Address = user.Address;
-                model.PhoneNumber = user.PhoneNumber;
+                Guid imageId = model.ImageId;
+
+                if (model.ImageFile != null && model.ImageFile.Length > 0)
+                {
+                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "users");
+                }
+
+                model = _converterHelper.ToChangeUserViewModel(user, imageId);
 
                 var city = await _countryRepository.GetCityAsync(user.CityId);
                 if (city != null)
@@ -197,7 +231,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> ChangeUser(ChangeUserViewModel model)
+        public async Task<IActionResult> ChangeUser(RegisterNewUserViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -206,11 +240,14 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 {
                     var city = await _countryRepository.GetCityAsync(model.CityId);
 
-                    user.FirstName = model.FirstName;
-                    user.LastName = model.LastName;
-                    user.Address = model.Address;
-                    user.PhoneNumber = model.PhoneNumber;
-                    user.CityId = model.CityId;
+                    Guid imageId = model.ImageId;
+
+                    if (model.ImageFile != null && model.ImageFile.Length > 0)
+                    {
+                        imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "users");
+                    }
+
+                    user = _converterHelper.ToChangeUser(model, imageId, false);
                     user.City = city;
 
                     var response = await _userHelper.UpdateUserAsync(user);
