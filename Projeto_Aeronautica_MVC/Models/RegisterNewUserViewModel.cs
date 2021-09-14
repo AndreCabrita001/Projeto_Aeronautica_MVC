@@ -47,7 +47,6 @@ namespace Projeto_Aeronautica_MVC.Models
         [Compare("Password")]
         public string Confirm { get; set; }
 
-        [Required]
         [Display(Name = "Image")]
         public IFormFile ImageFile { get; set; }
     }

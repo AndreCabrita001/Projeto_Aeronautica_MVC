@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Projeto_Aeronautica_MVC.Data.Entities;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Projeto_Aeronautica_MVC.Models
 {
-    public class ChangeUserViewModel
+    public class ChangeUserViewModel : User
     {
         [Required]
         [Display(Name = "First Name")]
@@ -31,5 +33,8 @@ namespace Projeto_Aeronautica_MVC.Models
         public int CountryId { get; set; }
 
         public IEnumerable<SelectListItem> Countries { get; set; }
+
+        [Display(Name = "Image")]
+        public IFormFile ImageFile { get; set; }
     }
 }

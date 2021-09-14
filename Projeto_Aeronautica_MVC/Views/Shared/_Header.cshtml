@@ -45,6 +45,7 @@
 
                         <div>
                             <img src="@TempData["ImageId"]" alt="Image" style="width:150px;height:200px;max-width:50%;height:auto;" />
+                            @{ TempData.Keep("ImageId"); }
                         </div>
                     }
 
