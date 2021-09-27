@@ -6,17 +6,64 @@
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css" />
 <br />
-@if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Employee"))
-{
-    <p>
-        <a asp-action="Create" class="btn btn-primary">Create New</a>
-    </p>
-}
-    <table class="table">
-        <thead>
-            <tr>
+<section class="services" id="services" style="margin-top:60px">
+
+    <h1 class="heading"> Flights</h1>
+    <hr />
+    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Employee"))
+    {
+        <p>
+            <a asp-action="Create" class="btn">Create New</a>
+        </p>
+    }
+
+</section>
+
+<section class="packages">
+
+    <div class="box-container">
+
+        @foreach (var item in Model)
+        {
+        <div class="box" style="width:50%">
+            <div class="image">
+                <img src="@Url.Content(item.ImageFullPath)" alt="Image">
+                <h3> <i class="fas fa-map-marker-alt"></i> @Html.DisplayFor(modelItem => item.FlightDestiny) </h3>
+            </div>
+
+            <div class="content">
+                <div class="price"> @Html.DisplayFor(modelItem => item.AdultPrice) </div>
+
+                @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Employee"))
+                {
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn">Delete</a>
+                }
+                else if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+                {
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn">Details</a>
+                }
+                else
+                {
+                    <a asp-action="" asp-route-id="@item.Id" class="btn">Book Now</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn">Details</a>
+                }
+            </div>
+        </div>
+        }
+    </div>
+</section>
+
+@*<section class="form-container" style="margin-top:60px">
+    <div class="inputBox">
+        <span>@Html.DisplayNameFor(model => model.Id)</span>
+    </div>*@
+                @*<th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.FlightApparatus)
+                        @Html.DisplayNameFor(model => model.FlightApparatus)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.FlightOrigin)
@@ -34,58 +81,54 @@
                     @Html.DisplayNameFor(model => model.IsAvailable)
                 </th>
                 <th></th>
-            </tr>
-        </thead>
-        <tbody>
             @foreach (var item in Model)
             {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FlightApparatus)
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
 
-                    @if (!string.IsNullOrEmpty(item.ImageFullPath))
-                    {
-                        <img src="@Url.Content(item.ImageFullPath)" alt="Image" style="width:100px;height:150px;max-width:100%;height:auto">
-                    }
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FlightOrigin)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FlightDestiny)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DepartureDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AdultPrice)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsAvailable)
-                </td>
-                <td>
-                    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Employee"))
-                    {
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
-                    }
-                    else if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
-                    {
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
-                    }
-                    else
-                    {
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Order</a>
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
-                    }
-                </td>
-            </tr>
-}
-        </tbody>
-    </table>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FlightApparatus)
 
-    @section Scripts{
+                        @if (!string.IsNullOrEmpty(item.ImageFullPath))
+                        {
+                            <img src="@Url.Content(item.ImageFullPath)" alt="Image" style="width:100px;height:150px;max-width:100%;height:auto">
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FlightOrigin)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FlightDestiny)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DepartureDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AdultPrice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsAvailable)
+                    </td>
+                    <td>
+                        @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Employee"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn">Edit</a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn">Details</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn">Delete</a>
+                        }
+                        else if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn">Details</a>
+                        }
+                        else
+                        {
+                            <a asp-action="" asp-route-id="@item.Id" class="btn">Book</a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn">Details</a>
+                        }*@
+            @*}*@
+@*</section>*@
+    @*@section Scripts{
         <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
         <script type="text/javascript">
@@ -93,4 +136,4 @@
                 $('#MyTable').DataTable();
             });
         </script>
-    }
+    }*@

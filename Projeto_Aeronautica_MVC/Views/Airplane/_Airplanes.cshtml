@@ -1,0 +1,42 @@
+﻿@model Projeto_Aeronautica_MVC.Models.AirplaneViewModel
+
+<div class="form-group">
+    <label asp-for="Apparatus" class="control-label"></label>
+    <input asp-for="Apparatus" class="form-control" />
+    <span asp-validation-for="Apparatus" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+    <label asp-for="ImageFile" class="control-label"></label>
+    <input asp-for="ImageFile" class="form-control" type="file" />
+    <span asp-validation-for="ImageFile" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+    <label asp-for="NumberOfRows" class="control-label"></label>
+    <input asp-for="NumberOfRows" class="form-control" />
+    <span asp-validation-for="NumberOfRows" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+    <label asp-for="TotalSeats" class="control-label"></label>
+    <input asp-for="TotalSeats" class="form-control" />
+    <span asp-validation-for="TotalSeats" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+    <label asp-for="AvaliableSeats" class="control-label"></label>
+    <input asp-for="AvaliableSeats" class="form-control" />
+    <span asp-validation-for="AvaliableSeats" class="text-danger"></span>
+</div>
+
+
+@section Scripts {
+
+    <script type="text/javascript">$(document).ready(function)(){
+        $('.date').datepicker({
+        orientation: "bottom",
+        autoclose: true
+        }
+    });</script>
+}

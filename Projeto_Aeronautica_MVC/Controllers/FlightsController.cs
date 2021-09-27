@@ -1,36 +1,40 @@
 ﻿using System;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Projeto_Aeronautica_MVC.Data;
+using Projeto_Aeronautica_MVC.Data.Entities;
 using Projeto_Aeronautica_MVC.Helpers;
 using Projeto_Aeronautica_MVC.Models;
 
 namespace Projeto_Aeronautica_MVC.Controllers
 {
-   
     public class FlightsController : Controller
     {
         private readonly IFlightRepository _flightRepository;
+        private readonly IAirplaneRepository _airplaneRepository;
         private readonly IUserHelper _userHelper;
         private readonly IBlobHelper _blobHelper;
         private readonly IConverterHelper _converterHelper;
 
         public FlightsController(
             IFlightRepository flightRepository,
+            IAirplaneRepository airplaneRepository,
             IUserHelper userHelper,
             IBlobHelper blobHelper,
             IConverterHelper converterHelper)
         {
             _flightRepository = flightRepository;
+            _airplaneRepository = airplaneRepository;
             _userHelper = userHelper;
             _blobHelper = blobHelper;
             _converterHelper = converterHelper;
         }
 
-        // GET: Products
+        // GET: Flights
         public IActionResult Index()
         {
             return View(_flightRepository.GetAll().OrderBy(p => p.FlightApparatus));
@@ -45,6 +49,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
             }
 
             var flight = await _flightRepository.GetByIdAsync(id.Value);
+
             if (flight == null)
             {
                 return NotFound();
@@ -52,7 +57,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
             return View(flight);
         }
-
 
         // GET: Flights/Create
         [Authorize(Roles = "Employee")]
@@ -70,11 +74,15 @@ namespace Projeto_Aeronautica_MVC.Controllers
         {
             if (ModelState.IsValid)
             {
+                var plane = new Airplane();
+
+                plane = await _airplaneRepository.GetByIdAsync(model.Id);
+
                 Guid imageId = Guid.Empty;
 
                 if (model.ImageFile != null && model.ImageFile.Length > 0)
                 {
-                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "flights");
+                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "airplanes");
                 }
 
                 var flight = _converterHelper.ToFlight(model, imageId, true);
@@ -86,8 +94,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
             }
             return View(model);
         }
-
-
 
         // GET: Flights/Edit/5
         [Authorize(Roles = "Employee")]
@@ -104,7 +110,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 return NotFound();
             }
 
-
             var model = _converterHelper.ToFlightViewModel(flight);
             return View(model);
         }
@@ -117,7 +122,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(FlightViewModel model)
         {
-
             if (ModelState.IsValid)
             {
                 try
@@ -126,10 +130,23 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
                     if (model.ImageFile != null && model.ImageFile.Length > 0)
                     {
-                        imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "flights");
+                        imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "airplanes");
                     }
 
-                    var flight = _converterHelper.ToFlight(model, imageId, false);
+                    bool isNew = false;
+                    var flight = new Flight
+                    {
+                        Id = isNew ? 0 : model.Id,
+                        FlightApparatus = model.FlightApparatus,
+                        IsAvailable = model.IsAvailable,
+                        ImageId = imageId,
+                        FlightOrigin = model.FlightOrigin,
+                        FlightDestiny = model.FlightDestiny,
+                        DepartureDate = model.DepartureDate,
+                        ArrivalDate = model.ArrivalDate,
+                        AdultPrice = model.AdultPrice,
+                        User = model.User
+                    };
 
                     flight.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                     await _flightRepository.UpdateAsync(flight);
@@ -159,6 +176,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
             {
                 return NotFound();
             }
+            //dynamic FlightAirplane = new ExpandoObject();
 
             var flight = await _flightRepository.GetByIdAsync(id.Value);
 

@@ -5,6 +5,7 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
 {
     public class Flight : IEntity
     {
+        [Display(Name = "Flight Number ")]
         public int Id { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
@@ -31,13 +32,14 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
         [Display(Name = "Is Available")]
         public bool IsAvailable { get; set; }
 
-        public User User { get; set; }
+        public Airplane Airplane { get; set; }
 
         [Display(Name = "Image")]
         public Guid ImageId { get; set; }
 
         public string ImageFullPath => ImageId == Guid.Empty
             ? $"https://projetoaeronautica.azurewebsites.net/images/noimage.png"
-            : $"https://projetoaerostorage.blob.core.windows.net/flights/{ImageId}";
+            : $"https://projetoaerostorage.blob.core.windows.net/airplanes/{ImageId}";
+        public User User { get; set; }
     }
 }

@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\images\airplane_images\" />
     <Folder Include="wwwroot\images\profile_images\" />
   </ItemGroup>
 

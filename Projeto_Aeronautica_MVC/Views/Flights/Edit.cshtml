@@ -3,30 +3,41 @@
 @{
     ViewData["Title"] = "Edit";
 }
+<section class="services" id="services" style="margin-top:60px">
+    <h1 class="heading"> Edit Flight</h1>
+    <hr />
+</section>
 
-<h1>Edit Flight</h1>
+    
+    <section class="form-container">
 
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="ImageId" />
+        <div class="row">
+            <div class="col-md-4">
+                <form asp-action="Edit" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="ImageId" />
 
-             <partial name="_Flights"/>
+                    <partial name="_Flights" />
 
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-success">Back to List</a>
+                    <div class="inputBox">
+                        <span>Image</span>
+                        <input asp-for="ImageFile" class="form-control" type="file" />
+                        <span asp-validation-for="ImageFile" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn" />
+                        <a asp-action="Index" class="bt btn-success">Back to List</a>
+                    </div>
+                </form>
             </div>
-        </form>
-    </div>
-    <div class="col-md-4">
-            <img src="@Url.Content(Model.ImageFullPath)" alt="Image" style="width:300px;height:450px;max-width:100%;height:auto">    
-    </div>
-</div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+            <div class="col-md-4">
+                <img src="@Url.Content(Model.ImageFullPath)" alt="Image" style="width:300px;height:270px;max-width:100%; border-radius:15%; overflow:hidden; box-shadow: 0px 30px 40px -25px rgba(0, 0, 0, 1)" />
+            </div>
+        </div>
+    </section>
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }

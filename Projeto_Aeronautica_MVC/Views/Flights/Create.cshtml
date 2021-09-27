@@ -7,21 +7,24 @@
 <h1>New Flight</h1>
 
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-           
-            <partial name="_Flights"/>
 
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-success">Back to List</a>
-            </div>
-        </form>
+<section class="form-container" style="margin-top:60px">
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <partial name="_Flights" />
+
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn" />
+                    <a asp-action="Index" class="btn">Back to List</a>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+</section>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }

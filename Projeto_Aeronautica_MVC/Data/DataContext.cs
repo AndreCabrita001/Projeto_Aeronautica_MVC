@@ -8,6 +8,8 @@ namespace Projeto_Aeronautica_MVC.Data
     {
         public DbSet<Flight> Flights { get; set; }
 
+        public DbSet<Airplane> Airplanes { get; set; }
+
         public DbSet<City> Cities { get; set; }
 
         public DbSet<Country> Countries { get; set; }

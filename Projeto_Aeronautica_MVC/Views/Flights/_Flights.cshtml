@@ -1,50 +1,47 @@
 ﻿@model Projeto_Aeronautica_MVC.Models.FlightViewModel
 
-<div class="form-group">
-    <label asp-for="FlightApparatus" class="control-label"></label>
+<div class="inputBox">
+    <span>Flight Apparatus</span>
     <input asp-for="FlightApparatus" class="form-control" />
     <span asp-validation-for="FlightApparatus" class="text-danger"></span>
 </div>
-<div class="form-group">
-    <label asp-for="FlightOrigin" class="control-label"></label>
+
+<div class="inputBox">
+    <span>Flight Origin</span>
     <input asp-for="FlightOrigin" class="form-control" />
     <span asp-validation-for="FlightOrigin" class="text-danger"></span>
 </div>
-<div class="form-group">
-    <label asp-for="FlightDestiny" class="control-label"></label>
+
+<div class="inputBox">
+    <span>Flight Destiny</span>
     <input asp-for="FlightDestiny" class="form-control" />
     <span asp-validation-for="FlightDestiny" class="text-danger"></span>
 </div>
-<div class="form-group">
-    <label asp-for="AdultPrice" class="control-label"></label>
+
+<div class="inputBox">
+    <span>Price</span>
     <input asp-for="AdultPrice" class="form-control" />
     <span asp-validation-for="AdultPrice" class="text-danger"></span>
 </div>
-<div class="form-group">
-    <label asp-for="ImageFile" class="control-label"></label>
-    <input asp-for="ImageFile" class="form-control" type="file" />
-    <span asp-validation-for="ImageFile" class="text-danger"></span>
-</div>
-<div class="form-group">
-    <label asp-for="DepartureDate" class="control-label"></label>
+
+<div class="inputBox">
+    <span>Departure Date</span>
     <input asp-for="DepartureDate" class="form-control" />
     <span asp-validation-for="DepartureDate" class="text-danger"></span>
 </div>
-<div class="form-group">
-    <label asp-for="ArrivalDate" class="control-label"></label>
+
+<div class="inputBox">
+    <span>Arrival Date</span>
     <input asp-for="ArrivalDate" class="form-control" />
     <span asp-validation-for="ArrivalDate" class="text-danger"></span>
 </div>
-<div class="form-group form-check">
-    <label class="form-check-label">
-        <input class="form-check-input" asp-for="IsAvailable" /> @Html.DisplayNameFor(model => model.IsAvailable)
-    </label>
+<div class="inputBox">
+    <div class="form-group form-check">
+        <label class="form-check-label">
+            <input class="form-check-input" asp-for="IsAvailable" /> <span>Is Avaliable?</span>@*@Html.DisplayNameFor(model => model.IsAvailable)*@
+        </label>
+    </div>
 </div>
-@*<div class="form-group">
-        <label asp-for="Stock" class="control-label"></label>
-        <input asp-for="Stock" class="form-control" />
-        <span asp-validation-for="Stock" class="text-danger"></span>
-    </div>*@
 
 @section Scripts {
 

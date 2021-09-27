@@ -3,20 +3,182 @@
     <head>
 
         <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>@ViewData["Title"] - </title>
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
         <link rel="stylesheet" href="~/lib/bootstrap-datepicker/css/bootstrap-datepicker.min.css" />
         <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
-        <link href="https://fonts.googleapis.com/css?family=Raleway:500,800" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700" />
-        <link rel="stylesheet" href="~/css/site.css" />
 
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+
+        <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+        <!-- font awesome cdn link  -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+        <link href="https://fonts.googleapis.com/css?family=Raleway:500,800" rel="stylesheet">
+
+        <link href='https://css.gg/home-alt.css' rel='stylesheet'>
+
+        <link href='https://css.gg/flag.css' rel='stylesheet'>
+
+        <link href='https://css.gg/airplane.css' rel='stylesheet'>
+
+        <link href='https://css.gg/user-add.css' rel='stylesheet'>
+        <!-- custom css file cdn link  -->
+        <link rel="stylesheet" href="~/css/style.css">
     </head>
     <body>
 
-        <partial name="_Header" />
+        @*<header>
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+                <div class="container">
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Projeto Aeronautica</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Flights" asp-action="Index">Flights</a>
+                            </li>
+
+                            @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+                            {
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Employees</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Airplane" asp-action="Index">Airplanes</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Countries" asp-action="Index">Countries</a>
+                                </li>
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Register">Employees</a></li>
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Airplane" asp-action="Index">Airplanes</a></li>
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="" asp-action="">Countries</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            </li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            @if (this.User.Identity.IsAuthenticated)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="ChangeUser">@this.User.Identity.Name</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
+                                </li>
+
+                                <div>
+                                    <img src="@TempData["ImageId"]" alt="Image" style="width:150px;height:200px;max-width:50%;height:auto; position:relative; top:25px" />
+                                    @{ TempData.Keep("ImageId"); }
+                                </div>
+                            }
+
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>*@
+
+        <header class="header">
+
+            <a class="logo" asp-area="" asp-controller="Home" asp-action="Index"><i class="fas fa-plane"></i>Projeto Aero</a>
+
+            <form action="" class="search-form">
+                <input type="search" name="" placeholder="search here..." id="searchBox">
+                <label for="searchBox" class="fas fa-search"></label>
+            </form>
+
+            <div class="icons">
+                <div class="fas fa-search" id="search-btn"></div>
+                <div class="fas fa-moon" id="theme-btn"></div>
+                <div class="fas fa-user" id="login-btn"></div>
+                <div class="fas fa-bars" id="menu-btn"></div>
+            </div>
+
+            <nav class="navbar">
+
+                <a asp-area="" asp-controller="Home" asp-action="Index"><center><i class="gg-home-alt"></i></center>Home</a>
+
+                <a asp-area="" asp-controller="Flights" asp-action="Index"><center><i class="fas fa-plane"></i></center>Flights</a>
+
+                @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+                {
+                    <a asp-area="" asp-controller="Countries" asp-action="Index"><center><i class="gg-flag"></i></center>Countries</a>
+
+                    <a asp-area="" asp-controller="Airplane" asp-action="Index"><center><i class="gg-airplane"></i></center>Planes</a>
+
+                    <a asp-area="" asp-controller="Account" asp-action="Register"><center><i class="gg-user-add"></i></center>Employees</a>
+                }
+            </nav>
+
+            @if (!this.User.Identity.IsAuthenticated)
+            {
+                <div action="" class="login-form">
+                    <a asp-area="" asp-controller="Account" asp-action="Login" type="submit" class="btn">Login</a>
+
+                    <a asp-area="" asp-controller="Account" asp-action="Register" type="submit" class="btn">Register</a>
+                </div>
+            }
+            else
+            {
+        <div action="" class="login-form">
+            <div>
+                <center>
+                    <img src="@TempData["ImageId"]" alt="Image" style="width:150px;height:200px;max-width:50%;height:auto; position:center; margin-bottom:20px; border-radius:15%; overflow:hidden; box-shadow: 0px 30px 40px -25px rgba(0, 0, 0, 1)" />
+                    @{ TempData.Keep("ImageId"); }
+                </center>
+            </div>
+            <div>
+                <a asp-area="" asp-controller="Account" asp-action="ChangeUser"><h3>@this.User.Identity.Name</h3></a>
+
+                <a asp-area="" asp-controller="Account" asp-action="Logout" type="submit" class="btn">Logout</a>
+            </div>
+        </div>
+            }
+
+        </header>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
+        <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+        <!-- custom js file link  -->
+        <script src="~/js/script.js"></script>
+
+        <script>
+
+            AOS.init({
+                duration: 800,
+                delay: 400
+            });
+
+        </script>
 
         <div class="container">
             <main role="main" class="pb-3">
@@ -24,14 +186,14 @@
             </main>
         </div>
 
-        <footer class="border-top footer text-muted">
+        <footer style="position:relative; bottom:0">
             <div class="container">
-                &copy; 2021 - Projeto Aeronautica - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                <h2>&copy; 2021 - Projeto Aeronautica - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></h2>
             </div>
         </footer>
         <script src="~/lib/jquery/dist/jquery.min.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
+        @*<script src="~/js/site.js" asp-append-version="true"></script>*@
         @await RenderSectionAsync("Scripts", required: false)
     </body>
 </html>

@@ -3,38 +3,53 @@
     ViewData["Title"] = "Login";
 }
 
-<h2>Login</h2>
+<section class="services" id="services" style="margin-top:60px">
+        <h1 class="heading"> Login</h1>
+</section>
 
-<div class="row">
-    <div class="col-md-4 offset-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly"></div>
-            <div class="form-group">
-                <label asp-for="Username">Username</label>
-                <input asp-for="Username" class="form-control" />
-                <span asp-validation-for="Username" class="text-warning"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password">Password</label>
-                <input asp-for="Password" type="password" class="form-control" />
-                <span asp-validation-for="Password" class="text-warning"></span>
-            </div>
-            <div class="form-group">
-                <div class="form-check">
-                    <input asp-for="RememberMe" type="checkbox" class="form-check-input" />
-                    <label asp-for="RememberMe" class="form-check-label">Remember Me?</label>
+<section class="form-container">
+    <div class="row">
+        <div class="col-md-4 offset-md-4">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly"></div>
+
+                <div class="form-group">
+                    <div class="inputBox">
+                        <span>Username</span>
+                        <input asp-for="Username" class="form-control" />
+                    </div>
+                    <h3><span asp-validation-for="Username" class="text-warning" style="color:red"></span></h3>
                 </div>
-                <span asp-validation-for="RememberMe" class="text-warning"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Login" class="btn btn-success" />
-                <a asp-action="Register" class="btn btn-primary">Register New User</a>
-                <a asp-action="RecoverPassword" class="btn btn-link">Forgot your password?</a>
-            </div>
-        </form>
-    </div>
-</div>
+                <div class="form-group">
+                    <div class="inputBox">
+                        <span>Password</span>
+                        <input asp-for="Password" type="password" class="form-control" />
+                    </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+                    <h3><span asp-validation-for="Password" class="text-warning" style="color:red"></span></h3>
+                </div>
+                <div class="inputBox">
+                    <div class="form-group form-check">
+                        <div class="form-check-label">
+
+                            <input asp-for="RememberMe" type="checkbox" class="form-check-input" style="left:40px"/> <span>Remember Me?</span>
+                            @*<label asp-for="RememberMe" class="form-check-label"></label>*@
+
+                        </div>
+                    </div>
+                <span asp-validation-for="RememberMe" class="text-warning" style="color:red"></span>
+
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Login" class="btn" />
+                        <a asp-action="Register" class="btn" style="margin-bottom:20px">Register New User</a>
+
+                        <a asp-action="RecoverPassword"><h3>Forgot your password?</h3></a>
+                    </div>
+</form>
+        </div>
+    </div>
+  </section>
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }

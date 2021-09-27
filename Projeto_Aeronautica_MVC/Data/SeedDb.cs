@@ -111,23 +111,47 @@ namespace Projeto_Aeronautica_MVC.Data
                 await _userHelper.AddUserToRoleAsync(user2, "Employee");
             }
 
+            var plane = new Airplane();
+
+            if (!_context.Airplanes.Any())
+            {
+                AddPlane(plane);
+
+                await _context.SaveChangesAsync();
+            }
+
             if (!_context.Flights.Any())
             {
-                AddFlight("Airbus 300", user);
+                AddFlight(plane, user);
 
                 await _context.SaveChangesAsync();
             }
         }
 
-        private void AddFlight(string name, User user)
+        private void AddPlane(Airplane plane)
+        {
+            plane.Apparatus = "Airbus a330";
+            plane.NumberOfRows = 3;
+            plane.ImageId = new Guid("ed8cbf78-f56b-4666-b486-a2e82b37f9b5");
+            plane.TotalSeats = 300;
+            plane.AvaliableSeats = 300;
+
+            _context.Airplanes.Add(plane);
+        }
+
+        private void AddFlight(Airplane plane, User user)
         {
             _context.Flights.Add(new Flight
             {
-                FlightApparatus = name,
-                FlightDestiny = "France",
-                DepartureDate = DateTime.Now,
-                AdultPrice = _random.Next(1000),
                 IsAvailable = true,
+                FlightApparatus = plane.Apparatus,
+                FlightOrigin = "Portugal",
+                FlightDestiny = "Espanha",
+                ImageId = plane.ImageId,
+                DepartureDate = DateTime.Now.AddDays(20),
+                ArrivalDate = DateTime.Now.AddDays(21),
+                AdultPrice = 300,
+                Airplane = plane,
                 User = user
             });
         }

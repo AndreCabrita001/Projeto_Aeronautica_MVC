@@ -41,7 +41,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
             _configuration = configuration;
             _countryRepository = countryRepository;
             _converterHelper = converterHelper;
-            /*_userRepository = userRepository*/;
+            //_userRepository = userRepository;
         }
 
         public async Task<IActionResult> Login()
@@ -51,17 +51,18 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
 
                 TempData["Redirect"] = "Redirected";
-
-                if (user.ImageId != Guid.Empty)
+                if (user != null)
                 {
-                    var imgId = user.ImageId.ToString();
-                    TempData["ImageId"] = "https://projetoaerostorage.blob.core.windows.net/users/" + $"{imgId}";
+                    if (user.ImageId != Guid.Empty)
+                    {
+                        var imgId = user.ImageId.ToString();
+                        TempData["ImageId"] = "https://projetoaerostorage.blob.core.windows.net/users/" + $"{imgId}";
+                    }
+                    else
+                    {
+                        TempData["ImageId"] = "https://projetoaeronautica.azurewebsites.net/images/noimage.png";
+                    }
                 }
-                else
-                {
-                    TempData["ImageId"] = "https://projetoaeronautica.azurewebsites.net/images/noimage.png";
-                }
-
                 return RedirectToAction("Index", "Home");
             }
 
@@ -84,7 +85,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
                     {
                         var imgId = user.ImageId.ToString();
                         TempData["ImageId"] = "https://projetoaerostorage.blob.core.windows.net/users/" + $"{imgId}";
-
                     }
                     else
                     {
@@ -180,12 +180,12 @@ namespace Projeto_Aeronautica_MVC.Controllers
                     }, protocol: HttpContext.Request.Scheme);
 
                     Response response2 = _mailHelper.SendEmail(model.Username, "Email confirmation", $"<h1>Email Confirmation</h1>" +
-                        $"To allow the user, " +
-                        $"plase click in this link:</br></br><a href = \"{tokenLink2}\">Confirm Email</a>");
+                        $"To activate your account, " +
+                        $"please click this link:</br></br><a href = \"{tokenLink2}\">Confirm Email</a>");
 
                     if (response2.IsSuccess)
                     {
-                        ViewBag.Message = "The instructions to allow you user has been sent to email";
+                        ViewBag.Message = "The instructions to activate this account have been sent to your email";
                         return View(model);
                     }
 
@@ -417,7 +417,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
                 if (response.IsSuccess)
                 {
-                    this.ViewBag.Message = "The instructions to recover your password has been sent to email.";
+                    this.ViewBag.Message = "The instructions to recover your password have been sent to your email.";
                 }
 
                 return this.View();
