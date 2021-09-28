@@ -11,11 +11,12 @@
     <div>
         <div class="box-container">
             <div class="box">
-                <p>@Html.DisplayNameFor(model => model.FlightApparatus) : @Html.DisplayFor(model => model.FlightApparatus)</p>
-                <p>@Html.DisplayNameFor(model => model.AdultPrice) : @Html.DisplayFor(model => model.AdultPrice)</p>
-                <p>@Html.DisplayNameFor(model => model.DepartureDate) : @Html.DisplayFor(model => model.DepartureDate)</p>
-                <p>@Html.DisplayNameFor(model => model.ArrivalDate) : @Html.DisplayFor(model => model.ArrivalDate)</p>
-                <p>@Html.DisplayNameFor(model => model.IsAvailable) : @Html.DisplayFor(model => model.IsAvailable)</p>
+                <p><b>@Html.DisplayNameFor(model => model.FlightApparatus)</b> : @Html.DisplayFor(model => model.FlightApparatus)</p>
+                <p><b>@Html.DisplayNameFor(model => model.FlightOrigin)</b> : @Html.DisplayFor(model => model.FlightOrigin)</p>
+                <p><b>@Html.DisplayNameFor(model => model.AdultPrice)</b> : @Html.DisplayFor(model => model.AdultPrice)</p>
+                <p><b>@Html.DisplayNameFor(model => model.DepartureDate)</b> : @Html.DisplayFor(model => model.DepartureDate)</p>
+                <p><b>@Html.DisplayNameFor(model => model.ArrivalDate)</b> : @Html.DisplayFor(model => model.ArrivalDate)</p>
+                <p><b>@Html.DisplayNameFor(model => model.IsAvailable)</b> : @Html.DisplayFor(model => model.IsAvailable)</p>
 
                 <div>
                     @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Employee"))
@@ -27,7 +28,7 @@
             </div>
 
             <div style="text-align:right; position:relative">
-                <img src="@Url.Content(Model.ImageFullPath)" alt="Image" style="width:300px;height:270px;max-width:100%; border-radius:15%; overflow:hidden; box-shadow: 0px 30px 40px -25px rgba(0, 0, 0, 1)" />
+                <img src="@Url.Content(Model.ImageFullPath)" alt="Image" style="height:300px; width:400px; border-radius:15%; overflow:hidden; box-shadow: 0px 30px 40px -25px rgba(0, 0, 0, 1)">
             </div>
 
             @*@Html.DisplayNameFor(model => model.AdultPrice)

@@ -11,9 +11,16 @@ namespace Projeto_Aeronautica_MVC.Helpers
 
         FlightViewModel ToFlightViewModel(Flight flight);
 
+
+        Airplane ToPlane(AirplaneViewModel model, Guid imageId, bool isNew);
+
+        AirplaneViewModel ToPlaneViewModel(Airplane airplane);
+
+
         User ToUser(RegisterNewUserViewModel model, Guid imageId, bool isNew);
 
         RegisterNewUserViewModel ToUserViewModel(User user);
+
 
         User ToChangeUser(RegisterNewUserViewModel model, Guid imageId, bool isNew);
 

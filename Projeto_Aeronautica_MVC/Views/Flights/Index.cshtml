@@ -8,7 +8,7 @@
 <br />
 <section class="services" id="services" style="margin-top:60px">
 
-    <h1 class="heading"> Flights</h1>
+    <h1 class="heading"> Flight List</h1>
     <hr />
     @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Employee"))
     {
@@ -28,7 +28,7 @@
         <div class="box" style="width:50%">
             <div class="image">
                 <img src="@Url.Content(item.ImageFullPath)" alt="Image">
-                <h3> <i class="fas fa-map-marker-alt"></i> @Html.DisplayFor(modelItem => item.FlightDestiny) </h3>
+                <h3> <i class="fas fa-map-marker-alt"></i> @Html.DisplayFor(modelItem => item.FlightDestiny)</h3>
             </div>
 
             <div class="content">

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Projeto_Aeronautica_MVC.Data;
+using Projeto_Aeronautica_MVC.Data.Entities;
 using Projeto_Aeronautica_MVC.Helpers;
 using Projeto_Aeronautica_MVC.Models;
 using System;
@@ -33,12 +35,14 @@ namespace Projeto_Aeronautica_MVC.Controllers
         }
 
         // GET: AirplaneController
+        [Authorize (Roles = "Admin")]
         public IActionResult Index()
         {
             return View(_airplaneRepository.GetAll().OrderBy(p => p.Apparatus));
         }
 
         // GET: AirplaneController/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -66,51 +70,133 @@ namespace Projeto_Aeronautica_MVC.Controllers
         // POST: AirplaneController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(AirplaneViewModel model)
+        public async Task<IActionResult> Create(AirplaneViewModel model)
         {
+            if (ModelState.IsValid)
+            {
+                Guid imageId = Guid.Empty;
+
+                if (model.ImageFile != null && model.ImageFile.Length > 0)
+                {
+                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "airplanes");
+                }
+
+                var airplane = new Airplane()
+                {
+                    Id = model.Id,
+                    ImageId = imageId,
+                    Apparatus = model.Apparatus,
+                    NumberOfRows = model.NumberOfRows,
+                    TotalSeats = model.TotalSeats,
+                    SeatsPerRow = model.SeatsPerRow,
+                    AvaliableSeats = model.AvaliableSeats,
+                    IsAvailable = model.IsAvailable
+                };
+
+                await _airplaneRepository.CreateAsync(airplane);
+
+                return RedirectToAction(nameof(Index));
+            }
             return View(model);
         }
 
         // GET: AirplaneController/Edit/5
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var airplane = await _airplaneRepository.GetByIdAsync(id.Value);
+            if (airplane == null)
+            {
+                return NotFound();
+            }
+
+            var model = _converterHelper.ToPlaneViewModel(airplane);
+
+
+            return View(model);
         }
 
         // POST: AirplaneController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, IFormCollection collection)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(AirplaneViewModel model)
         {
-            try
+            if (ModelState.IsValid)
             {
+                try
+                {
+                    Guid imageId = model.ImageId;
+
+                    if (model.ImageFile != null && model.ImageFile.Length > 0)
+                    {
+                        imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "airplanes");
+                    }
+
+                    var airplane = _converterHelper.ToPlane(model, imageId, false);
+
+                    await _airplaneRepository.UpdateAsync(airplane);
+
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!await _airplaneRepository.ExistAsync(model.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            return View(model);
         }
 
         // GET: AirplaneController/Delete/5
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+            //dynamic FlightAirplane = new ExpandoObject();
+
+            var airplane = await _airplaneRepository.GetByIdAsync(id.Value);
+
+            if (airplane == null)
+            {
+                return NotFound();
+            }
+
+            return View(airplane);
         }
 
         // POST: AirplaneController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var airplane = await _airplaneRepository.GetByIdAsync(id);
+
             try
             {
+                await _airplaneRepository.DeleteAsync(airplane);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (DbUpdateException)
             {
-                return View();
+                ViewBag.ErrorTitle = $"This airplane is currently in use.";
+                ViewBag.ErrorMessage = $"Unable to delete this airplane.<br>" +
+                    $"Try to remove it's usage components...";
             }
+
+            return View("Error");
         }
     }
 }

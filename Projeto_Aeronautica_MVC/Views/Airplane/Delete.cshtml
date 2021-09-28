@@ -1,0 +1,33 @@
+﻿@model Projeto_Aeronautica_MVC.Data.Entities.Airplane
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<section class="services" id="services" style="margin-top:60px">
+
+    <h1 class="heading"> Are you sure you want to delete this airplane?</h1>
+    <hr />
+    <div>
+        <div class="box-container">
+            <div class="box">
+            <p><b>@Html.DisplayNameFor(model => model.Apparatus)</b> : @Html.DisplayFor(model => model.Apparatus)</p>
+            <p><b>@Html.DisplayNameFor(model => model.NumberOfRows)</b> : @Html.DisplayFor(model => model.NumberOfRows)</p>
+            <p><b>@Html.DisplayNameFor(model => model.TotalSeats)</b> : @Html.DisplayFor(model => model.TotalSeats)</p>
+            <p><b>@Html.DisplayNameFor(model => model.SeatsPerRow)</b> : @Html.DisplayFor(model => model.SeatsPerRow)</p>
+            <p><b>@Html.DisplayNameFor(model => model.AvaliableSeats)</b> : @Html.DisplayFor(model => model.AvaliableSeats)</p>
+            <p><b>@Html.DisplayNameFor(model => model.IsAvailable)</b> : @Html.DisplayFor(model => model.IsAvailable)</p>
+
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="Id" />
+                    <input type="submit" value="Delete" class="btn" />
+                    <a asp-action="Index" class="btn">Back to List</a>
+                </form>
+            </div>
+
+            <div style="text-align:right; position:relative">
+                <img src="@Url.Content(Model.ImageFullPath)" alt="Image" style="height:300px; width:400px; border-radius:15%; overflow:hidden; box-shadow: 0px 30px 40px -25px rgba(0, 0, 0, 1)">
+            </div>
+        </div>
+    </div>
+</section>
+

@@ -25,6 +25,9 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
         [Display(Name = "Avaliable Seats")]
         public int AvaliableSeats { get; set; }
 
+        [Display(Name = "Is Available")]
+        public bool IsAvailable { get; set; }
+
         [Display(Name = "Image")]
         public Guid ImageId { get; set; }
 

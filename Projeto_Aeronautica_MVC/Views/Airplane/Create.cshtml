@@ -1,7 +1,32 @@
-﻿
+﻿@model Projeto_Aeronautica_MVC.Models.AirplaneViewModel
 @{
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<section class="services" id="services" style="margin-top:60px">
+
+    <h1 class="heading"> Create New Airplane</h1>
+    <hr />
+</section>
+
+<section class="form-container">
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <partial name="_Airplanes" />
+
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn" />
+                    <a asp-action="Index" class="btn">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 
 

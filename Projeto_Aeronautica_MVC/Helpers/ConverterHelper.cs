@@ -29,7 +29,6 @@ namespace Projeto_Aeronautica_MVC.Helpers
             return new FlightViewModel
             {
                 Id = flight.Id,
-                ImageId = flight.ImageId,
                 FlightApparatus = flight.FlightApparatus,
                 IsAvailable = flight.IsAvailable,
                 FlightOrigin = flight.FlightOrigin,
@@ -39,6 +38,35 @@ namespace Projeto_Aeronautica_MVC.Helpers
                 AdultPrice = flight.AdultPrice,
                 //ChildPrice = flight.ChildPrice,
                 User = flight.User
+            };
+        }
+
+        public Airplane ToPlane(AirplaneViewModel model, Guid imageId, bool isNew)
+        {
+            return new AirplaneViewModel
+            {
+                Id = isNew ? 0 : model.Id,
+                ImageId = imageId,
+                Apparatus = model.Apparatus,
+                NumberOfRows = model.NumberOfRows,
+                TotalSeats = model.TotalSeats,
+                SeatsPerRow = model.SeatsPerRow,
+                AvaliableSeats = model.AvaliableSeats,
+                IsAvailable = model.IsAvailable
+            };
+        }
+
+        public AirplaneViewModel ToPlaneViewModel(Airplane airplane)
+        {
+            return new AirplaneViewModel
+            {
+                Id = airplane.Id,
+                Apparatus = airplane.Apparatus,
+                NumberOfRows = airplane.NumberOfRows,
+                TotalSeats = airplane.TotalSeats,
+                SeatsPerRow = airplane.SeatsPerRow,
+                AvaliableSeats = airplane.AvaliableSeats,
+                IsAvailable = airplane.IsAvailable
             };
         }
 

@@ -5,11 +5,11 @@
 
 <section class="services" id="services" style="margin-top:60px">
 
-<h1 class="heading"> Delete</h1>
+<h1 class="heading"> Update User Info</h1>
 <hr />
     </section>
 
-<section class="form-container" style="margin-top:60px">
+<section class="form-container">
     <div class="row">
         <div class="col-md-4 offset-md-4">
             <form method="post" enctype="multipart/form-data">
@@ -18,44 +18,50 @@
                 <div class="inputBox">
                     <span>First Name</span>
                     <input asp-for="FirstName" class="form-control" />
-                    <span asp-validation-for="FirstName" class="text-warning"></span>
+
                 </div>
+                <h3> <span asp-validation-for="FirstName" class="text-warning"></span></h3>
 
                 <div class="inputBox">
                     <span>Last Name</span>
                     <input asp-for="LastName" class="form-control" />
-                    <span asp-validation-for="LastName" class="text-warning"></span>
+
                 </div>
+                <h3><span asp-validation-for="LastName" class="text-warning"></span></h3>
 
                 <div class="inputBox">
                     <span>Image</span>
                     <input asp-for="ImageFile" class="form-control" type="file" />
-                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+
                 </div>
+                <h3><span asp-validation-for="ImageFile" class="text-danger"></span></h3>
 
                 <div class="inputBox">
                     <span>Country</span>
-                    <select asp-for="CountryId" asp-items="Model.Countries" class="form-control"></select>
-                    <span asp-validation-for="CountryId" class="text-danger"></span>
+                    <select style="font-size:17px" asp-for="CountryId" asp-items="Model.Countries" class="form-control"></select>
+
                 </div>
+                <h3><span asp-validation-for="CountryId" class="text-danger"></span></h3>
 
                 <div class="inputBox">
                     <span>City</span>
-                    <select asp-for="CityId" asp-items="Model.Cities" class="form-control"></select>
-                    <span asp-validation-for="CityId" class="text-danger"></span>
+                    <select style="font-size:17px" asp-for="CityId" asp-items="Model.Cities" class="form-control"></select>
                 </div>
+                <h3><span asp-validation-for="CityId" class="text-danger"></span></h3>
 
                 <div class="inputBox">
                     <span>Adress</span>
                     <input asp-for="Address" class="form-control" />
-                    <span asp-validation-for="Address" class="text-warning"></span>
+
                 </div>
+                <h3><span asp-validation-for="Address" class="text-warning"></span></h3>
 
                 <div class="inputBox">
                     <span>Phone Number</span>
                     <input asp-for="PhoneNumber" class="form-control" />
-                    <span asp-validation-for="PhoneNumber" class="text-warning"></span>
+
                 </div>
+                <h3><span asp-validation-for="PhoneNumber" class="text-warning"></span></h3>
 
                 <div class="form-group">
                     <input type="submit" value="Update" class="btn" />

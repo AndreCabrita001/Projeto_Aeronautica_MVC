@@ -59,7 +59,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
         }
 
         // GET: Flights/Create
-        [Authorize(Roles = "Employee")]
+        
         public IActionResult Create()
         {
             return View();
@@ -69,6 +69,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Employee")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(FlightViewModel model)
         {
@@ -120,6 +121,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize (Roles = "Employee")]
         public async Task<IActionResult> Edit(FlightViewModel model)
         {
             if (ModelState.IsValid)
@@ -194,8 +196,19 @@ namespace Projeto_Aeronautica_MVC.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var flight = await _flightRepository.GetByIdAsync(id);
-            await _flightRepository.DeleteAsync(flight);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _flightRepository.DeleteAsync(flight);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException)
+            {
+                ViewBag.ErrorTitle = $"This flight is currently in use.";
+                ViewBag.ErrorMessage = $"Unable to delete this flight.<br>" +
+                    $"Try to remove it's usage components...";
+            }
+
+            return View("Error");
         }
 
     }

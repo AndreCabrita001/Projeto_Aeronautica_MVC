@@ -5,75 +5,87 @@
 <h1>Flight List</h1>
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css" />
+
 <br />
 <section class="services" id="services" style="margin-top:60px">
 
-
-    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Employee"))
+    <h1 class="heading"> Airplane List</h1>
+    <hr />
+    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
     {
-    <p>
-        <a asp-action="Create" class="btn">Create New</a>
-    </p>
+        <p>
+            <a asp-action="Create" class="btn">Create New</a>
+        </p>
     }
 </section>
     
-}
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Apparatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NumberOfRows)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TotalSeats)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AvaliableSeats)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageId)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Apparatus)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumberOfRows)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TotalSeats)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AvaliableSeats)
-            </td>
-            <td>
-                @if (!string.IsNullOrEmpty(item.ImageFullPath))
+<section class="form-container">
+    <form action="">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        <div class="inputBox">
+                            <b><span>@Html.DisplayNameFor(model => model.Apparatus)</span></b>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="inputBox">
+                            <b><span>@Html.DisplayNameFor(model => model.NumberOfRows)</span></b>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="inputBox">
+                            <b><span>@Html.DisplayNameFor(model => model.TotalSeats)</span></b>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="inputBox">
+                            <b><span>@Html.DisplayNameFor(model => model.AvaliableSeats)</span></b>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
                 {
-                    <img src="@Url.Content(item.ImageFullPath)" alt="Image" style="width:100px;height:150px;max-width:100%;height:auto">
-                }
-            </td>
-            <td>
-                @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
-                {
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
-                }
-            </td>
-        </tr>
-        }
-    </tbody>
-</table>
+                    <tr>
+                        <td>
+                            <div class="inputBox">
+                                <span>@Html.DisplayFor(modelItem => item.Apparatus)</span>
 
+                                <img src="@Url.Content(item.ImageFullPath)" alt="Image" style="width:100px;height:150px;max-width:100%;height:auto">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="inputBox">
+                                <span>@Html.DisplayFor(modelItem => item.NumberOfRows)</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="inputBox">
+                                <span>@Html.DisplayFor(modelItem => item.TotalSeats)</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="inputBox">
+                                <span>@Html.DisplayFor(modelItem => item.AvaliableSeats)</span>
+                            </div>
+                        </td>
+                        <td>
+                            @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn">Edit</a>
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn">Details</a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn">Delete</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </form>
+</section>
 @section Scripts{
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Projeto_Aeronautica_MVC.Data;
 using Projeto_Aeronautica_MVC.Data.Entities;
 using Projeto_Aeronautica_MVC.Models;
@@ -23,6 +24,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
             _flashMessage = flashMessage;
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCity(int? id)
         {
             if (id == null)
@@ -36,10 +38,22 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 return NotFound();
             }
 
-            var countryId = await _countryRepository.DeleteCityAsync(city);
-            return this.RedirectToAction($"Details", new { id = countryId });
+            try
+            {
+                var countryId = await _countryRepository.DeleteCityAsync(city);
+                return this.RedirectToAction($"Details", new { id = countryId });
+            }
+            catch (DbUpdateException)
+            {
+                ViewBag.ErrorTitle = $"Esta cidade está atualmente em uso.";
+                ViewBag.ErrorMessage = $"Impossivel apagar, sendo que algum componente da base de dados<br>" +
+                    $"está atualmente a fazer uso desta cidade...";
+            }
+
+            return View("Error");
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditCity(int? id)
         {
             if (id == null)
@@ -58,6 +72,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditCity(City city)
         {
             if (this.ModelState.IsValid)
@@ -101,11 +116,13 @@ namespace Projeto_Aeronautica_MVC.Controllers
             return this.View(model);
         }
 
+        [Authorize (Roles = "Admin")]
         public IActionResult Index()
         {
             return View(_countryRepository.GetCountriesWithCities());
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -129,6 +146,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(Country country)
         {
             if (ModelState.IsValid)
@@ -166,6 +184,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(Country country)
         {
             if (ModelState.IsValid)
@@ -177,6 +196,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
             return View(country);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -190,8 +210,18 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 return NotFound();
             }
 
-            await _countryRepository.DeleteAsync(country);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _countryRepository.DeleteAsync(country);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException)
+            {
+                ViewBag.ErrorTitle = $"Este país está atualmente em uso.";
+                ViewBag.ErrorMessage = $"Impossivel apagar, sendo que algum componente da base de dados<br>" +
+                    $"está atualmente a fazer uso deste país...";
+            }
+            return View("Error");
         }
     }
 }

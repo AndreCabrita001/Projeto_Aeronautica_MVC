@@ -7,7 +7,7 @@
     
     <style>
         /*body {
-                background-image: url('../../images/airport_image.jpg');
+                background-image: url('../../images/orange_background.jpg');
                 background-repeat: no-repeat;
                 background-size: cover;
             }*/
@@ -15,7 +15,6 @@
 </head>
 
 <section class="services" id="services" style="margin-top:60px">
-
 
     @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
     {
@@ -36,62 +35,71 @@
                     <div class="inputBox">
                         <span>First Name</span>
                         <input asp-for="FirstName" class="form-control" />
-                        <span asp-validation-for="FirstName" class="text-warning"></span>
                     </div>
+                    <h3><span asp-validation-for="FirstName" class="text-warning"></span></h3>
 
                     <div class="inputBox">
                         <span>Last Name</span>
                         <input asp-for="LastName" class="form-control" />
-                        <span asp-validation-for="LastName" class="text-warning"></span>
+
                     </div>
+                    <h3><span asp-validation-for="LastName" class="text-warning"></span></h3>
 
                     <div class="inputBox">
                         <span>Username</span>
                         <input asp-for="Username" class="form-control" />
-                        <span asp-validation-for="Username" class="text-warning"></span>
+
                     </div>
+                    <h3><span asp-validation-for="Username" class="text-warning"></span></h3>
 
                     <div class="inputBox">
                         <span>Image</span>
                         <input asp-for="ImageFile" class="form-control" type="file" />
-                        <span asp-validation-for="ImageFile" class="text-danger"></span>
+
                     </div>
+                    <h3><span asp-validation-for="ImageFile" class="text-warning"></span></h3>
 
                     <div class="inputBox">
                         <span>Country</span>
-                        <select asp-for="CountryId" asp-items="Model.Countries" class="form-control"></select>
-                        <span asp-validation-for="CountryId" class="text-danger"></span>
+                        <select style="font-size:17px" asp-for="CountryId" asp-items="Model.Countries" class="form-control"></select>
+
                     </div>
+                    <h3><span asp-validation-for="CountryId" class="text-warning"></span></h3>
 
                     <div class="inputBox">
                         <span>City</span>
-                        <select asp-for="CityId" asp-items="Model.Cities" class="form-control"></select>
-                        <span asp-validation-for="CityId" class="text-danger"></span>
+                        <select style="font-size:17px" asp-for="CityId" asp-items="Model.Cities" class="form-control"></select>
+
                     </div>
+                    <h3><span asp-validation-for="CityId" class="text-warning"></span></h3>
 
                     <div class="inputBox">
                         <span>Adress</span>
                         <input asp-for="Address" class="form-control" />
-                        <span asp-validation-for="Address" class="text-warning"></span>
+
                     </div>
+                    <h3><span asp-validation-for="Address" class="text-warning"></span></h3>
 
                     <div class="inputBox">
                         <span>Phone Number</span>
                         <input asp-for="PhoneNumber" class="form-control" />
-                        <span asp-validation-for="PhoneNumber" class="text-warning"></span>
+
                     </div>
+                    <h3><span asp-validation-for="PhoneNumber" class="text-warning"></span></h3>
 
                     <div class="inputBox">
                         <span>Password</span>
                         <input asp-for="Password" type="password" class="form-control" />
-                        <span asp-validation-for="Password" class="text-warning"></span>
+
                     </div>
+                    <h3><span asp-validation-for="Password" class="text-warning"></span></h3>
 
                     <div class="inputBox">
                         <span>Confirm Password</span>
                         <input asp-for="Confirm" type="password" class="form-control" />
-                        <span asp-validation-for="Confirm" class="text-warning"></span>
+
                     </div>
+                    <h3><span asp-validation-for="Confirm" class="text-warning"></span></h3>
 
                     <div class="form-group">
                         <input type="submit" value="Register New User" class="btn" />

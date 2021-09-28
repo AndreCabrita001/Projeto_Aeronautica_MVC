@@ -57,6 +57,7 @@ namespace Projeto_Aeronautica_MVC.Data
                     UserName = "aandrecaldeira15@gmail.com",
                     PhoneNumber = "212343555",
                     Address = "Rua Jau 33",
+                    ImageId = new Guid("a0307b6b-8657-4f43-ac27-044e03cab8b3"),
                     CityId = _context.Countries.FirstOrDefault().Cities.FirstOrDefault().Id,
                     City = _context.Countries.FirstOrDefault().Cities.FirstOrDefault()
                 };
@@ -69,6 +70,7 @@ namespace Projeto_Aeronautica_MVC.Data
                     UserName = "aandrecaldeira30@gmail.com",
                     PhoneNumber = "424686000",
                     Address = "Rua Jau 66",
+                    ImageId = new Guid("02e9916e-913c-4b40-8b0b-b8dce5f5e8f9"),
                     CityId = _context.Countries.FirstOrDefault().Cities.FirstOrDefault().Id,
                     City = _context.Countries.FirstOrDefault().Cities.FirstOrDefault()
                 };
@@ -111,20 +113,20 @@ namespace Projeto_Aeronautica_MVC.Data
                 await _userHelper.AddUserToRoleAsync(user2, "Employee");
             }
 
-            var plane = new Airplane();
-
             if (!_context.Airplanes.Any())
             {
+                var plane = new Airplane();
+
                 AddPlane(plane);
 
                 await _context.SaveChangesAsync();
-            }
 
-            if (!_context.Flights.Any())
-            {
-                AddFlight(plane, user);
+                if (!_context.Flights.Any())
+                {
+                    AddFlight(plane, user);
 
-                await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
+                }
             }
         }
 

@@ -1,27 +1,34 @@
 ﻿@model Projeto_Aeronautica_MVC.Models.CityViewModel
 
-<h4>City</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="AddCity">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="CountryId" />
+<section class="services" id="services" style="margin-top:60px">
 
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
+    <h1 class="heading">Add City</h1>
+    <hr />
 
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-success">Back to List</a>
-            </div>
-        </form>
+</section>
+
+<section class="form-container">
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="AddCity">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="CountryId" />
+
+                <div class="inputBox">
+                    <span>Name</span>
+                    <input asp-for="Name" class="form-control" />
+
+                </div>
+                <h3><span asp-validation-for="Name" class="text-danger"></span></h3>
+
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn" />
+                    <a asp-action="Index" class="btn">Back to List</a>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
+</section>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
