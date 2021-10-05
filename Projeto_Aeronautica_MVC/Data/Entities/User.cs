@@ -17,9 +17,11 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
         [MaxLength(100,ErrorMessage = "The field {0} only can contain {1} characters length.")]
         public string Address { get; set; }
 
-        public int CityId { get; set; }
+        public string Country { get; set; }
 
-        public City City { get; set; }
+        //public int CityId { get; set; }
+
+        //public City City { get; set; }
 
         [Display(Name = "Full Name")]
         public string FullName => $"{FirstName} {LastName}";

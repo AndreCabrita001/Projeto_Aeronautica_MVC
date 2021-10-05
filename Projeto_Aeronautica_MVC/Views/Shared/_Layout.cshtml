@@ -26,85 +26,17 @@
         <link href='https://css.gg/airplane.css' rel='stylesheet'>
 
         <link href='https://css.gg/user-add.css' rel='stylesheet'>
+
+        <link href='https://css.gg/album.css' rel='stylesheet'>
         <!-- custom css file cdn link  -->
         <link rel="stylesheet" href="~/css/style.css">
+
+        <link rel="stylesheet" href="~/build/css/countrySelect.css">
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/build/js/countrySelect.js"></script>
     </head>
     <body>
-
-        @*<header>
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-                <div class="container">
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Projeto Aeronautica</a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                        <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Flights" asp-action="Index">Flights</a>
-                            </li>
-
-                            @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
-                            {
-
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Employees</a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Airplane" asp-action="Index">Airplanes</a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Countries" asp-action="Index">Countries</a>
-                                </li>
-
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
-                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Register">Employees</a></li>
-                                        <li><a class="dropdown-item" asp-area="" asp-controller="Airplane" asp-action="Index">Airplanes</a></li>
-                                        <li><a class="dropdown-item" asp-area="" asp-controller="" asp-action="">Countries</a></li>
-                                    </ul>
-                                </li>
-                            }
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                            </li>
-                        </ul>
-                        <ul class="nav navbar-nav navbar-right">
-                            @if (this.User.Identity.IsAuthenticated)
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="ChangeUser">@this.User.Identity.Name</a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
-                                </li>
-
-                                <div>
-                                    <img src="@TempData["ImageId"]" alt="Image" style="width:150px;height:200px;max-width:50%;height:auto; position:relative; top:25px" />
-                                    @{ TempData.Keep("ImageId"); }
-                                </div>
-                            }
-
-                            else
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
-                                </li>
-                            }
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-        </header>*@
-
+        
         <header class="header">
 
             <a class="logo" asp-area="" asp-controller="Home" asp-action="Index"><i class="fas fa-plane"></i>Projeto Aero</a>
@@ -127,6 +59,8 @@
 
                 <a asp-area="" asp-controller="Flights" asp-action="Index"><center><i class="fas fa-plane"></i></center>Flights</a>
 
+
+
                 @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
                 {
                     <a asp-area="" asp-controller="Countries" asp-action="Index"><center><i class="gg-flag"></i></center>Countries</a>
@@ -135,8 +69,11 @@
 
                     <a asp-area="" asp-controller="Account" asp-action="Register"><center><i class="gg-user-add"></i></center>Employees</a>
                 }
+                else if (this.User.Identity.IsAuthenticated && !this.User.IsInRole("Employee"))
+                {
+                    <a asp-area="" asp-controller="Bookings" asp-action="Index"><center><i class="gg-album"></i></center>Bookings</a>
+                }
             </nav>
-
             @if (!this.User.Identity.IsAuthenticated)
             {
                 <div action="" class="login-form">
@@ -147,19 +84,33 @@
             }
             else
             {
-        <div action="" class="login-form">
-            <div>
-                <center>
-                    <img src="@TempData["ImageId"]" alt="Image" style="width:150px;height:200px;max-width:50%;height:auto; position:center; margin-bottom:20px; border-radius:15%; overflow:hidden; box-shadow: 0px 30px 40px -25px rgba(0, 0, 0, 1)" />
-                    @{ TempData.Keep("ImageId"); }
-                </center>
-            </div>
-            <div>
-                <a asp-area="" asp-controller="Account" asp-action="ChangeUser"><h3>@this.User.Identity.Name</h3></a>
+                <div action="" class="login-form">
+                    <div>
+                        <center>
+                            <img src="@TempData["ImageId"]" alt="Image" style="width:150px;height:200px;max-width:50%;height:auto; position:center; margin-bottom:20px; border-radius:15%; overflow:hidden; box-shadow: 0px 30px 40px -25px rgba(0, 0, 0, 1)" />
+                            @{ TempData.Keep("ImageId"); }
+                        </center>
+                    </div>
+                    <div>
+                        @if (this.User.IsInRole("Admin"))
+                        {
+                           <center><h3><b>Admin</b></h3></center>
+                        }
+                        else if (this.User.IsInRole("Employee"))
+                        {
+                           <center><h3><b>Employee</b></h3></center>
+                        }
+                        else
+                        {
+                           <center><h3><b>Client</b></h3></center>
+                        }
+                        <br />
 
-                <a asp-area="" asp-controller="Account" asp-action="Logout" type="submit" class="btn">Logout</a>
-            </div>
-        </div>
+                        <a asp-area="" asp-controller="Account" asp-action="ChangeUser"><h3>@this.User.Identity.Name</h3></a>
+
+                        <a asp-area="" asp-controller="Account" asp-action="Logout" type="submit" class="btn">Logout</a>
+                    </div>
+                </div>
             }
 
         </header>
@@ -203,6 +154,8 @@
         @await RenderSectionAsync("Scripts", required: false)
     </body>
 </html>
+
+    
 
 <!--Start of Tawk.to Script-->
 <script type="text/javascript">

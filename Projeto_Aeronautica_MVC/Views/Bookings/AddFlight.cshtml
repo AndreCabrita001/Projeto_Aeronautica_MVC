@@ -1,0 +1,42 @@
+﻿@model Projeto_Aeronautica_MVC.Models.AddTicketViewModel
+@{
+    ViewData["Title"] = "AddBooking";
+}
+
+<section class="services" id="services" style="margin-top:60px">
+
+    <h1 class="heading">Add Flight to Booking</h1>
+    <hr />
+</section>
+
+<section class="form-container">
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="AddFlight">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="inputBox">
+                    <span>Flight</span>
+                    <select style="font-size:17px" asp-for="FlightId" asp-items="Model.Flights" class="form-control"></select>
+
+                </div>
+                <h3><span asp-validation-for="FlightId" class="text-danger"></span></h3>
+
+                <div class="inputBox">
+                    <span>Quantity</span>
+                    <input asp-for="Quantity" class="form-control" />
+
+                </div>
+                <h3><span asp-validation-for="Quantity" class="text-danger"></span></h3>
+
+                <div class="form-group">
+                    <input type="submit" value="Add Flight" class="btn" />
+                    <a asp-action="Index" class="btn">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+@section Scripts {
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

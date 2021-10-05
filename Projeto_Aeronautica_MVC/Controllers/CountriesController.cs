@@ -24,7 +24,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
             _flashMessage = flashMessage;
         }
 
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCity(int? id)
         {
             if (id == null)
@@ -53,7 +52,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
             return View("Error");
         }
 
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditCity(int? id)
         {
             if (id == null)
@@ -72,7 +70,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditCity(City city)
         {
             if (this.ModelState.IsValid)
@@ -116,13 +113,11 @@ namespace Projeto_Aeronautica_MVC.Controllers
             return this.View(model);
         }
 
-        [Authorize (Roles = "Admin")]
         public IActionResult Index()
         {
             return View(_countryRepository.GetCountriesWithCities());
         }
 
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -146,7 +141,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(Country country)
         {
             if (ModelState.IsValid)
@@ -184,7 +178,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(Country country)
         {
             if (ModelState.IsValid)
@@ -217,9 +210,9 @@ namespace Projeto_Aeronautica_MVC.Controllers
             }
             catch (DbUpdateException)
             {
-                ViewBag.ErrorTitle = $"Este país está atualmente em uso.";
-                ViewBag.ErrorMessage = $"Impossivel apagar, sendo que algum componente da base de dados<br>" +
-                    $"está atualmente a fazer uso deste país...";
+                ViewBag.ErrorTitle = $"This reservation is currently in use...";
+                ViewBag.ErrorMessage = $"Unable to delete this data due to its usage ramifications<br>" +
+                    $"Try again later...";
             }
             return View("Error");
         }

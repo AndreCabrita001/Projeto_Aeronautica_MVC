@@ -12,13 +12,11 @@ namespace Projeto_Aeronautica_MVC.Data
     {
         private readonly DataContext _context;
         private readonly IUserHelper _userHelper;
-        private Random _random;
 
         public SeedDb(DataContext context,IUserHelper userHelper)
         {
             _context = context;
             _userHelper = userHelper;
-            _random = new Random();
         }
 
         public async Task SeedAsync()
@@ -58,8 +56,7 @@ namespace Projeto_Aeronautica_MVC.Data
                     PhoneNumber = "212343555",
                     Address = "Rua Jau 33",
                     ImageId = new Guid("a0307b6b-8657-4f43-ac27-044e03cab8b3"),
-                    CityId = _context.Countries.FirstOrDefault().Cities.FirstOrDefault().Id,
-                    City = _context.Countries.FirstOrDefault().Cities.FirstOrDefault()
+                    Country = "Portugal"
                 };
 
                 user2 = new User
@@ -71,10 +68,8 @@ namespace Projeto_Aeronautica_MVC.Data
                     PhoneNumber = "424686000",
                     Address = "Rua Jau 66",
                     ImageId = new Guid("02e9916e-913c-4b40-8b0b-b8dce5f5e8f9"),
-                    CityId = _context.Countries.FirstOrDefault().Cities.FirstOrDefault().Id,
-                    City = _context.Countries.FirstOrDefault().Cities.FirstOrDefault()
+                    Country = "Portugal"
                 };
-
 
                 var result = await _userHelper.AddUserAsync(user, "123456");
                 var result2 = await _userHelper.AddUserAsync(user2, "123456");
@@ -88,7 +83,6 @@ namespace Projeto_Aeronautica_MVC.Data
                 {
                     throw new InvalidOperationException("Could not create the user2 in seeder");
                 }
-
 
                 await _userHelper.AddUserToRoleAsync(user, "Admin");
                 await _userHelper.AddUserToRoleAsync(user2, "Employee");
@@ -137,7 +131,6 @@ namespace Projeto_Aeronautica_MVC.Data
             plane.ImageId = new Guid("ed8cbf78-f56b-4666-b486-a2e82b37f9b5");
             plane.TotalSeats = 300;
             plane.AvaliableSeats = 300;
-
             _context.Airplanes.Add(plane);
         }
 
@@ -146,13 +139,13 @@ namespace Projeto_Aeronautica_MVC.Data
             _context.Flights.Add(new Flight
             {
                 IsAvailable = true,
-                FlightApparatus = plane.Apparatus,
+                AirplaneName = plane.Apparatus,
                 FlightOrigin = "Portugal",
                 FlightDestiny = "Espanha",
                 ImageId = plane.ImageId,
                 DepartureDate = DateTime.Now.AddDays(20),
                 ArrivalDate = DateTime.Now.AddDays(21),
-                AdultPrice = 300,
+                Price = 300,
                 Airplane = plane,
                 User = user
             });

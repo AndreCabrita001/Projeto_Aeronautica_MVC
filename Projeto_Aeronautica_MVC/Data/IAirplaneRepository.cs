@@ -1,4 +1,5 @@
-﻿using Projeto_Aeronautica_MVC.Data.Entities;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Projeto_Aeronautica_MVC.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,7 @@ namespace Projeto_Aeronautica_MVC.Data
     public interface IAirplaneRepository: IGenericRepository<Airplane>
     {
         public IQueryable GetAllWithFlights();
+
+        public IEnumerable<SelectListItem> GetComboFlightApparatus();
     }
 }

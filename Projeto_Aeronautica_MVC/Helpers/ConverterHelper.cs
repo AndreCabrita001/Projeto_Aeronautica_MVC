@@ -12,14 +12,13 @@ namespace Projeto_Aeronautica_MVC.Helpers
             {
                 Id = isNew ? 0 : model.Id,
                 ImageId = imageId,
-                FlightApparatus = model.FlightApparatus,
+                AirplaneId = model.AirplaneId,
                 IsAvailable = model.IsAvailable,
                 FlightOrigin = model.FlightOrigin,
                 FlightDestiny = model.FlightDestiny,
                 DepartureDate = model.DepartureDate,
                 ArrivalDate = model.ArrivalDate,
-                AdultPrice = model.AdultPrice,
-                //ChildPrice = model.ChildPrice,
+                Price = model.Price,
                 User = model.User
             };
         }
@@ -35,7 +34,7 @@ namespace Projeto_Aeronautica_MVC.Helpers
                 FlightDestiny = flight.FlightDestiny,
                 DepartureDate = flight.DepartureDate,
                 ArrivalDate = flight.ArrivalDate,
-                AdultPrice = flight.AdultPrice,
+                Price = flight.Price,
                 //ChildPrice = flight.ChildPrice,
                 User = flight.User
             };
@@ -81,7 +80,8 @@ namespace Projeto_Aeronautica_MVC.Helpers
                 UserName = model.Username,
                 Address = model.Address,
                 PhoneNumber = model.PhoneNumber,
-                CityId = model.CityId,
+                Country = model.SelectedCountry,
+                //CityId = model.CityId,
             };
         }
 
@@ -94,7 +94,7 @@ namespace Projeto_Aeronautica_MVC.Helpers
                 Username = user.UserName,
                 Address = user.Address,
                 PhoneNumber = user.PhoneNumber,
-                CityId = user.CityId,
+                //CityId = user.CityId,
             };
         }
 
@@ -107,7 +107,7 @@ namespace Projeto_Aeronautica_MVC.Helpers
                 ImageId = imageId,
                 Address = model.Address,
                 PhoneNumber = model.PhoneNumber,
-                CityId = model.CityId
+                //CityId = model.CityId
             };
         }
 

@@ -59,10 +59,14 @@ namespace Projeto_Aeronautica_MVC.Controllers
         }
 
         // GET: Flights/Create
-        
         public IActionResult Create()
         {
-            return View();
+            var model = new FlightViewModel
+            {
+                Flights = _airplaneRepository.GetComboFlightApparatus(),
+            };
+
+            return View(model);
         }
 
         // POST: Flights/Create
@@ -75,9 +79,9 @@ namespace Projeto_Aeronautica_MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                var plane = new Airplane();
+                //var plane = new Airplane();
 
-                plane = await _airplaneRepository.GetByIdAsync(model.Id);
+                //plane = await _airplaneRepository.GetByIdAsync(model.Id);
 
                 Guid imageId = Guid.Empty;
 
@@ -86,7 +90,11 @@ namespace Projeto_Aeronautica_MVC.Controllers
                     imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "airplanes");
                 }
 
+                var airplane = await _airplaneRepository.GetByIdAsync(model.AirplaneId);
+
                 var flight = _converterHelper.ToFlight(model, imageId, true);
+
+                flight.AirplaneName = airplane.Apparatus;
 
                 flight.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                 await _flightRepository.CreateAsync(flight);
@@ -146,7 +154,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
                         FlightDestiny = model.FlightDestiny,
                         DepartureDate = model.DepartureDate,
                         ArrivalDate = model.ArrivalDate,
-                        AdultPrice = model.AdultPrice,
+                        Price = model.Price,
                         User = model.User
                     };
 

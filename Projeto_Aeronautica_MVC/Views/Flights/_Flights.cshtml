@@ -1,61 +1,62 @@
 ﻿@model Projeto_Aeronautica_MVC.Models.FlightViewModel
 
-<div class="inputBox">
-    <span>Flight Apparatus</span>
-    <input asp-for="FlightApparatus" class="form-control" />
-    
-</div>
-<h3><span asp-validation-for="FlightApparatus" class="text-danger"></span></h3>
-
-<div class="inputBox">
-    <span>Flight Origin</span>
-    <input asp-for="FlightOrigin" class="form-control" />
-    
-</div>
-<h3><span asp-validation-for="FlightOrigin" class="text-danger"></span></h3>
-
-<div class="inputBox">
-    <span>Flight Destiny</span>
-    <input asp-for="FlightDestiny" class="form-control" />
-    
-</div>
-<h3><span asp-validation-for="FlightDestiny" class="text-danger"></span></h3>
-
-<div class="inputBox">
-    <span>Price</span>
-    <input asp-for="AdultPrice" class="form-control" />
-    
-</div>
-<h3><span asp-validation-for="AdultPrice" class="text-danger"></span></h3>
-
-<div class="inputBox">
-    <span>Departure Date</span>
-    <input asp-for="DepartureDate" class="form-control" />
-    
-</div>
-<h3><span asp-validation-for="DepartureDate" class="text-danger"></span></h3>
-
-<div class="inputBox">
-    <span>Arrival Date</span>
-    <input asp-for="ArrivalDate" class="form-control" />
-    
-</div>
-<h3><span asp-validation-for="ArrivalDate" class="text-danger"></span></h3>
-
-<div class="inputBox">
-    <div class="form-group form-check">
-        <label class="form-check-label">
-            <input class="form-check-input" asp-for="IsAvailable" /> <span>Is Avaliable?</span>@*@Html.DisplayNameFor(model => model.IsAvailable)*@
-        </label>
+    <div class="inputBox">
+        <span>Flight</span>
+        <select style="font-size:17px" asp-for="AirplaneId" id="flightApparatusId" asp-items="Model.Flights" class="form-control"></select>
     </div>
-</div>
+    <h3><span asp-validation-for="AirplaneId" class="text-danger"></span></h3>
 
-@section Scripts {
+    <div class="inputBox">
+        <span>Flight Origin</span>
+        <input asp-for="FlightOrigin" class="form-control" />
 
-    <script type="text/javascript">$(document).ready(function)(){
-        $('.date').datepicker({
-        orientation: "bottom",
-        autoclose: true
-        }
-    });</script>
-}
+    </div>
+    <h3><span asp-validation-for="FlightOrigin" class="text-danger"></span></h3>
+
+    <div class="inputBox">
+        <span>Flight Destiny</span>
+        <input asp-for="FlightDestiny" class="form-control" />
+
+    </div>
+    <h3><span asp-validation-for="FlightDestiny" class="text-danger"></span></h3>
+
+    <div class="inputBox">
+        <span>Price</span>
+        <input asp-for="Price" class="form-control" />
+
+    </div>
+    <h3><span asp-validation-for="Price" class="text-danger"></span></h3>
+
+    <div class="inputBox">
+        <span>Departure Date</span>
+        <input asp-for="DepartureDate" class="form-control" />
+
+    </div>
+    <h3><span asp-validation-for="DepartureDate" class="text-danger"></span></h3>
+
+    <div class="inputBox">
+        <span>Arrival Date</span>
+        <input asp-for="ArrivalDate" class="form-control" />
+
+    </div>
+    <h3><span asp-validation-for="ArrivalDate" class="text-danger"></span></h3>
+
+    <div class="inputBox">
+        <div class="form-group form-check">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="IsAvailable" /> <span>Is Avaliable?</span>
+            </label>
+        </div>
+    </div>
+
+    @section Scripts {
+
+        <script type="text/javascript">
+            $(document).ready(function)(){
+                $('.date').datepicker({
+                    orientation: "bottom",
+                    autoclose: true
+                });
+            });
+        </script>
+    }

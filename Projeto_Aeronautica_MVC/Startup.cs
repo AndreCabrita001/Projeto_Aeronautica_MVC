@@ -83,6 +83,8 @@ namespace Projeto_Aeronautica_MVC
 
             services.AddScoped<ICountryRepository, CountryRepository>();
 
+            services.AddScoped<IBookingRepository, BookingRepository>();
+
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/Account/NotAuthorized";

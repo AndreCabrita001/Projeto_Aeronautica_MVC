@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Projeto_Aeronautica_MVC.Data.Entities;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,24 @@ namespace Projeto_Aeronautica_MVC.Data
         public IQueryable GetAllWithFlights()
         {
             return _context.Airplanes.Include(p => p.Apparatus);
+        }
+
+        public IEnumerable<SelectListItem> GetComboFlightApparatus()
+        {
+            var list = _context.Airplanes.Select(p => new SelectListItem
+            {
+                Text = p.Apparatus,
+                Value = p.Id.ToString()
+
+            }).ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "(Select an airplane...)",
+                Value = "0"
+            });
+
+            return list;
         }
     }
 }

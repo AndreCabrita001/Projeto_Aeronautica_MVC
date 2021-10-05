@@ -1,0 +1,105 @@
+﻿@model IEnumerable<Projeto_Aeronautica_MVC.Data.Entities.Booking>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<section class="services" id="services" style="margin-top:60px">
+
+    <h1 class="heading">Personal Bookings</h1>
+    <hr />
+
+</section>
+
+<section class="form-container">
+    <p>
+        <a asp-action="Create" class="btn">Create New</a>
+    </p>
+    <form action="">
+
+        <table class="table">
+
+            <thead>
+                <tr>
+                    @if (this.User.IsInRole("Admin"))
+                    {
+                <th>
+                    <div class="inputBox">
+                        <span>@Html.DisplayNameFor(model => model.User.FullName)</span>
+                    </div>
+                </th>
+}
+                    <th>
+                        <div class="inputBox">
+                            <span>@Html.DisplayNameFor(model => model.BookingDateLocal)</span>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="inputBox">
+                            <span>@Html.DisplayNameFor(model => model.DepartureDate)</span>
+                        </div>
+
+                    </th>
+                    <th>
+                        <div class="inputBox">
+                            <span>@Html.DisplayNameFor(model => model.Lines)</span>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="inputBox">
+                            <span>@Html.DisplayNameFor(model => model.Quantity)</span>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="inputBox">
+                            <span>@Html.DisplayNameFor(model => model.Value)</span>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+    <tr>
+        @if (this.User.IsInRole("Admin"))
+        {
+<th>
+    <div class="inputBox">
+        <span>@Html.DisplayFor(modelItem => item.User.FullName)</span>
+    </div>
+</th>}
+        <td>
+            <div class="inputBox">
+                <span>@Html.DisplayFor(modelItem => item.BookingDateLocal)</span>
+            </div>
+        </td>
+        <td>
+            <div class="inputBox">
+                <span>@Html.DisplayFor(modelItem => item.DepartureDate)</span>
+            </div>
+        </td>
+        <td>
+            <div class="inputBox">
+                <span> @Html.DisplayFor(modelItem => item.Lines)</span>
+            </div>
+        </td>
+        <td>
+            <div class="inputBox">
+                <span>@Html.DisplayFor(modelItem => item.Quantity)</span>
+            </div>
+
+        </td>
+        <td>
+            <div class="inputBox">
+                <span>@Html.DisplayFor(modelItem => item.Value)</span>
+            </div>
+        </td>
+        <td>
+            <a asp-action="Departure" asp-route-id="@item.Id" class="btn" id="btnDeliver">Deliver</a>
+            <a asp-action="Delete" asp-route-id="@item.Id" class="btn" id="btnDelete">Delete</a>
+        </td>
+    </tr>}
+            </tbody>
+        </table>
+    </form>
+</section>

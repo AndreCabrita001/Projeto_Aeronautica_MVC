@@ -10,6 +10,12 @@
 
     <h1 class="heading"> Flight List</h1>
     <hr />
+    
+
+</section>
+
+<section class="form-container">
+
     @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Employee"))
     {
         <p>
@@ -17,43 +23,95 @@
         </p>
     }
 
+    <form action="">
+        <table class="table">
+
+            <thead>
+                <tr>
+                    <th>
+                        <div class="inputBox">
+                            <span>@Html.DisplayNameFor(model => model.AirplaneName)</span>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="inputBox">
+                            <span>@Html.DisplayNameFor(model => model.Price)</span>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="inputBox">
+                            <span>@Html.DisplayNameFor(model => model.FlightOrigin)</span>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="inputBox">
+                            <span>@Html.DisplayNameFor(model => model.FlightDestiny)</span>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="inputBox">
+                            <span>@Html.DisplayNameFor(model => model.DepartureDate)</span>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td>
+                        <div class="inputBox">
+                            <span>@Html.DisplayFor(modelItem => item.AirplaneName)</span>
+
+                        </div>
+                    </td>
+                    <td>
+                        <div class="inputBox">
+                            <span>@Html.DisplayFor(modelItem => item.Price)</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="inputBox">
+                            <span>@Html.DisplayFor(modelItem => item.FlightOrigin)</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="inputBox">
+                            <span>@Html.DisplayFor(modelItem => item.FlightDestiny)</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="inputBox">
+                            <span>@Html.DisplayFor(modelItem => item.DepartureDate)</span>
+                        </div>
+                    </td>
+                    <td>
+                        @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Employee"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn">Edit</a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn">Details</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn">Delete</a>
+                        }
+                        else if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn">Details</a>
+                        }
+                        else
+                        {
+                            <a asp-action="Bookings" asp-route-id="@item.Id" class="btn">Book Now</a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn">Details</a>
+                        }
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+
+
+
+    </form>
 </section>
 
-<section class="packages">
-
-    <div class="box-container">
-
-        @foreach (var item in Model)
-        {
-        <div class="box" style="width:50%">
-            <div class="image">
-                <img src="@Url.Content(item.ImageFullPath)" alt="Image">
-                <h3> <i class="fas fa-map-marker-alt"></i> @Html.DisplayFor(modelItem => item.FlightDestiny)</h3>
-            </div>
-
-            <div class="content">
-                <div class="price"> @Html.DisplayFor(modelItem => item.AdultPrice) </div>
-
-                @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Employee"))
-                {
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn">Edit</a>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn">Details</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn">Delete</a>
-                }
-                else if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
-                {
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn">Details</a>
-                }
-                else
-                {
-                    <a asp-action="" asp-route-id="@item.Id" class="btn">Book Now</a>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn">Details</a>
-                }
-            </div>
-        </div>
-        }
-    </div>
-</section>
 
 @*<section class="form-container" style="margin-top:60px">
     <div class="inputBox">

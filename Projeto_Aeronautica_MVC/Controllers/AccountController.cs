@@ -114,8 +114,8 @@ namespace Projeto_Aeronautica_MVC.Controllers
         {
             var model = new RegisterNewUserViewModel
             {
-                Countries = _countryRepository.GetComboCountries(),
-                Cities = _countryRepository.GetComboCities(0),
+                //Countries = _countryRepository.GetComboCountries(),
+                //Cities = _countryRepository.GetComboCities(0),
             };
 
             return View(model);
@@ -129,7 +129,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 var user = await _userHelper.GetUserByEmailAsync(model.Username);
                 if (user == null)
                 {
-                    var city = await _countryRepository.GetCityAsync(model.CityId);
+                    //var city = await _countryRepository.GetCityAsync(model.CityId);
 
                     Guid imageId = Guid.Empty;
 
@@ -139,7 +139,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
                     }
 
                     user = _converterHelper.ToUser(model, imageId, true);
-                    user.City = city;
+                    //user.City = city;
 
                     if (this.User.Identity.Name != null && this.User.IsInRole("Admin"))
                     {
@@ -215,17 +215,17 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 model.Address = user.Address;
                 model.PhoneNumber = user.PhoneNumber;
 
-                var city = await _countryRepository.GetCityAsync(user.CityId);
-                if (city != null)
-                {
-                    var country = await _countryRepository.GetCountryAsync(city);
-                    if (country != null)
-                    {
-                        model.CountryId = country.Id;
-                        model.Cities = _countryRepository.GetComboCities(country.Id);
-                        model.Countries = _countryRepository.GetComboCountries();
-                     }
-                }
+                //var city = await _countryRepository.GetCityAsync(user.CityId);
+                //if (city != null)
+                //{
+                //    var country = await _countryRepository.GetCountryAsync(city);
+                //    if (country != null)
+                //    {
+                //        model.CountryId = country.Id;
+                //        model.Cities = _countryRepository.GetComboCities(country.Id);
+                //        model.Countries = _countryRepository.GetComboCountries();
+                //     }
+                //}
             }
 
             model.Cities = _countryRepository.GetComboCities(model.CountryId);
@@ -255,9 +255,9 @@ namespace Projeto_Aeronautica_MVC.Controllers
                     user.ImageId = imageId;
                     user.Address = model.Address;
                     user.PhoneNumber = model.PhoneNumber;
-                    user.CityId = model.CityId;
-                    user.City = city;
-                    user.City = city;
+                    //user.CityId = model.CityId;
+                    //user.City = city;
+                    //user.City = city;
 
                     if (user.ImageId != Guid.Empty)
                     {
