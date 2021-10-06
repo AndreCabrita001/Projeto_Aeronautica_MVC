@@ -154,10 +154,8 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 {
                     _flashMessage.Danger("This country already exist!");
                 }
-
                 return View(country);
             }
-
             return View(country);
         }
 
@@ -169,10 +167,12 @@ namespace Projeto_Aeronautica_MVC.Controllers
             }
 
             var country = await _countryRepository.GetByIdAsync(id.Value);
+
             if (country == null)
             {
                 return NotFound();
             }
+
             return View(country);
         }
 

@@ -158,13 +158,13 @@ namespace Projeto_Aeronautica_MVC.Controllers
                             $"Your account has been created by an admin. You are now required to change your password." +
                             $"Please click this link to do so:</br></br><a href = \"{tokenLink}\">Change password</a>");
 
-
                         if (response.IsSuccess)
                         {
                             ViewBag.Message = "The authentication instructions have been sent to the employee's email.";
                             return View(model);
                         }
                     }
+
                     var result2 = await _userHelper.AddUserAsync(user, model.Password);
                     if (result2 != IdentityResult.Success)
                     {
@@ -192,7 +192,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
                     ModelState.AddModelError(string.Empty, "The user couldn't be logged.");
                 }
             }
-
             return View(model);
         }
 
@@ -214,7 +213,10 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 model.ImageId = imageId;
                 model.Address = user.Address;
                 model.PhoneNumber = user.PhoneNumber;
+                model.Country = user.Country;
 
+
+                var wtf = "WTF";
                 //var city = await _countryRepository.GetCityAsync(user.CityId);
                 //if (city != null)
                 //{
@@ -228,8 +230,8 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 //}
             }
 
-            model.Cities = _countryRepository.GetComboCities(model.CountryId);
-            model.Countries = _countryRepository.GetComboCountries();
+            //model.Cities = _countryRepository.GetComboCities(model.CountryId);
+            //model.Countries = _countryRepository.GetComboCountries();
             return View(model);
         }
 
@@ -241,7 +243,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                 if (user != null)
                 {
-                    var city = await _countryRepository.GetCityAsync(model.CityId);
+                    //var city = await _countryRepository.GetCityAsync(model.CityId);
 
                     Guid imageId = user.ImageId;
 
@@ -255,6 +257,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
                     user.ImageId = imageId;
                     user.Address = model.Address;
                     user.PhoneNumber = model.PhoneNumber;
+                    user.Country = model.Country;
                     //user.CityId = model.CityId;
                     //user.City = city;
                     //user.City = city;

@@ -15,11 +15,15 @@ namespace Projeto_Aeronautica_MVC.Models
         //[Range(1, int.MaxValue, ErrorMessage = "You must select a flight.")]
         //public int FlightId { get; set; }
 
-
-
         //[Display(Name = "Flight Apparatus")]
         //public string ApparatusName { get; set; }
 
+        
+
         public IEnumerable<SelectListItem> Flights { get; set; }
+
+        public IEnumerable<SelectListItem> FlightsOrigin { get; set; }
+
+        public IEnumerable<SelectListItem> FlightsDestiny { get; set; }
     }
 }

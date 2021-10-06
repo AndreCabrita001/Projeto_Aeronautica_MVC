@@ -6,53 +6,61 @@
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css" />
 <br />
+
 <section class="services" id="services" style="margin-top:60px">
 
     <h1 class="heading"> Flight List</h1>
     <hr />
-    
 
 </section>
 
-<section class="form-container">
-
+<section class="form-container" style="zoom:90%">
     @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Employee"))
     {
         <p>
             <a asp-action="Create" class="btn">Create New</a>
         </p>
     }
-
     <form action="">
         <table class="table">
-
             <thead>
                 <tr>
                     <th>
                         <div class="inputBox">
-                            <span>@Html.DisplayNameFor(model => model.AirplaneName)</span>
+                            <span>@Html.DisplayNameFor(model => model.FlightApparatus)</span>
                         </div>
                     </th>
-                    <th>
+
+                    <th style="width:10%">
                         <div class="inputBox">
                             <span>@Html.DisplayNameFor(model => model.Price)</span>
                         </div>
                     </th>
+
                     <th>
                         <div class="inputBox">
                             <span>@Html.DisplayNameFor(model => model.FlightOrigin)</span>
                         </div>
                     </th>
+
                     <th>
                         <div class="inputBox">
                             <span>@Html.DisplayNameFor(model => model.FlightDestiny)</span>
                         </div>
                     </th>
+
                     <th>
                         <div class="inputBox">
                             <span>@Html.DisplayNameFor(model => model.DepartureDate)</span>
                         </div>
                     </th>
+
+                    <th>
+                        <div class="inputBox">
+                            <span>@Html.DisplayNameFor(model => model.AvaliableSeats)</span>
+                        </div>
+                    </th>
+
                 </tr>
             </thead>
             <tbody>
@@ -61,8 +69,9 @@
                 <tr>
                     <td>
                         <div class="inputBox">
-                            <span>@Html.DisplayFor(modelItem => item.AirplaneName)</span>
+                            <span>@Html.DisplayFor(modelItem => item.FlightApparatus)</span>
 
+                            <img src="@Url.Content(item.ImageFullPath)" alt="Image" style="width:100px;height:150px;max-width:100%;height:auto">
                         </div>
                     </td>
                     <td>
@@ -71,18 +80,23 @@
                         </div>
                     </td>
                     <td>
-                        <div class="inputBox">
-                            <span>@Html.DisplayFor(modelItem => item.FlightOrigin)</span>
+                        <div class="inputBox" style="position:relative; bottom:7px">
+                            <input id="country_selector" style="background-color:white; font-size:17px;" type="text" value="@Html.DisplayFor(modelItem => item.FlightOrigin)" />
                         </div>
                     </td>
                     <td>
-                        <div class="inputBox">
-                            <span>@Html.DisplayFor(modelItem => item.FlightDestiny)</span>
+                        <div class="inputBox" style="position:relative; bottom:7px">
+                            <input id="country_selector2" style="background-color:white; font-size:17px;" type="text" value="@Html.DisplayFor(modelItem => item.FlightDestiny)" />
                         </div>
                     </td>
                     <td>
                         <div class="inputBox">
                             <span>@Html.DisplayFor(modelItem => item.DepartureDate)</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="inputBox">
+                            <span>@Html.DisplayFor(modelItem => item.AvaliableSeats)</span>
                         </div>
                     </td>
                     <td>
@@ -106,12 +120,29 @@
                 }
             </tbody>
         </table>
-
-
-
     </form>
 </section>
+<script>
 
+    $('input[type=text]').each(function () {
+        $("input[type=text]").countrySelect({
+            preferredCountries: ['pt']
+        });
+        $("input[type=text]").attr("disabled", "disabled")
+    })
+
+    //$("#country_selector").each(function () {
+    //   $("#country_selector").countrySelect({
+    //       preferredCountries: ['pt']
+    //   });
+    //});
+    //$("#country_selector").attr("disabled", "disabled");
+
+    //$("#country_selector2").countrySelect({
+    //    preferredCountries: ['pt']
+    //});
+    //$("#country_selector2").attr("disabled", "disabled");
+</script>
 
 @*<section class="form-container" style="margin-top:60px">
     <div class="inputBox">

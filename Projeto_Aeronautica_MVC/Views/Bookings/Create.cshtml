@@ -4,18 +4,18 @@
 }
 
 <section class="services" id="services" style="margin-top:60px">
-
     <h1 class="heading">Reserve Tickets</h1>
     <hr />
-
 </section>
 
-<p>
-	<a asp-action="AddFlight" class="btn">Add Product</a>
-	<a asp-action="ConfirmOrder" class="btn" id="btnConfirm">Confirm Order</a>
-</p>
+
 
 <section class="form-container">
+    <p>
+        <a asp-action="AddFlight" class="btn">Buy Ticket</a>
+        <a asp-action="ConfirmOrder" class="btn" id="btnConfirm">Confirm Order</a>
+    </p>
+
     <form action="">
         <table class="table">
             <thead>
@@ -23,25 +23,25 @@
 
                     <th>
                         <div class="inputBox">
-                        <span>@Html.DisplayNameFor(model => model.Flight.FlightApparatus)</span>
-                            </div>
+                            <span>@Html.DisplayNameFor(model => model.Flight.FlightApparatus)</span>
+                        </div>
                     </th>
 
                     <th>
                         <div class="inputBox">
                             <span>@Html.DisplayNameFor(model => model.Price)</span>
-                            </div>
+                        </div>
                     </th>
 
                     <th>
                         <div class="inputBox">
                             <span>@Html.DisplayNameFor(model => model.Quantity)</span>
-                            </div>
+                        </div>
                     </th>
                     <th>
                         <div class="inputBox">
                             <span>@Html.DisplayNameFor(model => model.Value)</span>
-                            </div>
+                        </div>
                     </th>
                 </tr>
             </thead>
@@ -52,7 +52,7 @@
         <td>
             <div class="inputBox">
                 <span>@Html.DisplayFor(modelItem => item.Flight.FlightApparatus)</span>
-                </div>
+            </div>
         </td>
         <td>
             <div class="inputBox">
@@ -74,8 +74,7 @@
             <a asp-action="Decrease" asp-route-id="@item.Id" class="btn"><i class="fa fa-minus"></i></a>
             <a asp-action="DeleteItem" asp-route-id="@item.Id" class="btn" id="btnDeleteItem">Delete</a>
         </td>
-    </tr>
-}
+    </tr>}
             </tbody>
         </table>
 

@@ -22,24 +22,27 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
         [Display(Name = "Arrival Date")]
         public DateTime? ArrivalDate { get; set; }
 
-        [Required]
+        public int FlightOriginId { get; set; }
+
+        public int FlightDestinyId { get; set; }
+
         [Display(Name = "Flight Origin")]
         public string FlightOrigin { get; set; }
 
-        [Required]
         [Display(Name = "Flight Destiny")]
         public string FlightDestiny { get; set; }
 
         [Display(Name = "Flight Apparatus")]
         public string FlightApparatus { get; set; }
 
+        [Display(Name = "Avaliable Seats")]
+        public int AvaliableSeats { get; set; }
+
         [Display(Name = "Is Available")]
         public bool IsAvailable { get; set; }
 
+        [Required]
         public int AirplaneId { get; set; }
-
-        [Display(Name = "Flight Apparatus")]
-        public string AirplaneName { get; set; }
 
         public Airplane Airplane { get; set; }
 

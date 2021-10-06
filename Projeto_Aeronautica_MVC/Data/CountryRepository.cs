@@ -90,7 +90,6 @@ namespace Projeto_Aeronautica_MVC.Data
                 .FirstOrDefaultAsync();
         }
 
-
         public IEnumerable<SelectListItem> GetComboCountries()
         {
             var list = _context.Countries.Select(c => new SelectListItem

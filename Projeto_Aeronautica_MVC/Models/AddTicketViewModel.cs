@@ -9,7 +9,7 @@ namespace Projeto_Aeronautica_MVC.Models
     {
         [Display(Name = "Flight")]
         [Range(1, int.MaxValue, ErrorMessage = "You must select a flight.")]
-        public int FlightId { get; set; }
+        public int FlightId { get; set; } 
 
         //public Flight Flight { get; set; }
 

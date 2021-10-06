@@ -22,7 +22,7 @@ namespace Projeto_Aeronautica_MVC.Models
         [Display(Name = "Country")]
         public string SelectedCountry { get; set; }
 
-        public IEnumerable<SelectListItem> Countries { get; set; }
+        //public IEnumerable<SelectListItem> Countries { get; set; }
 
         [Required]
         [MinLength(6)]

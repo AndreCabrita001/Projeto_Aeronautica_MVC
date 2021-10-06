@@ -1,24 +1,26 @@
 ﻿@model Projeto_Aeronautica_MVC.Models.FlightViewModel
 
+<div>
     <div class="inputBox">
         <span>Flight</span>
-        <select style="font-size:17px" asp-for="AirplaneId" id="flightApparatusId" asp-items="Model.Flights" class="form-control"></select>
+        <select style="font-size:17px" asp-for="AirplaneId" asp-items="Model.Flights" class="form-control"></select>
     </div>
     <h3><span asp-validation-for="AirplaneId" class="text-danger"></span></h3>
+    <br />
 
     <div class="inputBox">
         <span>Flight Origin</span>
-        <input asp-for="FlightOrigin" class="form-control" />
-
+        <select style="font-size:17px" asp-for="FlightOriginId" asp-items="Model.FlightsOrigin" class="form-control"></select>
     </div>
-    <h3><span asp-validation-for="FlightOrigin" class="text-danger"></span></h3>
+    <h3><span asp-validation-for="FlightOriginId" class="text-danger"></span></h3>
+    <br />
 
     <div class="inputBox">
         <span>Flight Destiny</span>
-        <input asp-for="FlightDestiny" class="form-control" />
-
+        <select style="font-size:17px" asp-for="FlightDestinyId" asp-items="Model.FlightsDestiny" class="form-control"></select>
     </div>
-    <h3><span asp-validation-for="FlightDestiny" class="text-danger"></span></h3>
+    <h3><span asp-validation-for="FlightDestinyId" class="text-danger"></span></h3>
+    <br />
 
     <div class="inputBox">
         <span>Price</span>
@@ -48,7 +50,7 @@
             </label>
         </div>
     </div>
-
+</div>
     @section Scripts {
 
         <script type="text/javascript">

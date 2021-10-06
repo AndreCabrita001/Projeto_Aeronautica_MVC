@@ -36,6 +36,7 @@ namespace Projeto_Aeronautica_MVC.Data
 
                 _context.Countries.Add(new Country
                 {
+                    
                     Cities = cities,
                     Name = "Portugal"
                 });
@@ -139,13 +140,14 @@ namespace Projeto_Aeronautica_MVC.Data
             _context.Flights.Add(new Flight
             {
                 IsAvailable = true,
-                AirplaneName = plane.Apparatus,
+                FlightApparatus = plane.Apparatus,
                 FlightOrigin = "Portugal",
-                FlightDestiny = "Espanha",
+                FlightDestiny = "Spain",
                 ImageId = plane.ImageId,
                 DepartureDate = DateTime.Now.AddDays(20),
                 ArrivalDate = DateTime.Now.AddDays(21),
                 Price = 300,
+                AvaliableSeats = plane.AvaliableSeats,
                 Airplane = plane,
                 User = user
             });

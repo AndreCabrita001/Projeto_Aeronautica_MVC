@@ -16,6 +16,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
     {
         private readonly IFlightRepository _flightRepository;
         private readonly IAirplaneRepository _airplaneRepository;
+        private readonly ICountryRepository _countryRepository;
         private readonly IUserHelper _userHelper;
         private readonly IBlobHelper _blobHelper;
         private readonly IConverterHelper _converterHelper;
@@ -23,12 +24,14 @@ namespace Projeto_Aeronautica_MVC.Controllers
         public FlightsController(
             IFlightRepository flightRepository,
             IAirplaneRepository airplaneRepository,
+            ICountryRepository countryRepository,
             IUserHelper userHelper,
             IBlobHelper blobHelper,
             IConverterHelper converterHelper)
         {
             _flightRepository = flightRepository;
             _airplaneRepository = airplaneRepository;
+            _countryRepository = countryRepository;
             _userHelper = userHelper;
             _blobHelper = blobHelper;
             _converterHelper = converterHelper;
@@ -64,6 +67,8 @@ namespace Projeto_Aeronautica_MVC.Controllers
             var model = new FlightViewModel
             {
                 Flights = _airplaneRepository.GetComboFlightApparatus(),
+                FlightsDestiny = _countryRepository.GetComboCountries(),
+                FlightsOrigin = _countryRepository.GetComboCountries()
             };
 
             return View(model);
@@ -79,22 +84,26 @@ namespace Projeto_Aeronautica_MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                //var plane = new Airplane();
 
-                //plane = await _airplaneRepository.GetByIdAsync(model.Id);
+                var airplane = await _airplaneRepository.GetByIdAsync(model.AirplaneId);
 
-                Guid imageId = Guid.Empty;
+                var flightOrigin = await _countryRepository.GetByIdAsync(model.FlightOriginId);
+                var flightDestiny = await _countryRepository.GetByIdAsync(model.FlightDestinyId);
+
+                Guid imageId = airplane.ImageId;
 
                 if (model.ImageFile != null && model.ImageFile.Length > 0)
                 {
                     imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "airplanes");
                 }
 
-                var airplane = await _airplaneRepository.GetByIdAsync(model.AirplaneId);
-
                 var flight = _converterHelper.ToFlight(model, imageId, true);
 
-                flight.AirplaneName = airplane.Apparatus;
+                flight.FlightApparatus = airplane.Apparatus;
+                flight.AvaliableSeats = airplane.AvaliableSeats;
+
+                flight.FlightOrigin = flightOrigin.Name;
+                flight.FlightDestiny = flightDestiny.Name;
 
                 flight.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                 await _flightRepository.CreateAsync(flight);
@@ -114,15 +123,25 @@ namespace Projeto_Aeronautica_MVC.Controllers
             }
 
             var flight = await _flightRepository.GetByIdAsync(id.Value);
+
+            var flightOrigin = await _countryRepository.GetByIdAsync(flight.FlightOriginId);
+            var flightDestiny = await _countryRepository.GetByIdAsync(flight.FlightDestinyId);
+
             if (flight == null)
             {
                 return NotFound();
             }
 
             var model = _converterHelper.ToFlightViewModel(flight);
+
+            model.Flights = _airplaneRepository.GetComboFlightApparatus();
+            model.FlightsOrigin = _countryRepository.GetComboCountries();
+            model.FlightsDestiny = _countryRepository.GetComboCountries();
+
+
+
             return View(model);
         }
-
 
         // POST: Flights/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -150,6 +169,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
                         FlightApparatus = model.FlightApparatus,
                         IsAvailable = model.IsAvailable,
                         ImageId = imageId,
+                        AirplaneId = model.AirplaneId,
                         FlightOrigin = model.FlightOrigin,
                         FlightDestiny = model.FlightDestiny,
                         DepartureDate = model.DepartureDate,

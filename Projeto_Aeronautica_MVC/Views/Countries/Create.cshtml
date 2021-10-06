@@ -13,30 +13,38 @@
 <flash dismissable="true"/>
 
 <section class="form-container">
-
     <div class="row">
-
         <div class="col-md-4">
-
             <form asp-action="Create">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
                 <div class="inputBox">
+                    <span>Country</span>
+                    <input id="country_selector" asp-for="Name" class="form-control" type="text" />
+                </div>
+                <h3><span asp-validation-for="Name" class="text-warning"></span></h3>
+
+                @*<div class="inputBox">
                     <span>Name</span>
                     <input asp-for="Name" class="form-control" />
                 </div>
-                <h3><span asp-validation-for="Name" class="text-danger"></span></h3>
+                <h3><span asp-validation-for="Name" class="text-danger"></span></h3>*@
 
                 <div class="form-group">
                     <input type="submit" value="Create" class="btn" />
                     <a asp-action="Index" class="btn">Back to List</a>
                 </div>
             </form>
-
         </div>
-
     </div>
-
 </section>
+
+<script>
+    $("#country_selector").countrySelect({
+        preferredCountries: ['pt']
+    });
+    $("#country_selector").countrySelect("setCountry", "Portugal");
+</script>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

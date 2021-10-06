@@ -56,7 +56,6 @@ namespace Projeto_Aeronautica_MVC.Helpers
             return await _userManager.ConfirmEmailAsync(user, token);
         }
 
-
         public async Task<string> GenerateEmailConfirmationTokenAsync(User user)
         {
             return await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -81,7 +80,6 @@ namespace Projeto_Aeronautica_MVC.Helpers
         {
             return await _userManager.IsInRoleAsync(user, roleName);
         }
-
 
         public async Task<SignInResult> LoginAsync(LoginViewModel model)
         {
