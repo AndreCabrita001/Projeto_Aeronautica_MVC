@@ -1,44 +1,55 @@
-﻿@model IEnumerable<Projeto_Aeronautica_MVC.Data.Entities.Airplane>
+﻿@model IEnumerable<Projeto_Aeronautica_MVC.Data.Entities.User>
+@{
+    ViewData["Title"] = "Index";
+}
 
-@{ ViewData["Title"] = "Index"; }
-
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css" />
+<head>
+    <style>
+        .country-select .selected-flag .arrow {
+            display: none;
+        }
+    </style>
+</head>
 
 <section class="services" id="services" style="margin-top:60px">
-
-    <h1 class="heading"> Airplane List</h1>
+    <h1 class="heading">Client List</h1>
     <hr />
+</section>
+
+<section class="form-container">
     @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
     {
         <p>
-            <a asp-action="Create" class="btn">Create New</a>
+            <a asp-action="Register" class="btn">Create New</a>
         </p>
     }
-</section>
-    
-<section class="form-container">
     <form action="">
-        <table class="table" style="zoom:90%">
+        <table class="table">
             <thead>
                 <tr>
                     <th>
                         <div class="inputBox">
-                            <b><span>@Html.DisplayNameFor(model => model.Apparatus)</span></b>
+                            <span>@Html.DisplayNameFor(model => model.FullName)</span>
                         </div>
                     </th>
                     <th>
                         <div class="inputBox">
-                            <b><span>@Html.DisplayNameFor(model => model.NumberOfColumns)</span></b>
+                            <span>User Image</span>
                         </div>
                     </th>
                     <th>
                         <div class="inputBox">
-                            <b><span>@Html.DisplayNameFor(model => model.TotalSeats)</span></b>
+                            <span>@Html.DisplayNameFor(model => model.Address)</span>
                         </div>
                     </th>
                     <th>
                         <div class="inputBox">
-                            <b><span>@Html.DisplayNameFor(model => model.AvaliableSeats)</span></b>
+                            <span>@Html.DisplayNameFor(model => model.PhoneNumber)</span>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="inputBox">
+                            <span>Native Country</span>
                         </div>
                     </th>
                 </tr>
@@ -46,27 +57,32 @@
             <tbody>
                 @foreach (var item in Model)
                 {
+                    @*@if (item.Role != "Admin" && item.Role != "Employee")
+                    {*@ 
                     <tr>
                         <td>
                             <div class="inputBox">
-                                <span>@Html.DisplayFor(modelItem => item.Apparatus)</span>
-
-                                <img src="@Url.Content(item.ImageFullPath)" alt="Image" style="width:100px;height:150px;max-width:100%;height:auto">
+                                <span>@Html.DisplayFor(modelItem => item.FullName)</span>
                             </div>
                         </td>
                         <td>
                             <div class="inputBox">
-                                <span>@Html.DisplayFor(modelItem => item.NumberOfColumns)</span>
+                                <span><img src="@Url.Content(item.ImageFullPath)" alt="Image" style="width:100px;height:150px;max-width:100%;height:auto"></span>
                             </div>
                         </td>
                         <td>
                             <div class="inputBox">
-                                <span>@Html.DisplayFor(modelItem => item.TotalSeats)</span>
+                                <span>@Html.DisplayFor(modelItem => item.Address)</span>
                             </div>
                         </td>
                         <td>
                             <div class="inputBox">
-                                <span>@Html.DisplayFor(modelItem => item.AvaliableSeats)</span>
+                                <span>@Html.DisplayFor(modelItem => item.PhoneNumber)</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="inputBox" style="position:relative; bottom:7px">
+                                <input id="country_selector" style="background-color:transparent;font-size:17px;" type="text" value="@Html.DisplayFor(modelItem => item.Country)" />
                             </div>
                         </td>
                         <td>
@@ -78,18 +94,19 @@
                             }
                         </td>
                     </tr>
+                    @*}*@
                 }
             </tbody>
         </table>
     </form>
 </section>
-@section Scripts{
-    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
-    <script type="text/javascript">
-            $(document).ready(function () {
-                $('#MyTable').DataTable();
-            });
-    </script>
-}
 
+<script>
+
+    $('input[type=text]').each(function () {
+        $("input[type=text]").countrySelect({
+            preferredCountries: ['pt']
+        });
+        $("input[type=text]").attr("disabled", "disabled")
+    })
+</script>

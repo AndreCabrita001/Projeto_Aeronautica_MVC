@@ -8,6 +8,7 @@ namespace Projeto_Aeronautica_MVC.Data
 {
     public interface IUserRepository : IGenericRepository<User>
     {
-        public IQueryable GetAllUsers();
+        public IQueryable<User> GetAllUsers();
+        //public IQueryable GetAllUsers();
     }
 }

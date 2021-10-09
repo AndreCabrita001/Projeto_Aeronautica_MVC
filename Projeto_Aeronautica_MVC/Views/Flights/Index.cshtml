@@ -2,18 +2,21 @@
 
 @{ ViewData["Title"] = "Index"; }
 
-<h1>Flight List</h1>
+<head>
+    <style>
 
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css" />
-<br />
+        .country-select .selected-flag .arrow{
+            display:none;
+        }
+    </style>
+</head>
 
 <section class="services" id="services" style="margin-top:60px">
 
-    <h1 class="heading"> Flight List</h1>
+    <h1 class="heading">Flight List</h1>
     <hr />
 
 </section>
-
 <section class="form-container" style="zoom:90%">
     @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Employee"))
     {
@@ -21,208 +24,129 @@
             <a asp-action="Create" class="btn">Create New</a>
         </p>
     }
-    <form action="">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        <div class="inputBox">
-                            <span>@Html.DisplayNameFor(model => model.FlightApparatus)</span>
-                        </div>
-                    </th>
 
-                    <th style="width:10%">
-                        <div class="inputBox">
-                            <span>@Html.DisplayNameFor(model => model.Price)</span>
-                        </div>
-                    </th>
+<form method="get">
+    <p>
+        <div class="inputBox">
+            <span><input type="search" autocomplete="off" style="font-weight:600; width:300px;" placeholder="Enter Flight Info" value="@ViewData["GetFlightDetails"]" name="flightSearch" /></span>
 
-                    <th>
-                        <div class="inputBox">
-                            <span>@Html.DisplayNameFor(model => model.FlightOrigin)</span>
-                        </div>
-                    </th>
+        </div>
+        <input type="submit" value="Search" class="btn" />
+        <a asp-action="Index" class="btn">Get All Flights</a>
+    </p>
 
-                    <th>
-                        <div class="inputBox">
-                            <span>@Html.DisplayNameFor(model => model.FlightDestiny)</span>
-                        </div>
-                    </th>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <div class="inputBox">
+                        <span>@Html.DisplayNameFor(model => model.FlightApparatus)</span>
+                    </div>
+                </th>
 
-                    <th>
-                        <div class="inputBox">
-                            <span>@Html.DisplayNameFor(model => model.DepartureDate)</span>
-                        </div>
-                    </th>
+                <th style="width:10%">
+                    <div class="inputBox">
+                        <span>@Html.DisplayNameFor(model => model.Price)</span>
+                    </div>
+                </th>
 
-                    <th>
-                        <div class="inputBox">
-                            <span>@Html.DisplayNameFor(model => model.AvaliableSeats)</span>
-                        </div>
-                    </th>
+                <th>
+                    <div class="inputBox">
+                        <span>@Html.DisplayNameFor(model => model.FlightOrigin)</span>
+                    </div>
+                </th>
 
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                <tr>
-                    <td>
-                        <div class="inputBox">
-                            <span>@Html.DisplayFor(modelItem => item.FlightApparatus)</span>
+                <th>
+                    <div class="inputBox">
+                        <span>@Html.DisplayNameFor(model => model.FlightDestiny)</span>
+                    </div>
+                </th>
 
-                            <img src="@Url.Content(item.ImageFullPath)" alt="Image" style="width:100px;height:150px;max-width:100%;height:auto">
-                        </div>
-                    </td>
-                    <td>
-                        <div class="inputBox">
-                            <span>@Html.DisplayFor(modelItem => item.Price)</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="inputBox" style="position:relative; bottom:7px">
-                            <input id="country_selector" style="background-color:white; font-size:17px;" type="text" value="@Html.DisplayFor(modelItem => item.FlightOrigin)" />
-                        </div>
-                    </td>
-                    <td>
-                        <div class="inputBox" style="position:relative; bottom:7px">
-                            <input id="country_selector2" style="background-color:white; font-size:17px;" type="text" value="@Html.DisplayFor(modelItem => item.FlightDestiny)" />
-                        </div>
-                    </td>
-                    <td>
-                        <div class="inputBox">
-                            <span>@Html.DisplayFor(modelItem => item.DepartureDate)</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="inputBox">
-                            <span>@Html.DisplayFor(modelItem => item.AvaliableSeats)</span>
-                        </div>
-                    </td>
-                    <td>
-                        @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Employee"))
-                        {
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn">Edit</a>
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn">Details</a>
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn">Delete</a>
-                        }
-                        else if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
-                        {
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn">Details</a>
-                        }
-                        else
-                        {
-                            <a asp-action="Bookings" asp-route-id="@item.Id" class="btn">Book Now</a>
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn">Details</a>
-                        }
-                    </td>
-                </tr>
-                }
-            </tbody>
-        </table>
-    </form>
+                <th>
+                    <div class="inputBox">
+                        <span>@Html.DisplayNameFor(model => model.DepartureDate)</span>
+                    </div>
+                </th>
+
+                <th>
+                    <div class="inputBox">
+                        <span>@Html.DisplayNameFor(model => model.AvaliableSeats)</span>
+                    </div>
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+
+                <td>
+                    <div class="inputBox">
+                        <span>@Html.DisplayFor(modelItem => item.FlightApparatus)</span>
+
+                        <img src="@Url.Content(item.ImageFullPath)" alt="Image" style="width:100px;height:150px;max-width:100%;height:auto">
+                    </div>
+                </td>
+
+                <td>
+                    <div class="inputBox">
+                        <span>@Html.DisplayFor(modelItem => item.Price)</span>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="inputBox" style="position:relative; bottom:16px">
+                        <input id="country_selector" style="background-color: transparent; font-size: 17px;" type="text" disabled="disabled" value="@Html.DisplayFor(modelItem => item.FlightOrigin)" />
+                        <center><span>@Html.DisplayFor(modelItem => item.CityOrigin)</span></center>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="inputBox" style="position:relative; bottom:16px">
+                        <input id="country_selector2" style="background-color: transparent; font-size: 17px;" type="text" value="@Html.DisplayFor(modelItem => item.FlightDestiny)" />
+                        <center><span>@Html.DisplayFor(modelItem => item.CityDestiny)</span></center>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="inputBox">
+                        <span>@Html.DisplayFor(modelItem => item.DepartureDate)</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="inputBox">
+                        <span>@Html.DisplayFor(modelItem => item.AvaliableSeats)</span>
+                    </div>
+                </td>
+                <td>
+                    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Employee"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn">Edit</a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn">Details</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn">Delete</a>
+                    }
+                    else if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn">Details</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Bookings" asp-route-id="@item.Id" class="btn">Book Now</a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn">Details</a>
+                    }
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</form>
 </section>
 <script>
-
     $('input[type=text]').each(function () {
         $("input[type=text]").countrySelect({
             preferredCountries: ['pt']
         });
         $("input[type=text]").attr("disabled", "disabled")
     })
-
-    //$("#country_selector").each(function () {
-    //   $("#country_selector").countrySelect({
-    //       preferredCountries: ['pt']
-    //   });
-    //});
-    //$("#country_selector").attr("disabled", "disabled");
-
-    //$("#country_selector2").countrySelect({
-    //    preferredCountries: ['pt']
-    //});
-    //$("#country_selector2").attr("disabled", "disabled");
 </script>
-
-@*<section class="form-container" style="margin-top:60px">
-    <div class="inputBox">
-        <span>@Html.DisplayNameFor(model => model.Id)</span>
-    </div>*@
-                @*<th>
-                    @Html.DisplayNameFor(model => model.Id)
-                </th>
-                <th>
-                        @Html.DisplayNameFor(model => model.FlightApparatus)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FlightOrigin)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FlightDestiny)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DepartureDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.AdultPrice)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.IsAvailable)
-                </th>
-                <th></th>
-            @foreach (var item in Model)
-            {
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Id)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FlightApparatus)
-
-                        @if (!string.IsNullOrEmpty(item.ImageFullPath))
-                        {
-                            <img src="@Url.Content(item.ImageFullPath)" alt="Image" style="width:100px;height:150px;max-width:100%;height:auto">
-                        }
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FlightOrigin)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FlightDestiny)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DepartureDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.AdultPrice)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IsAvailable)
-                    </td>
-                    <td>
-                        @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Employee"))
-                        {
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn">Edit</a>
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn">Details</a>
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn">Delete</a>
-                        }
-                        else if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
-                        {
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn">Details</a>
-                        }
-                        else
-                        {
-                            <a asp-action="" asp-route-id="@item.Id" class="btn">Book</a>
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn">Details</a>
-                        }*@
-            @*}*@
-@*</section>*@
-    @*@section Scripts{
-        <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('#MyTable').DataTable();
-            });
-        </script>
-    }*@

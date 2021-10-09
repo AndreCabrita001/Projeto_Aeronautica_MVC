@@ -82,7 +82,6 @@
         $(document).ready(function () {
             var id = 0;
             $('a[id*=btnDelete]').click(function () {
-                debugger;
                 id = $(this).parent()[0].id;
                 $("#deleteDialog").modal('show');
                 return false;

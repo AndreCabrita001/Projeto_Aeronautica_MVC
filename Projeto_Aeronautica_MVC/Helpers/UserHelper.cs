@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Projeto_Aeronautica_MVC.Data.Entities;
 using Projeto_Aeronautica_MVC.Models;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Projeto_Aeronautica_MVC.Helpers
@@ -103,6 +104,11 @@ namespace Projeto_Aeronautica_MVC.Helpers
         public async Task<IdentityResult> UpdateUserAsync(User user)
         {
             return await _userManager.UpdateAsync(user);
+        }
+
+        public async Task<IdentityResult> DeleteUserAsync(User user)
+        {
+            return await _userManager.DeleteAsync(user);
         }
 
         public async Task<SignInResult> ValidatePasswordAsync(User user, string password)

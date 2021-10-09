@@ -13,7 +13,7 @@
 <section class="form-container">
     <p>
         <a asp-action="AddFlight" class="btn">Buy Ticket</a>
-        <a asp-action="ConfirmOrder" class="btn" id="btnConfirm">Confirm Order</a>
+        <a asp-action="ConfirmBooking" class="btn" id="btnConfirm">Confirm Booking</a>
     </p>
 
     <form action="">
@@ -26,13 +26,11 @@
                             <span>@Html.DisplayNameFor(model => model.Flight.FlightApparatus)</span>
                         </div>
                     </th>
-
                     <th>
                         <div class="inputBox">
-                            <span>@Html.DisplayNameFor(model => model.Price)</span>
+                            <span>Price p/Ticket</span>
                         </div>
                     </th>
-
                     <th>
                         <div class="inputBox">
                             <span>@Html.DisplayNameFor(model => model.Quantity)</span>
@@ -72,7 +70,7 @@
         <td id="@item.Id">
             <a asp-action="Increase" asp-route-id="@item.Id" class="btn"><i class="fa fa-plus"></i></a>
             <a asp-action="Decrease" asp-route-id="@item.Id" class="btn"><i class="fa fa-minus"></i></a>
-            <a asp-action="DeleteItem" asp-route-id="@item.Id" class="btn" id="btnDeleteItem">Delete</a>
+            <a  asp-action="DeleteItem" asp-route-id="@item.Id" class="btn" id="btnDeleteItem">Delete</a>
         </td>
     </tr>}
             </tbody>
@@ -137,7 +135,6 @@
             });
 
             $("a[id*=btnDeleteItem]").click(function() {
-                debugger;
                 id=$(this).parent()[0].id;
                 $("#deleteDialog").modal("show");
                 return false;

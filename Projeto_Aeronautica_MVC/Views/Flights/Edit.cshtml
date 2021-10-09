@@ -7,7 +7,6 @@
     <h1 class="heading"> Edit Flight</h1>
     <hr />
 </section>
-
     
     <section class="form-container" style="width:120%">
 
@@ -20,25 +19,71 @@
 
                     <partial name="_Flights" />
 
-                    <div class="inputBox">
-                        <span>Image</span>
-                        <input asp-for="ImageFile" class="form-control" type="file" />
-
-                    </div>
-                    <h3><span asp-validation-for="ImageFile" class="text-danger"></span></h3>
-
                     <div class="form-group">
                         <input type="submit" value="Save" class="btn" />
                         <a asp-action="Index" class="btn">Back to List</a>
+                    </div>
+
+                    <div class="inputBox">
+                        <span class="text-danger">@TempData["EditFlightError"]</span>
                     </div>
                 </form>
             </div>
 
             <div style="text-align:right; position:relative">
-                <img src="@Url.Content(Model.ImageFullPath)" alt="Image" style="height:300px; width:400px; border-radius:15%; overflow:hidden; box-shadow: 0px 30px 40px -25px rgba(0, 0, 0, 1)">
+                <img src="@Url.Content(Model.ImageFullPath)" style="height:300px; width:400px; border-radius:15%; overflow:hidden; box-shadow: 0px 30px 40px -25px rgba(0, 0, 0, 1)">
             </div>
         </div>
     </section>
     @section Scripts {
         @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script type="text/javascript">
+            $(document).ready(function () {
+                $("#FlightOriginId").change(function () {
+			$("#CityOriginId").empty();
+			$.ajax({
+				url: '@Url.Action("GetCitiesAsync", "Flights")',
+				type: 'POST',
+				dataType: 'json',
+				data: {countryId:$("#FlightOriginId").val()},
+                success: function (cities) {
+                    $("#CityOriginId").append('<option value="0">(Select a city origin...)</option>');
+					$.each(cities, function (i, city) {
+                        $("#CityOriginId").append('<option value="'
+							+ city.id + '">'
+							+ city.name + '</option>');
+					});
+				},
+				error: function (ex) {
+					alert('Failed to retrieve cities.' + ex);
+				}
+			});
+			return false;
+		})
+            });
+
+    $(document).ready(function () {
+                $("#FlightDestinyId").change(function () {
+			$("#CityDestinyId").empty();
+			$.ajax({
+				url: '@Url.Action("GetCitiesAsync", "Flights")',
+				type: 'POST',
+				dataType: 'json',
+				data: {countryId:$("#FlightDestinyId").val()},
+                success: function (cities) {
+                    $("#CityDestinyId").append('<option value="0">(Select a city destiny...)</option>');
+					$.each(cities, function (i, city) {
+                        $("#CityDestinyId").append('<option value="'
+							+ city.id + '">'
+							+ city.name + '</option>');
+					});
+				},
+				error: function (ex) {
+					alert('Failed to retrieve cities.' + ex);
+				}
+			});
+			return false;
+		})
+            });
+</script>
     }

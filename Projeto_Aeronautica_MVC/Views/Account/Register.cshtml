@@ -3,17 +3,6 @@
     ViewData["Title"] = "Register";
 }
 
-<head>
-
-    <style>
-        /*body {
-                background-image: url('../../images/orange_background.jpg');
-                background-repeat: no-repeat;
-                background-size: cover;
-            }*/
-    </style>
-</head>
-
 <section class="services" id="services" style="margin-top:60px">
 
     @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
@@ -80,7 +69,6 @@
                 <div class="inputBox">
                     <span>Address</span>
                     <input asp-for="Address" class="form-control" />
-
                 </div>
                 <h3><span asp-validation-for="Address" class="text-warning"></span></h3>
 

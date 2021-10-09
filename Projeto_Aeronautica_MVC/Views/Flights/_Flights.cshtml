@@ -1,47 +1,55 @@
 ﻿@model Projeto_Aeronautica_MVC.Models.FlightViewModel
 
-<div>
-    <div class="inputBox">
-        <span>Flight</span>
-        <select style="font-size:17px" asp-for="AirplaneId" asp-items="Model.Flights" class="form-control"></select>
-    </div>
-    <h3><span asp-validation-for="AirplaneId" class="text-danger"></span></h3>
-    <br />
+<div class="inputBox">
+    <span>Flight</span>
+    <select style="font-size:17px" asp-for="AirplaneId" asp-items="Model.Flights" class="form-control"></select>
+</div>
+<h3><span asp-validation-for="AirplaneId" class="text-danger"></span></h3>
+<br />
 
-    <div class="inputBox">
-        <span>Flight Origin</span>
-        <select style="font-size:17px" asp-for="FlightOriginId" asp-items="Model.FlightsOrigin" class="form-control"></select>
-    </div>
-    <h3><span asp-validation-for="FlightOriginId" class="text-danger"></span></h3>
-    <br />
+<div class="inputBox">
+    <span>Flight Origin</span>
+    <select style="font-size:17px" asp-for="FlightOriginId" asp-items="Model.FlightsOrigin" class="form-control"></select>
+</div>
+<h3><span asp-validation-for="FlightOriginId" class="text-danger"></span></h3>
+<br />
 
-    <div class="inputBox">
-        <span>Flight Destiny</span>
-        <select style="font-size:17px" asp-for="FlightDestinyId" asp-items="Model.FlightsDestiny" class="form-control"></select>
-    </div>
-    <h3><span asp-validation-for="FlightDestinyId" class="text-danger"></span></h3>
-    <br />
+<div class="inputBox">
+    <span>City Origin</span>
+    <select style="font-size:17px" asp-for="CityOriginId" asp-items="Model.Cities" class="form-control"></select>
+</div>
+<h3><span asp-validation-for="CityOriginId" class="text-danger"></span></h3>
+<br />
 
-    <div class="inputBox">
-        <span>Price</span>
-        <input asp-for="Price" class="form-control" />
+<div class="inputBox">
+    <span>Flight Destiny</span>
+    <select style="font-size:17px" asp-for="FlightDestinyId" asp-items="Model.FlightsDestiny" class="form-control"></select>
+</div>
+<h3><span asp-validation-for="FlightDestinyId" class="text-danger"></span></h3>
+<br />
 
-    </div>
-    <h3><span asp-validation-for="Price" class="text-danger"></span></h3>
+<div class="inputBox">
+    <span>City Destiny</span>
+    <select style="font-size:17px" asp-for="CityDestinyId" asp-items="Model.Cities" class="form-control"></select>
+</div>
+<h3><span asp-validation-for="CityDestinyId" class="text-danger"></span></h3>
+<br />
 
-    <div class="inputBox">
-        <span>Departure Date</span>
+<div class="inputBox">
+    <span>Price p/Ticket</span>
+    <input asp-for="Price" class="form-control" />
+
+</div>
+<h3><span asp-validation-for="Price" class="text-danger"></span></h3>
+<br />
+
+<div class="inputBox">
+    <span>Departure Date</span>
+    <div class="input-group date" data-provide="datepicker">
         <input asp-for="DepartureDate" class="form-control" />
-
+    </div>
     </div>
     <h3><span asp-validation-for="DepartureDate" class="text-danger"></span></h3>
-
-    <div class="inputBox">
-        <span>Arrival Date</span>
-        <input asp-for="ArrivalDate" class="form-control" />
-
-    </div>
-    <h3><span asp-validation-for="ArrivalDate" class="text-danger"></span></h3>
 
     <div class="inputBox">
         <div class="form-group form-check">
@@ -50,15 +58,3 @@
             </label>
         </div>
     </div>
-</div>
-    @section Scripts {
-
-        <script type="text/javascript">
-            $(document).ready(function)(){
-                $('.date').datepicker({
-                    orientation: "bottom",
-                    autoclose: true
-                });
-            });
-        </script>
-    }

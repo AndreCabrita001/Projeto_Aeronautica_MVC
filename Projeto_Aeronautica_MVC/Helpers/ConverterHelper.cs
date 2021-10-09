@@ -18,7 +18,7 @@ namespace Projeto_Aeronautica_MVC.Helpers
                 FlightOrigin = model.FlightOrigin,
                 FlightDestiny = model.FlightDestiny,
                 DepartureDate = model.DepartureDate,
-                ArrivalDate = model.ArrivalDate,
+                AvaliableSeats = model.AvaliableSeats,
                 Price = model.Price,
                 User = model.User
             };
@@ -29,17 +29,16 @@ namespace Projeto_Aeronautica_MVC.Helpers
             return new FlightViewModel
             {
                 Id = flight.Id,
-                FlightOriginId = flight.FlightOriginId,
-                FlightDestinyId = flight.FlightDestinyId,
                 FlightApparatus = flight.FlightApparatus,
                 IsAvailable = flight.IsAvailable,
                 AirplaneId = flight.AirplaneId,
                 FlightOrigin = flight.FlightOrigin,
                 FlightDestiny = flight.FlightDestiny,
                 DepartureDate = flight.DepartureDate,
-                ArrivalDate = flight.ArrivalDate,
+                CityOriginId = flight.CityOriginId,
+                CityDestinyId = flight.CityDestinyId,
+                AvaliableSeats = flight.AvaliableSeats,
                 Price = flight.Price,
-                //ChildPrice = flight.ChildPrice,
                 User = flight.User
             };
         }
@@ -51,9 +50,9 @@ namespace Projeto_Aeronautica_MVC.Helpers
                 Id = isNew ? 0 : model.Id,
                 ImageId = imageId,
                 Apparatus = model.Apparatus,
-                NumberOfRows = model.NumberOfRows,
+                NumberOfColumns = model.NumberOfColumns,
                 TotalSeats = model.TotalSeats,
-                SeatsPerRow = model.SeatsPerRow,
+                SeatsPerColumn = model.SeatsPerColumn,
                 AvaliableSeats = model.AvaliableSeats,
                 IsAvailable = model.IsAvailable
             };
@@ -65,9 +64,9 @@ namespace Projeto_Aeronautica_MVC.Helpers
             {
                 Id = airplane.Id,
                 Apparatus = airplane.Apparatus,
-                NumberOfRows = airplane.NumberOfRows,
+                NumberOfColumns = airplane.NumberOfColumns,
                 TotalSeats = airplane.TotalSeats,
-                SeatsPerRow = airplane.SeatsPerRow,
+                SeatsPerColumn = airplane.SeatsPerColumn,
                 AvaliableSeats = airplane.AvaliableSeats,
                 IsAvailable = airplane.IsAvailable
             };
@@ -84,7 +83,7 @@ namespace Projeto_Aeronautica_MVC.Helpers
                 UserName = model.Username,
                 Address = model.Address,
                 PhoneNumber = model.PhoneNumber,
-                Country = model.SelectedCountry,
+                Country = model.Country,
                 //CityId = model.CityId,
             };
         }
@@ -111,7 +110,7 @@ namespace Projeto_Aeronautica_MVC.Helpers
                 ImageId = imageId,
                 Address = model.Address,
                 PhoneNumber = model.PhoneNumber,
-                Country = model.SelectedCountry
+                Country = model.Country
                 //CityId = model.CityId
             };
         }

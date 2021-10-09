@@ -15,7 +15,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
         public BookingsController(IBookingRepository bookingRepository, IFlightRepository flightRepository)
         {
-
             _bookingRepository = bookingRepository;
             _flightRepository = flightRepository;
         }
@@ -25,7 +24,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
             var model = await _bookingRepository.GetBookingAsync(this.User.Identity.Name);
             return View(model);
         }
-
 
         public async Task<IActionResult> Create()
         {
@@ -50,6 +48,9 @@ namespace Projeto_Aeronautica_MVC.Controllers
             if (ModelState.IsValid)
             {
                 await _bookingRepository.AddTicketToBookingAsync(model, this.User.Identity.Name);
+
+
+
                 return RedirectToAction("Create");
             }
 

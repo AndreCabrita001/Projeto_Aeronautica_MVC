@@ -43,6 +43,25 @@ namespace Projeto_Aeronautica_MVC.Controllers
             return View(_flightRepository.GetAll().OrderBy(p => p.FlightApparatus));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Index(string flightSearch)
+        {
+            ViewData["GetFlightDetails"] = flightSearch;
+
+            var flightQuery = from x in _flightRepository.GetAll() select x;
+
+            if (!String.IsNullOrEmpty(flightSearch))
+            {
+                flightQuery = flightQuery.Where(x => x.FlightApparatus.Contains(flightSearch) ||
+                x.Price.ToString().Contains(flightSearch) || x.FlightOrigin.Contains(flightSearch) ||
+                x.FlightDestiny.Contains(flightSearch) || x.DepartureDate.ToString().Contains(flightSearch) ||
+                x.AvaliableSeats.ToString().Contains(flightSearch) || x.CityOrigin.Contains(flightSearch) ||
+                x.CityDestiny.Contains(flightSearch));
+            }
+
+            return View(await flightQuery.AsNoTracking().ToListAsync());
+        }
+
         // GET: Flights/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -62,13 +81,15 @@ namespace Projeto_Aeronautica_MVC.Controllers
         }
 
         // GET: Flights/Create
+        [Authorize(Roles = "Employee")]
         public IActionResult Create()
         {
             var model = new FlightViewModel
             {
                 Flights = _airplaneRepository.GetComboFlightApparatus(),
                 FlightsDestiny = _countryRepository.GetComboCountries(),
-                FlightsOrigin = _countryRepository.GetComboCountries()
+                FlightsOrigin = _countryRepository.GetComboCountries(),
+                Cities = _countryRepository.GetComboCities(0),
             };
 
             return View(model);
@@ -78,17 +99,19 @@ namespace Projeto_Aeronautica_MVC.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize(Roles = "Employee")]
+        
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(FlightViewModel model)
         {
             if (ModelState.IsValid)
             {
+                if(model.DepartureDate < DateTime.Now)
+                {
+                    TempData["CreateFlightError"] = "The departure cannot occur in the past.";
 
+                    return RedirectToAction("Create");
+                }
                 var airplane = await _airplaneRepository.GetByIdAsync(model.AirplaneId);
-
-                var flightOrigin = await _countryRepository.GetByIdAsync(model.FlightOriginId);
-                var flightDestiny = await _countryRepository.GetByIdAsync(model.FlightDestinyId);
 
                 Guid imageId = airplane.ImageId;
 
@@ -102,10 +125,27 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 flight.FlightApparatus = airplane.Apparatus;
                 flight.AvaliableSeats = airplane.AvaliableSeats;
 
+                var OriginCity = await _countryRepository.GetCityAsync(model.CityOriginId);
+                var DestinyCity = await _countryRepository.GetCityAsync(model.CityDestinyId);
+
+                if(OriginCity == DestinyCity)
+                {
+                    TempData["CreateFlightError"] = "The Flight Origin cannot be the same as it's Destiny.";
+
+                    return RedirectToAction("Create");
+                }
+
+                var flightOrigin = await _countryRepository.GetByIdAsync(model.FlightOriginId);
+                var flightDestiny = await _countryRepository.GetByIdAsync(model.FlightDestinyId);
+
                 flight.FlightOrigin = flightOrigin.Name;
                 flight.FlightDestiny = flightDestiny.Name;
 
+                flight.CityOrigin = OriginCity.Name;
+                flight.CityDestiny = DestinyCity.Name;
+
                 flight.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+
                 await _flightRepository.CreateAsync(flight);
 
                 return RedirectToAction(nameof(Index));
@@ -124,9 +164,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
             var flight = await _flightRepository.GetByIdAsync(id.Value);
 
-            var flightOrigin = await _countryRepository.GetByIdAsync(flight.FlightOriginId);
-            var flightDestiny = await _countryRepository.GetByIdAsync(flight.FlightDestinyId);
-
             if (flight == null)
             {
                 return NotFound();
@@ -134,11 +171,17 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
             var model = _converterHelper.ToFlightViewModel(flight);
 
+            Guid imageId = flight.ImageId;
+
+            if (model.ImageFile != null && model.ImageFile.Length > 0)
+            {
+                imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "airplanes");
+            }
+
+            model.ImageId = imageId;
             model.Flights = _airplaneRepository.GetComboFlightApparatus();
             model.FlightsOrigin = _countryRepository.GetComboCountries();
             model.FlightsDestiny = _countryRepository.GetComboCountries();
-
-
 
             return View(model);
         }
@@ -148,11 +191,17 @@ namespace Projeto_Aeronautica_MVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize (Roles = "Employee")]
         public async Task<IActionResult> Edit(FlightViewModel model)
         {
             if (ModelState.IsValid)
             {
+                if (model.DepartureDate < DateTime.Now)
+                {
+                    TempData["EditFlightError"] = "The departure cannot occur in the past.";
+
+                    return RedirectToAction("Create");
+                }
+
                 try
                 {
                     Guid imageId = model.ImageId;
@@ -161,22 +210,42 @@ namespace Projeto_Aeronautica_MVC.Controllers
                     {
                         imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "airplanes");
                     }
+                    var airplane = await _airplaneRepository.GetByIdAsync(model.AirplaneId);
 
                     bool isNew = false;
                     var flight = new Flight
                     {
                         Id = isNew ? 0 : model.Id,
-                        FlightApparatus = model.FlightApparatus,
+                        FlightApparatus = airplane.Apparatus,
+                        AvaliableSeats = airplane.AvaliableSeats,
                         IsAvailable = model.IsAvailable,
                         ImageId = imageId,
                         AirplaneId = model.AirplaneId,
                         FlightOrigin = model.FlightOrigin,
                         FlightDestiny = model.FlightDestiny,
                         DepartureDate = model.DepartureDate,
-                        ArrivalDate = model.ArrivalDate,
                         Price = model.Price,
                         User = model.User
                     };
+
+                    var OriginCity = await _countryRepository.GetCityAsync(model.CityOriginId);
+                    var DestinyCity = await _countryRepository.GetCityAsync(model.CityDestinyId);
+
+                    if (OriginCity == DestinyCity)
+                    {
+                        TempData["EditFlightError"] = "The Flight Origin cannot be the same as it's Destiny.";
+
+                        return RedirectToAction("Create");
+                    }
+
+                    var flightOrigin = await _countryRepository.GetByIdAsync(model.FlightOriginId);
+                    var flightDestiny = await _countryRepository.GetByIdAsync(model.FlightDestinyId);
+
+                    flight.FlightOrigin = flightOrigin.Name;
+                    flight.FlightDestiny = flightDestiny.Name;
+
+                    flight.CityOrigin = OriginCity.Name;
+                    flight.CityDestiny = DestinyCity.Name;
 
                     flight.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                     await _flightRepository.UpdateAsync(flight);
@@ -206,7 +275,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
             {
                 return NotFound();
             }
-            //dynamic FlightAirplane = new ExpandoObject();
 
             var flight = await _flightRepository.GetByIdAsync(id.Value);
 
@@ -237,6 +305,14 @@ namespace Projeto_Aeronautica_MVC.Controllers
             }
 
             return View("Error");
+        }
+
+        [HttpPost]
+        [Route("Flights/GetCitiesAsync")]
+        public async Task<JsonResult> GetCitiesAsync(int countryId)
+        {
+            var country = await _countryRepository.GetCountryWithCitiesAsync(countryId);
+            return Json(country.Cities.OrderBy(c => c.Name));
         }
 
     }

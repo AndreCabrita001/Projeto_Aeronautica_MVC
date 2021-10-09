@@ -1,0 +1,35 @@
+﻿@model Projeto_Aeronautica_MVC.Data.Entities.User
+@{
+    ViewData["Title"] = "Details";
+}
+
+<section class="services" id="services" style="margin-top:60px">
+
+    <h1 class="heading"> Client Details</h1>
+    <hr />
+    <div>
+        <div class="box-container">
+            <div class="box">
+
+                <p><b>@Html.DisplayNameFor(model => model.FullName)</b> : @Html.DisplayFor(model => model.FullName)</p>
+                <p><b>@Html.DisplayNameFor(model => model.ImageId)</b> : @Html.DisplayFor(model => model.ImageId)</p>
+                <p><b>@Html.DisplayNameFor(model => model.Address)</b> : @Html.DisplayFor(model => model.Address)</p>
+                <p><b>@Html.DisplayNameFor(model => model.PhoneNumber)</b> : @Html.DisplayFor(model => model.PhoneNumber)</p>
+                <p><b>@Html.DisplayNameFor(model => model.Country)</b> : @Html.DisplayFor(model => model.Country)</p>
+
+                <div>
+                    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Employee"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn">Edit</a>
+                    }
+                    <a asp-action="Index" class="btn">Back to List</a>
+                </div>
+            </div>
+
+            <div style="text-align:right; position:relative">
+                <img src="@Url.Content(Model.ImageFullPath)" alt="Image" style="height:300px; width:400px; border-radius:15%; overflow:hidden; box-shadow: 0px 30px 40px -25px rgba(0, 0, 0, 1)">
+            </div>
+        </div>
+    </div>
+</section>
+

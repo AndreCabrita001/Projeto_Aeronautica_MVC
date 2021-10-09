@@ -20,16 +20,9 @@
 
                 <partial name="_Airplanes" />
 
-                <div class="inputBox">
-                    <span>Image</span>
-                    <input asp-for="ImageFile" class="form-control" type="file" />
-
-                </div>
-                <h3><span asp-validation-for="ImageFile" class="text-danger"></span></h3>
-
                 <div class="form-group">
                     <input type="submit" value="Save" class="btn" />
-                    <a asp-action="Index" class="bt btn-success">Back to List</a>
+                    <a asp-action="Index" class="btn">Back to List</a>
                 </div>
             </form>
         </div>

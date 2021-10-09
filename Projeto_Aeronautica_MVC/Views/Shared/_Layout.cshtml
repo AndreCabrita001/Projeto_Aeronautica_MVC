@@ -27,6 +27,8 @@
 
         <link href='https://css.gg/user-add.css' rel='stylesheet'>
 
+        <link href='https://css.gg/user-list.css' rel='stylesheet'>
+
         <link href='https://css.gg/album.css' rel='stylesheet'>
         <!-- custom css file cdn link  -->
         <link rel="stylesheet" href="~/css/style.css">
@@ -34,9 +36,13 @@
         <link rel="stylesheet" href="~/build/css/countrySelect.css">
         <script src="~/lib/jquery/dist/jquery.min.js"></script>
         <script src="~/build/js/countrySelect.js"></script>
+
+        <link rel="stylesheet" href="~/lib/jquery-ui/jquery-ui.css">
+        <script src="~/lib/jquery-ui/jquery-ui.js"></script>
+        <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
+
     </head>
     <body>
-        
         <header class="header">
 
             <a class="logo" asp-area="" asp-controller="Home" asp-action="Index"><i class="fas fa-plane"></i>Projeto Aero</a>
@@ -59,8 +65,6 @@
 
                 <a asp-area="" asp-controller="Flights" asp-action="Index"><center><i class="fas fa-plane"></i></center>Flights</a>
 
-
-
                 @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
                 {
                     <a asp-area="" asp-controller="Countries" asp-action="Index"><center><i class="gg-flag"></i></center>Countries</a>
@@ -68,6 +72,8 @@
                     <a asp-area="" asp-controller="Airplane" asp-action="Index"><center><i class="gg-airplane"></i></center>Planes</a>
 
                     <a asp-area="" asp-controller="Account" asp-action="Register"><center><i class="gg-user-add"></i></center>Employees</a>
+
+                    <a asp-area="" asp-controller="Account" asp-action="Index"><center><i class="gg-user-list"></i></center>Clients</a>
                 }
                 else if (this.User.Identity.IsAuthenticated && !this.User.IsInRole("Employee"))
                 {
@@ -104,6 +110,7 @@
                         {
                            <center><h3><b>Client</b></h3></center>
                         }
+
                         <br />
 
                         <a asp-area="" asp-controller="Account" asp-action="ChangeUser"><h3>@this.User.Identity.Name</h3></a>

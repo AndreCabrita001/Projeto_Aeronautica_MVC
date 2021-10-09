@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using Projeto_Aeronautica_MVC.Data.Entities;
 using Projeto_Aeronautica_MVC.Helpers;
 using Projeto_Aeronautica_MVC.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,7 +15,6 @@ namespace Projeto_Aeronautica_MVC.Data
     {
         private readonly DataContext _context;
         private readonly IUserHelper _userHelper;
-
         public BookingRepository(DataContext context, IUserHelper userHelper) : base(context)
         {
             _context = context;
@@ -42,6 +43,7 @@ namespace Projeto_Aeronautica_MVC.Data
             {
                 bookingDetailTemp = new BookingDetailTemp
                 {
+                    DepartureDate = flight.DepartureDate,
                     Price = flight.Price,
                     Flight = flight,
                     Quantity = model.Quantity,
@@ -79,16 +81,24 @@ namespace Projeto_Aeronautica_MVC.Data
 
             var details = bookingTmps.Select(o => new BookingDetail
             {
+                DepartureDate = o.DepartureDate,
                 Price = o.Price,
                 Flight = o.Flight,
                 Quantity = o.Quantity
             }).ToList();
 
+            var data = new DateTime?();
+            foreach(var item in details)
+            {
+                data = item.DepartureDate;
+            }
+
             var booking = new Booking
             {
+                DepartureDate = data,
                 BookingDate = DateTime.UtcNow,
                 User = user,
-                Tickets = details
+                Tickets = details,
             };
 
             await CreateAsync(booking);

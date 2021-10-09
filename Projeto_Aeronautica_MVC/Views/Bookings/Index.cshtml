@@ -1,8 +1,8 @@
 ﻿@model IEnumerable<Projeto_Aeronautica_MVC.Data.Entities.Booking>
 
-@{
-    ViewData["Title"] = "Index";
-}
+@{ ViewData["Title"] = "Index"; }
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css" />
 
 <section class="services" id="services" style="margin-top:60px">
 
@@ -15,7 +15,7 @@
     <p>
         <a asp-action="Create" class="btn">Create New</a>
     </p>
-    <form action="">
+    <form action="" style="zoom:90%">
 
         <table class="table">
 
@@ -23,15 +23,14 @@
                 <tr>
                     @if (this.User.IsInRole("Admin"))
                     {
-                <th>
-                    <div class="inputBox">
-                        <span>@Html.DisplayNameFor(model => model.User.FullName)</span>
-                    </div>
-                </th>
-}
+        <th>
+            <div class="inputBox">
+                <span>@Html.DisplayNameFor(model => model.User.FullName)</span>
+            </div>
+        </th>}
                     <th>
                         <div class="inputBox">
-                            <span>@Html.DisplayNameFor(model => model.BookingDateLocal)</span>
+                            <span>Booking Date</span>
                         </div>
                     </th>
                     <th>
@@ -39,11 +38,6 @@
                             <span>@Html.DisplayNameFor(model => model.DepartureDate)</span>
                         </div>
 
-                    </th>
-                    <th>
-                        <div class="inputBox">
-                            <span>@Html.DisplayNameFor(model => model.Lines)</span>
-                        </div>
                     </th>
                     <th>
                         <div class="inputBox">
@@ -63,11 +57,11 @@
     <tr>
         @if (this.User.IsInRole("Admin"))
         {
-<th>
+<td>
     <div class="inputBox">
         <span>@Html.DisplayFor(modelItem => item.User.FullName)</span>
     </div>
-</th>}
+</td>}
         <td>
             <div class="inputBox">
                 <span>@Html.DisplayFor(modelItem => item.BookingDateLocal)</span>
@@ -76,11 +70,6 @@
         <td>
             <div class="inputBox">
                 <span>@Html.DisplayFor(modelItem => item.DepartureDate)</span>
-            </div>
-        </td>
-        <td>
-            <div class="inputBox">
-                <span> @Html.DisplayFor(modelItem => item.Lines)</span>
             </div>
         </td>
         <td>
@@ -98,8 +87,19 @@
             <a asp-action="Departure" asp-route-id="@item.Id" class="btn" id="btnDeliver">Deliver</a>
             <a asp-action="Delete" asp-route-id="@item.Id" class="btn" id="btnDelete">Delete</a>
         </td>
-    </tr>}
+    </tr>
+}
             </tbody>
         </table>
     </form>
 </section>
+
+@section Scripts{
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript">
+            $(document).ready(function () {
+                $('#MyTable').DataTable();
+            });
+    </script>
+}

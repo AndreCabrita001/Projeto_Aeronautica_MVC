@@ -4,7 +4,6 @@
 }
 
 <section class="services" id="services" style="margin-top:60px">
-
     <h1 class="heading">Add Flight to Booking</h1>
     <hr />
 </section>
@@ -18,14 +17,12 @@
                 <div class="inputBox">
                     <span>Flight</span>
                     <select style="font-size:17px" asp-for="FlightId" asp-items="Model.Flights" class="form-control"></select>
-
                 </div>
                 <h3><span asp-validation-for="FlightId" class="text-danger"></span></h3>
 
                 <div class="inputBox">
-                    <span>Quantity</span>
+                    <span>Number of Tickets</span>
                     <input asp-for="Quantity" class="form-control" />
-
                 </div>
                 <h3><span asp-validation-for="Quantity" class="text-danger"></span></h3>
 

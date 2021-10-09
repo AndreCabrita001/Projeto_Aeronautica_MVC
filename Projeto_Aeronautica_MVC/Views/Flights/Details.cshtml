@@ -11,12 +11,14 @@
     <div>
         <div class="box-container">
             <div class="box">
+
                 <p><b>@Html.DisplayNameFor(model => model.FlightApparatus)</b> : @Html.DisplayFor(model => model.FlightApparatus)</p>
                 <p><b>@Html.DisplayNameFor(model => model.FlightOrigin)</b> : @Html.DisplayFor(model => model.FlightOrigin)</p>
+                <p><b>@Html.DisplayNameFor(model => model.CityOrigin)</b> : @Html.DisplayFor(model => model.CityOrigin)</p>
                 <p><b>@Html.DisplayNameFor(model => model.FlightDestiny)</b> : @Html.DisplayFor(model => model.FlightDestiny)</p>
+                <p><b>@Html.DisplayNameFor(model => model.CityDestiny)</b> : @Html.DisplayFor(model => model.CityDestiny)</p>
                 <p><b>@Html.DisplayNameFor(model => model.Price)</b> : @Html.DisplayFor(model => model.Price)</p>
                 <p><b>@Html.DisplayNameFor(model => model.DepartureDate)</b> : @Html.DisplayFor(model => model.DepartureDate)</p>
-                <p><b>@Html.DisplayNameFor(model => model.ArrivalDate)</b> : @Html.DisplayFor(model => model.ArrivalDate)</p>
                 <p><b>@Html.DisplayNameFor(model => model.AvaliableSeats)</b> : @Html.DisplayFor(model => model.AvaliableSeats)</p>
                 <p><b>@Html.DisplayNameFor(model => model.IsAvailable)</b> : @Html.DisplayFor(model => model.IsAvailable)</p>
 
@@ -32,18 +34,6 @@
             <div style="text-align:right; position:relative">
                 <img src="@Url.Content(Model.ImageFullPath)" alt="Image" style="height:300px; width:400px; border-radius:15%; overflow:hidden; box-shadow: 0px 30px 40px -25px rgba(0, 0, 0, 1)">
             </div>
-
-            @*@Html.DisplayNameFor(model => model.AdultPrice)
-                @Html.DisplayFor(model => model.AdultPrice)
-
-                @Html.DisplayNameFor(model => model.DepartureDate)
-                @Html.DisplayFor(model => model.DepartureDate)
-
-                @Html.DisplayNameFor(model => model.ArrivalDate)
-                @Html.DisplayFor(model => model.ArrivalDate)
-
-                @Html.DisplayNameFor(model => model.IsAvailable)
-                @Html.DisplayFor(model => model.IsAvailable)*@
         </div>
     </div>
 </section>

@@ -14,6 +14,9 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd hh:mm tt}", ApplyFormatInEditMode = false)]
         public DateTime BookingDate { get; set; }
 
+        [Display(Name = "Seats per Column")]
+        public int SeatsPerColumn { get; set; }
+
         [Display(Name = "Departure date")]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd hh:mm tt}", ApplyFormatInEditMode = false)]
         public DateTime? DepartureDate { get; set; }
@@ -40,6 +43,5 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
 #pragma warning restore CS8073
             ? null
             : this.BookingDate.ToLocalTime();
-
     }
 }

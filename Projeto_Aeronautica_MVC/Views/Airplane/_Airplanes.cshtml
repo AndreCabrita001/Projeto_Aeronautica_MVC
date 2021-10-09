@@ -10,16 +10,15 @@
 <div class="inputBox">
     <span>Image</span>
     <input asp-for="ImageFile" class="form-control" type="file" />
-    
 </div>
 <h3><span asp-validation-for="ImageFile" class="text-danger"></span></h3>
 
 <div class="inputBox">
-    <span>Number of Rows</span>
-    <input asp-for="NumberOfRows" class="form-control" />
+    <span>Number of Columns</span>
+    <input asp-for="NumberOfColumns" class="form-control" />
     
 </div>
-<h3><span asp-validation-for="NumberOfRows" class="text-danger"></span></h3>
+<h3><span asp-validation-for="NumberOfColumns" class="text-danger"></span></h3>
 
 <div class="inputBox">
     <span>Total Seats</span>
@@ -38,14 +37,12 @@
 <div class="inputBox">
     <div class="form-group form-check">
         <label class="form-check-label">
-            <input class="form-check-input" asp-for="IsAvailable" /> <span>Is Avaliable?</span>@*@Html.DisplayNameFor(model => model.IsAvailable)*@
+            <input class="form-check-input" asp-for="IsAvailable" /> <span>Is Avaliable?</span>
         </label>
     </div>
 </div>
 
-
 @section Scripts {
-
     <script type="text/javascript">$(document).ready(function)(){
         $('.date').datepicker({
         orientation: "bottom",

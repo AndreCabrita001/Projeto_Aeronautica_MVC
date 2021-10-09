@@ -1,17 +1,15 @@
 ﻿@model Projeto_Aeronautica_MVC.Models.FlightViewModel
-@{
-    ViewData["Title"] = "Create new flight";
-}
+@{ ViewData["Title"] = "Create new flight"; }
 
 <section class="services" id="services" style="margin-top:60px">
-        <h1 class="heading"> Create New Flight</h1>
+    <h1 class="heading"> Create New Flight</h1>
     <hr />
 </section>
 
 <section class="form-container">
     <div class="row">
         <div class="col-md-4">
-            <form asp-action="Create" enctype="multipart/form-data">
+            <form asp-action="Create">
 
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -21,11 +19,66 @@
                     <input type="submit" value="Create" class="btn" />
                     <a asp-action="Index" class="btn">Back to List</a>
                 </div>
+
+                <div class="inputBox">
+                    <span class="text-danger">@TempData["CreateFlightError"]</span>
+                </div>
             </form>
         </div>
     </div>
 </section>
 
-    @section Scripts {
-        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    }
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+        
+            $(document).ready(function () {
+                $("#FlightOriginId").change(function () {
+			$("#CityOriginId").empty();
+			$.ajax({
+				url: '@Url.Action("GetCitiesAsync", "Flights")',
+				type: 'POST',
+				dataType: 'json',
+				data: {countryId:$("#FlightOriginId").val()},
+                success: function (cities) {
+                    $("#CityOriginId").append('<option value="0">(Select a city origin...)</option>');
+					$.each(cities, function (i, city) {
+                        $("#CityOriginId").append('<option value="'
+							+ city.id + '">'
+							+ city.name + '</option>');
+					});
+				},
+				error: function (ex) {
+					alert('Failed to retrieve cities.' + ex);
+				}
+			});
+			return false;
+		})
+            });
+
+    $(document).ready(function () {
+                $("#FlightDestinyId").change(function () {
+			$("#CityDestinyId").empty();
+			$.ajax({
+				url: '@Url.Action("GetCitiesAsync", "Flights")',
+				type: 'POST',
+				dataType: 'json',
+				data: {countryId:$("#FlightDestinyId").val()},
+                success: function (cities) {
+                    $("#CityDestinyId").append('<option value="0">(Select a city destiny...)</option>');
+					$.each(cities, function (i, city) {
+                        $("#CityDestinyId").append('<option value="'
+							+ city.id + '">'
+							+ city.name + '</option>');
+					});
+				},
+				error: function (ex) {
+					alert('Failed to retrieve cities.' + ex);
+				}
+			});
+			return false;
+		})
+	});
+    </script>
+}

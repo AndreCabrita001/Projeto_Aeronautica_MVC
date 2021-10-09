@@ -86,9 +86,9 @@ namespace Projeto_Aeronautica_MVC.Controllers
                     Id = model.Id,
                     ImageId = imageId,
                     Apparatus = model.Apparatus,
-                    NumberOfRows = model.NumberOfRows,
+                    NumberOfColumns = model.NumberOfColumns,
                     TotalSeats = model.TotalSeats,
-                    SeatsPerRow = model.SeatsPerRow,
+                    SeatsPerColumn = model.SeatsPerColumn,
                     AvaliableSeats = model.AvaliableSeats,
                     IsAvailable = model.IsAvailable
                 };
@@ -116,6 +116,14 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
             var model = _converterHelper.ToPlaneViewModel(airplane);
 
+            Guid imageId = airplane.ImageId;
+
+            if (model.ImageFile != null && model.ImageFile.Length > 0)
+            {
+                imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "airplanes");
+            }
+
+            model.ImageId = imageId;
 
             return View(model);
         }

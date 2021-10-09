@@ -18,10 +18,6 @@ namespace Projeto_Aeronautica_MVC.Models
         //[Display(Name = "Country")]
         //[Range(1, int.MaxValue, ErrorMessage = "You must select a country.")]
         //public int CountryId { get; set; }
-
-        [Display(Name = "Country")]
-        public string SelectedCountry { get; set; }
-
         //public IEnumerable<SelectListItem> Countries { get; set; }
 
         [Required]

@@ -44,6 +44,24 @@ namespace Projeto_Aeronautica_MVC.Data
                 await _context.SaveChangesAsync();
             }
 
+            if (!_context.Countries.Any())
+            {
+                var cities = new List<City>();
+                cities.Add(new City { Name = "Madrid" });
+                cities.Add(new City { Name = "Barcelona" });
+                cities.Add(new City { Name = "Sevilla" });
+
+                _context.Countries.Add(new Country
+                {
+
+                    Cities = cities,
+                    Name = "Spain"
+                });
+
+                await _context.SaveChangesAsync();
+            }
+
+
             var user = await _userHelper.GetUserByEmailAsync("aandrecaldeira15@gmail.com");
             var user2 = await _userHelper.GetUserByEmailAsync("aandrecaldeira30@gmail.com");
             if (user == null && user2 == null)
@@ -56,7 +74,6 @@ namespace Projeto_Aeronautica_MVC.Data
                     UserName = "aandrecaldeira15@gmail.com",
                     PhoneNumber = "212343555",
                     Address = "Rua Jau 33",
-                    ImageId = new Guid("a0307b6b-8657-4f43-ac27-044e03cab8b3"),
                     Country = "Portugal"
                 };
 
@@ -68,7 +85,6 @@ namespace Projeto_Aeronautica_MVC.Data
                     UserName = "aandrecaldeira30@gmail.com",
                     PhoneNumber = "424686000",
                     Address = "Rua Jau 66",
-                    ImageId = new Guid("02e9916e-913c-4b40-8b0b-b8dce5f5e8f9"),
                     Country = "Portugal"
                 };
 
@@ -128,8 +144,8 @@ namespace Projeto_Aeronautica_MVC.Data
         private void AddPlane(Airplane plane)
         {
             plane.Apparatus = "Airbus a330";
-            plane.NumberOfRows = 3;
-            plane.ImageId = new Guid("ed8cbf78-f56b-4666-b486-a2e82b37f9b5");
+            plane.NumberOfColumns = 3;
+            plane.ImageId = new Guid("f62027f2-3f94-4a01-980f-88da906190c1");
             plane.TotalSeats = 300;
             plane.AvaliableSeats = 300;
             _context.Airplanes.Add(plane);
@@ -145,10 +161,12 @@ namespace Projeto_Aeronautica_MVC.Data
                 FlightDestiny = "Spain",
                 ImageId = plane.ImageId,
                 DepartureDate = DateTime.Now.AddDays(20),
-                ArrivalDate = DateTime.Now.AddDays(21),
+                //ArrivalDate = DateTime.Now.AddDays(21),
                 Price = 300,
                 AvaliableSeats = plane.AvaliableSeats,
                 Airplane = plane,
+                CityOrigin = "Lisboa",
+                CityDestiny = "Madrid",
                 User = user
             });
         }

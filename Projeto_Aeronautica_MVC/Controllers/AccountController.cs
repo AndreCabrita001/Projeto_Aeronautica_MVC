@@ -19,12 +19,12 @@ namespace Projeto_Aeronautica_MVC.Controllers
     public class AccountController : Controller
     {
         private readonly IUserHelper _userHelper;
+        private readonly IUserRepository _userRepository;
         private readonly IMailHelper _mailHelper;
         private readonly IConfiguration _configuration;
         private readonly ICountryRepository _countryRepository;
         private readonly IBlobHelper _blobHelper;
         private readonly IConverterHelper _converterHelper;
-        //private readonly IUserRepository _userRepository;
 
         public AccountController(
             IUserHelper userHelper,
@@ -32,8 +32,8 @@ namespace Projeto_Aeronautica_MVC.Controllers
             IConfiguration configuration,
             ICountryRepository countryRepository,
             IBlobHelper blobHelper,
-            IConverterHelper converterHelper
-            /*IUserRepository userRepository*/)
+            IConverterHelper converterHelper,
+            IUserRepository userRepository)
         {
             _userHelper = userHelper;
             _mailHelper = mailHelper;
@@ -41,7 +41,31 @@ namespace Projeto_Aeronautica_MVC.Controllers
             _configuration = configuration;
             _countryRepository = countryRepository;
             _converterHelper = converterHelper;
-            //_userRepository = userRepository;
+            _userRepository = userRepository;
+        }
+
+        [Authorize (Roles = "Admin")]
+        public IActionResult Index()
+        {
+            return View(_userRepository.GetAllUsers().OrderBy(p => p.FirstName));
+        }
+
+        // GET: Users/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _userHelper.GetUserByIdAsync(id.Value.ToString());
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
         }
 
         public async Task<IActionResult> Login()
@@ -56,16 +80,15 @@ namespace Projeto_Aeronautica_MVC.Controllers
                     if (user.ImageId != Guid.Empty)
                     {
                         var imgId = user.ImageId.ToString();
-                        TempData["ImageId"] = "https://projetoaerostorage.blob.core.windows.net/users/" + $"{imgId}";
+                        TempData["ImageId"] = "https://projaerostoragemvc.blob.core.windows.net/users/" + $"{imgId}";
                     }
                     else
                     {
-                        TempData["ImageId"] = "https://projetoaeronautica.azurewebsites.net/images/noimage.png";
+                        TempData["ImageId"] = "https://projetoaeronauticamvc.azurewebsites.net/images/noimage.png";
                     }
                 }
                 return RedirectToAction("Index", "Home");
             }
-
             return View();
         }
 
@@ -84,11 +107,11 @@ namespace Projeto_Aeronautica_MVC.Controllers
                     if (user.ImageId != Guid.Empty)
                     {
                         var imgId = user.ImageId.ToString();
-                        TempData["ImageId"] = "https://projetoaerostorage.blob.core.windows.net/users/" + $"{imgId}";
+                        TempData["ImageId"] = "https://projaerostoragemvc.blob.core.windows.net/users/" + $"{imgId}";
                     }
                     else
                     {
-                        TempData["ImageId"] = "https://projetoaeronautica.azurewebsites.net/images/noimage.png";
+                        TempData["ImageId"] = "https://projetoaeronauticamvc.azurewebsites.net/images/noimage.png";
                     }
 
                     if (this.Request.Query.Keys.Contains("ReturnUrl"))
@@ -127,10 +150,9 @@ namespace Projeto_Aeronautica_MVC.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _userHelper.GetUserByEmailAsync(model.Username);
+
                 if (user == null)
                 {
-                    //var city = await _countryRepository.GetCityAsync(model.CityId);
-
                     Guid imageId = Guid.Empty;
 
                     if (model.ImageFile != null && model.ImageFile.Length > 0)
@@ -166,6 +188,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
                     }
 
                     var result2 = await _userHelper.AddUserAsync(user, model.Password);
+
                     if (result2 != IdentityResult.Success)
                     {
                         ModelState.AddModelError(string.Empty, "The user couldn't be created.");
@@ -191,6 +214,11 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
                     ModelState.AddModelError(string.Empty, "The user couldn't be logged.");
                 }
+                else
+                {
+                    ViewBag.Message = "This user already exists.";
+                    return View(model);
+                }
             }
             return View(model);
         }
@@ -214,24 +242,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 model.Address = user.Address;
                 model.PhoneNumber = user.PhoneNumber;
                 model.Country = user.Country;
-
-
-                var wtf = "WTF";
-                //var city = await _countryRepository.GetCityAsync(user.CityId);
-                //if (city != null)
-                //{
-                //    var country = await _countryRepository.GetCountryAsync(city);
-                //    if (country != null)
-                //    {
-                //        model.CountryId = country.Id;
-                //        model.Cities = _countryRepository.GetComboCities(country.Id);
-                //        model.Countries = _countryRepository.GetComboCountries();
-                //     }
-                //}
             }
-
-            //model.Cities = _countryRepository.GetComboCities(model.CountryId);
-            //model.Countries = _countryRepository.GetComboCountries();
             return View(model);
         }
 
@@ -265,11 +276,11 @@ namespace Projeto_Aeronautica_MVC.Controllers
                     if (user.ImageId != Guid.Empty)
                     {
                         var imgId = user.ImageId.ToString();
-                        TempData["ImageId"] = "https://projetoaerostorage.blob.core.windows.net/users/" + $"{imgId}";
+                        TempData["ImageId"] = "https://projaerostoragemvc.blob.core.windows.net/users/" + $"{imgId}";
                     }
                     else
                     {
-                        TempData["ImageId"] = "https://projetoaeronautica.azurewebsites.net/images/noimage.png";
+                        TempData["ImageId"] = "https://projetoaeronauticamvc.azurewebsites.net/images/noimage.png";
                     }
 
                     var response = await _userHelper.UpdateUserAsync(user);
@@ -471,12 +482,12 @@ namespace Projeto_Aeronautica_MVC.Controllers
         }
 
 
-        [HttpPost]
-        [Route("Account/GetCitiesAsync")]
-        public async Task<JsonResult> GetCitiesAsync(int countryId)
-        {
-            var country = await _countryRepository.GetCountryWithCitiesAsync(countryId);
-            return Json(country.Cities.OrderBy(c => c.Name));
-        }
+        //[HttpPost]
+        //[Route("Account/GetCitiesAsync")]
+        //public async Task<JsonResult> GetCitiesAsync(int countryId)
+        //{
+        //    var country = await _countryRepository.GetCountryWithCitiesAsync(countryId);
+        //    return Json(country.Cities.OrderBy(c => c.Name));
+        //}
     }
 }
