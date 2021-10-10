@@ -4,11 +4,19 @@
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css" />
 
+<head>
+    <style>
+
+        .country-select .selected-flag .arrow {
+            display: none;
+        }
+    </style>
+</head>
+
 <section class="services" id="services" style="margin-top:60px">
 
     <h1 class="heading">Personal Bookings</h1>
     <hr />
-
 </section>
 
 <section class="form-container">
@@ -23,11 +31,12 @@
                 <tr>
                     @if (this.User.IsInRole("Admin"))
                     {
-        <th>
-            <div class="inputBox">
-                <span>@Html.DisplayNameFor(model => model.User.FullName)</span>
-            </div>
-        </th>}
+                <th>
+                    <div class="inputBox">
+                        <span>Username</span>
+                    </div>
+                </th>
+}
                     <th>
                         <div class="inputBox">
                             <span>Booking Date</span>
@@ -39,7 +48,12 @@
                         </div>
 
                     </th>
-                    <th>
+                    <th style="width:20%">
+                        <div class="inputBox">
+                            <span>@Html.DisplayNameFor(model => model.FlightDestiny)</span>
+                        </div>
+                    </th>
+                    @*<th>
                         <div class="inputBox">
                             <span>@Html.DisplayNameFor(model => model.Quantity)</span>
                         </div>
@@ -48,51 +62,62 @@
                         <div class="inputBox">
                             <span>@Html.DisplayNameFor(model => model.Value)</span>
                         </div>
-                    </th>
+                    </th>*@
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
-    <tr>
-        @if (this.User.IsInRole("Admin"))
-        {
-<td>
-    <div class="inputBox">
-        <span>@Html.DisplayFor(modelItem => item.User.FullName)</span>
-    </div>
-</td>}
-        <td>
-            <div class="inputBox">
-                <span>@Html.DisplayFor(modelItem => item.BookingDateLocal)</span>
-            </div>
-        </td>
-        <td>
-            <div class="inputBox">
-                <span>@Html.DisplayFor(modelItem => item.DepartureDate)</span>
-            </div>
-        </td>
-        <td>
+                <tr>
+                    <td>
+                        <div class="inputBox">
+                            <span>Client</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="inputBox">
+                            <span>@Html.DisplayFor(modelItem => item.BookingDateLocal)</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="inputBox">
+                            <span>@Html.DisplayFor(modelItem => item.DepartureDate)</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="inputBox" style="position:relative; bottom:16px">
+                            <input style="background-color: transparent; font-size: 17px;" type="text" disabled="disabled" value="@Html.DisplayFor(modelItem => item.FlightDestiny)" />
+                            <span>	&nbsp;	&nbsp;	&nbsp;	&nbsp; &nbsp; &nbsp;@Html.DisplayFor(modelItem => item.CityDestiny)</span>
+                        </div>
+                    </td>
+                    @*<td>
             <div class="inputBox">
                 <span>@Html.DisplayFor(modelItem => item.Quantity)</span>
             </div>
-
         </td>
         <td>
             <div class="inputBox">
                 <span>@Html.DisplayFor(modelItem => item.Value)</span>
             </div>
-        </td>
-        <td>
-            <a asp-action="Departure" asp-route-id="@item.Id" class="btn" id="btnDeliver">Deliver</a>
-            <a asp-action="Delete" asp-route-id="@item.Id" class="btn" id="btnDelete">Delete</a>
-        </td>
-    </tr>
+        </td>*@
+                    <td>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn" id="btnDelete">Delete</a>
+                    </td>
+                </tr>
 }
             </tbody>
         </table>
     </form>
 </section>
+
+<script>
+    $('input[type=text]').each(function () {
+        $("input[type=text]").countrySelect({
+            preferredCountries: ['pt']
+        });
+        $("input[type=text]").attr("disabled", "disabled")
+    })
+</script>
 
 @section Scripts{
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>

@@ -11,6 +11,21 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
         [Required]
         public Flight Flight { get; set; }
 
+        [Range(1, int.MaxValue, ErrorMessage = "You must select a Flight Destiny.")]
+        public int FlightDestinyId { get; set; }
+
+        [Display(Name = "Flight Destiny")]
+        public string FlightDestiny { get; set; }
+
+        [Range(1, int.MaxValue, ErrorMessage = "You must select a City Destiny.")]
+        public int CityDestinyId { get; set; }
+
+        [Display(Name = "City Destiny")]
+        public string CityDestiny { get; set; }
+
+        [Display(Name = "Seats Name")]
+        public string SeatName { get; set; }
+
         [Display(Name = "Seats per Column")]
         public int SeatsPerColumn { get; set; }
 
@@ -24,6 +39,6 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
         [DisplayFormat(DataFormatString = "{0:N2}")]
         public double Quantity { get; set; }
 
-        public decimal Value => Price * (decimal)Quantity;
+        //public decimal Value => Price * (decimal)Quantity;
     }
 }

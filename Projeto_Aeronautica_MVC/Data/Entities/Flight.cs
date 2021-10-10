@@ -9,11 +9,15 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
     {
         public int Id { get; set; }
 
-
         [Range(1, int.MaxValue, ErrorMessage = "You must select an airplane.")]
         public int AirplaneId { get; set; }
 
         public Airplane Airplane { get; set; }
+
+        public ICollection<Passenger> Passengers { get; set; }
+
+        [Display(Name = "Number of cities")]
+        public int NumberPassengers => Passengers == null ? 0 : Passengers.Count;
 
         [Display(Name = "Flight Apparatus")]
         public string FlightApparatus { get; set; }
@@ -27,11 +31,6 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd hh:mm tt}", ApplyFormatInEditMode = false)]
         [Display(Name = "Departure Date")]
         public DateTime? DepartureDate { get; set; }
-
-        //[Required]
-        //[DisplayFormat(DataFormatString = "{0:yyyy/MM/dd hh:mm tt}", ApplyFormatInEditMode = false)]
-        //[Display(Name = "Arrival Date")]
-        //public DateTime? ArrivalDate { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "You must select a Flight Origin.")]
         public int FlightOriginId { get; set; }
@@ -54,7 +53,7 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
         [Display(Name = "Flight Destiny")]
         public string FlightDestiny { get; set; }
 
-        [Display(Name = "City Origin")]
+        [Display(Name = "City Destiny")]
         public string CityDestiny { get; set; }
 
         [Display(Name = "Avaliable Seats")]

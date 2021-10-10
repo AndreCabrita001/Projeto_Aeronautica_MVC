@@ -85,6 +85,8 @@ namespace Projeto_Aeronautica_MVC
 
             services.AddScoped<IBookingRepository, BookingRepository>();
 
+            services.AddScoped<IPassengerRepository, PassengerRepository>();
+
             services.AddScoped<IUserRepository, UserRepository>();
 
             services.ConfigureApplicationCookie(options =>

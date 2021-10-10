@@ -24,13 +24,15 @@ namespace Projeto_Aeronautica_MVC.Data
         public async Task AddTicketToBookingAsync(AddTicketViewModel model, string userName)
         {
             var user = await _userHelper.GetUserByEmailAsync(userName);
+
             if(user == null)
             {
                 return;
             }
 
             var flight = await _context.Flights.FindAsync(model.FlightId);
-            if(flight == null)
+
+            if (flight == null)
             {
                 return;
             }
@@ -39,24 +41,23 @@ namespace Projeto_Aeronautica_MVC.Data
                 .Where(odt => odt.User == user && odt.Flight == flight)
                 .FirstOrDefaultAsync();
 
-            if(bookingDetailTemp == null)
-            {
                 bookingDetailTemp = new BookingDetailTemp
                 {
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    SeatName = model.SeatName,
+                    Address = model.Address,
+                    Country = model.Country,
+                    PhoneNumber = model.PhoneNumber,
                     DepartureDate = flight.DepartureDate,
+                    CityDestiny = flight.CityDestiny,
+                    FlightDestiny = flight.FlightDestiny,
                     Price = flight.Price,
                     Flight = flight,
-                    Quantity = model.Quantity,
-                    User = user,
+                    User = user
                 };
 
-                _context.BookingDetailsTemp.Add(bookingDetailTemp);
-            }
-            else
-            {
-                bookingDetailTemp.Quantity += model.Quantity;
-                _context.BookingDetailsTemp.Update(bookingDetailTemp);
-            }
+            _context.BookingDetailsTemp.Add(bookingDetailTemp);
 
             await _context.SaveChangesAsync();
         }
@@ -81,20 +82,28 @@ namespace Projeto_Aeronautica_MVC.Data
 
             var details = bookingTmps.Select(o => new BookingDetail
             {
+                FlightDestiny = o.FlightDestiny,
+                CityDestiny = o.CityDestiny,
                 DepartureDate = o.DepartureDate,
                 Price = o.Price,
                 Flight = o.Flight,
-                Quantity = o.Quantity
+                //Quantity = o.Quantity
             }).ToList();
 
             var data = new DateTime?();
-            foreach(var item in details)
+            var flightDestiny = "";
+            var cityDestiny = "";
+            foreach (var item in details)
             {
                 data = item.DepartureDate;
+                flightDestiny = item.FlightDestiny;
+                cityDestiny = item.CityDestiny;
             }
 
             var booking = new Booking
             {
+                FlightDestiny = flightDestiny,
+                CityDestiny = cityDestiny,
                 DepartureDate = data,
                 BookingDate = DateTime.UtcNow,
                 User = user,
@@ -176,20 +185,21 @@ namespace Projeto_Aeronautica_MVC.Data
             return await _context.Bookings.FindAsync(id);
         }
 
+
         public async Task ModifyBookingDetailTempQuantityAsync(int id, double quantity)
         {
             var bookingDetailTemp = await _context.BookingDetailsTemp.FindAsync(id);
-            if(bookingDetailTemp == null)
+            if (bookingDetailTemp == null)
             {
                 return;
             }
 
-            bookingDetailTemp.Quantity += quantity;
-            if(bookingDetailTemp.Quantity > 0)
-            {
-                _context.BookingDetailsTemp.Update(bookingDetailTemp);
+            //bookingDetailTemp.Quantity += quantity;
+            //if (bookingDetailTemp.Quantity > 0)
+            //{
+            //    _context.BookingDetailsTemp.Update(bookingDetailTemp);
                 await _context.SaveChangesAsync();
-            }
+            //}
         }
     }
 }

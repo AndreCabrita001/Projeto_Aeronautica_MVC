@@ -61,7 +61,6 @@ namespace Projeto_Aeronautica_MVC.Data
                 .FirstOrDefaultAsync();
         }
 
-
         public async Task<int> UpdateCityAsync(City city)
         {
             var country = await _context.Countries

@@ -6,13 +6,15 @@ using Projeto_Aeronautica_MVC.Data.Entities;
 
 namespace Projeto_Aeronautica_MVC.Models
 {
-    public class AddTicketViewModel
+    public class AddTicketViewModel : Passenger
     {
-        [Display(Name = "Flight")]
-        [Range(1, int.MaxValue, ErrorMessage = "You must select a flight.")]
-        public int FlightId { get; set; } 
+        [Display(Name = "Column")]
+        [Range(1, int.MaxValue, ErrorMessage = "You must select a seat column.")]
+        public int ColumnId { get; set; }
 
-        //public Flight Flight { get; set; }
+        [Display(Name = "Column")]
+        [Range(1, int.MaxValue, ErrorMessage = "You must select a seat column number.")]
+        public int ColumnNumberId { get; set; }
 
         [Range(0.0001, double.MaxValue, ErrorMessage = "The quantity must be a positive number.")]
         public double Quantity { get; set; }

@@ -26,7 +26,7 @@ namespace Projeto_Aeronautica_MVC.Data
         {
             var list = _context.Flights.Select(p => new SelectListItem
             {
-                Text = $"{p.FlightApparatus} - {p.FlightDestiny}",
+                Text = $"{p.FlightDestiny}({p.CityDestiny}) - {p.FlightApparatus}",
                 Value = p.Id.ToString()
             }).ToList();
 

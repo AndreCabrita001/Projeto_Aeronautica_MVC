@@ -1,22 +1,29 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Projeto_Aeronautica_MVC.Data;
 using Projeto_Aeronautica_MVC.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Projeto_Aeronautica_MVC.Controllers
 {
     public class BookingsController : Controller
     {
+        private readonly DataContext _context;
         private readonly IBookingRepository _bookingRepository;
         private readonly IFlightRepository _flightRepository;
+        private readonly IAirplaneRepository _airplaneRepository;
 
-        public BookingsController(IBookingRepository bookingRepository, IFlightRepository flightRepository)
+        public BookingsController(DataContext context, IBookingRepository bookingRepository, IFlightRepository flightRepository,
+            IAirplaneRepository airplaneRepository)
         {
+            _context = context;
             _bookingRepository = bookingRepository;
             _flightRepository = flightRepository;
+            _airplaneRepository = airplaneRepository;
         }
 
         public async Task<IActionResult> Index()
@@ -33,11 +40,9 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
         public IActionResult AddFlight()
         {
-            var model = new AddTicketViewModel
-            {
-                Quantity = 1,
-                Flights = _flightRepository.GetComboFlightDestiny()
-            };
+            var model = new AddTicketViewModel();
+            model.Quantity = 1;
+            model.Flights = _flightRepository.GetComboFlightDestiny();
 
             return View(model);
         }
@@ -47,19 +52,34 @@ namespace Projeto_Aeronautica_MVC.Controllers
         {
             if (ModelState.IsValid)
             {
+                string alphabet = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
+                string columnLetter = "";
+                for (int i = 0; i < model.ColumnId; i++)
+                {
+                    columnLetter = alphabet.Substring(i, 1);
+                }
+
+                model.SeatName = $"{columnLetter}{model.ColumnNumberId}";
+
+                var bdt = _context.BookingDetailsTemp.Any(x => x.SeatName == model.SeatName);
+
+                if (bdt == true)
+                {
+                    TempData["AddBookingError"] = "This Seat is taken!";
+
+                    return RedirectToAction("AddFlight");
+                }
+
                 await _bookingRepository.AddTicketToBookingAsync(model, this.User.Identity.Name);
-
-
 
                 return RedirectToAction("Create");
             }
-
             return View(model);
         }
 
         public async Task<IActionResult> DeleteItem(int? id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -76,7 +96,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 return NotFound();
             }
 
-            await _bookingRepository.ModifyBookingDetailTempQuantityAsync(id.Value,1);
+            await _bookingRepository.ModifyBookingDetailTempQuantityAsync(id.Value, 1);
             return RedirectToAction("Create");
         }
 
@@ -107,14 +127,14 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
         public async Task<IActionResult> Departure(int? id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
             var order = await _bookingRepository.GetBookingAsync(id.Value);
 
-            if(order == null)
+            if (order == null)
             {
                 return NotFound();
             }
@@ -126,6 +146,48 @@ namespace Projeto_Aeronautica_MVC.Controllers
             };
 
             return View(model);
+        }
+
+        [HttpPost]
+        [Route("Bookings/GetColumnsAsync")]
+        public async Task<JsonResult> GetColumnsAsync(int flightId)
+        {
+            if(flightId == 0)
+            {
+                return Json(flightId);
+            }
+            var flight = await _flightRepository.GetByIdAsync(flightId);
+            var airplane = await _airplaneRepository.GetByIdAsync(flight.AirplaneId);
+            List<string> columnLetters = new List<string>();
+            columnLetters.Sort();
+            string alphabet = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
+            int counter = 0;
+
+            foreach (char c in alphabet)
+            {
+                if (counter < airplane.NumberOfColumns)
+                {
+                    columnLetters.Add(c.ToString());
+                }
+                counter++;
+            }
+            return Json(columnLetters);
+        }
+
+        [HttpPost]
+        [Route("Bookings/GetColumnNumbersAsync")]
+        public async Task<JsonResult> GetColumnNumbersAsync(int flightId)
+        {
+            var flight = await _flightRepository.GetByIdAsync(flightId);
+            var airplane = await _airplaneRepository.GetByIdAsync(flight.AirplaneId);
+            List<string> columnNumbers = new List<string>();
+
+            for (int i = 1; i <= airplane.SeatsPerColumn; i++)
+            {
+                columnNumbers.Add(i.ToString());
+            }
+
+            return Json(columnNumbers);
         }
 
         [HttpPost]

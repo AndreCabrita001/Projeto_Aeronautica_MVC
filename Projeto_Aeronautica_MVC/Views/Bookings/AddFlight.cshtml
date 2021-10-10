@@ -21,19 +21,140 @@
                 <h3><span asp-validation-for="FlightId" class="text-danger"></span></h3>
 
                 <div class="inputBox">
-                    <span>Number of Tickets</span>
-                    <input asp-for="Quantity" class="form-control" />
+                    <span>Seat Column Letter</span>
+                    <select style="font-size:17px" asp-for="ColumnId" class="form-control"></select>
                 </div>
-                <h3><span asp-validation-for="Quantity" class="text-danger"></span></h3>
+                <h3><span asp-validation-for="ColumnId" class="text-danger"></span></h3>
+
+                <div class="inputBox">
+                    <span>Seat Number</span>
+                    <select style="font-size:17px" size="2" asp-for="ColumnNumberId" class="form-control"></select>
+                </div>
+                <h3><span asp-validation-for="ColumnNumberId" class="text-danger"></span></h3>
+
+                <div class="inputBox">
+                    <span>First Name</span>
+                    <input asp-for="FirstName" class="form-control" />
+                </div>
+                <h3><span asp-validation-for="FirstName" class="text-warning"></span></h3>
+
+                <div class="inputBox">
+                    <span>Last Name</span>
+                    <input asp-for="LastName" class="form-control" />
+                </div>
+                <h3><span asp-validation-for="LastName" class="text-warning"></span></h3>
+
+                <div class="inputBox">
+                    <span>Address</span>
+                    <input asp-for="Address" class="form-control" />
+                </div>
+                <h3><span asp-validation-for="Address" class="text-warning"></span></h3>
+
+                <div class="inputBox">
+                    <span>Nationality</span>
+                    <input id="country_selector" asp-for="Country" class="form-control" type="text" />
+                </div>
+                <h3><span asp-validation-for="Country" class="text-warning"></span></h3>
+                <br />
+                <div class="inputBox">
+                    <input asp-for="Quantity" hidden="hidden" class="form-control" />
+                </div>
+
+                <div class="inputBox">
+                    <span>Phone Number</span>
+                    <input asp-for="PhoneNumber" class="form-control" />
+                </div>
+                <h3><span asp-validation-for="PhoneNumber" class="text-warning"></span></h3>
+                <br />
+                <br />
+                @*<div class="inputBox">
+            <span>Number of Tickets</span>
+            <input asp-for="Quantity" class="form-control" />
+        </div>
+        <h3><span asp-validation-for="Quantity" class="text-danger"></span></h3>*@
+                <div class="inputBox">
+                    <span class="text-danger">@TempData["AddBookingError"]</span>
+                </div>
 
                 <div class="form-group">
-                    <input type="submit" value="Add Flight" class="btn" />
-                    <a asp-action="Index" class="btn">Back to List</a>
+                    <input type="submit" value="Add Flight" id="submitButton" class="btn" />
+                    <a asp-action="Create" class="btn">Back to List</a>
                 </div>
             </form>
         </div>
     </div>
 </section>
+
+<script>
+    $("#country_selector").countrySelect({
+        preferredCountries: ['pt']
+    });
+    $("#country_selector").countrySelect("setCountry", "Portugal");
+</script>
+
 @section Scripts {
-	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script type="text/javascript">
+            $(document).ready(function () {
+                $("#FlightId").change(function () {
+                    var flightValue = $("#FlightId").val();
+                    if (flightValue != 0) {
+                        $("#ColumnId").empty();
+                        $.ajax({
+                            url: '@Url.Action("GetColumnsAsync", "Bookings")',
+                            type: 'POST',
+                            dataType: 'json',
+                            data: { flightId: $("#FlightId").val() },
+                            success: function (columns) {
+                                $("#ColumnId").append('<option value="0">(Select a seat column...)</option>');
+                                $.each(columns, function (counter, columnLetters) {
+                                    counter++;
+                                    $("#ColumnId").append('<option value="'
+                                        + counter  + '">'
+                                        + columnLetters + '</option>');
+                                });
+                            },
+                            error: function (ex) {
+                                alert('Failed to retrieve columns.' + ex);
+                            }
+                        });
+                    }
+                    else {
+                        $("#ColumnId").children().remove().end();
+                    }
+			return false;
+		})
+            });
+
+    $(document).ready(function () {
+        $("#FlightId").change(function () {
+            var flightValue = $("#FlightId").val();
+            if (flightValue != 0) {
+                $("#ColumnNumberId").empty();
+                $.ajax({
+                    url: '@Url.Action("GetColumnNumbersAsync", "Bookings")',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: { flightId: $("#FlightId").val() },
+                    success: function (columns) {
+                        $("#ColumnNumberId").append('<option value="0">(select a seat column number...)</option>');
+                        $.each(columns, function (i, columnNumbers) {
+                            i++;
+                            $("#ColumnNumberId").append('<option value="'
+                                + i + '">'
+                                + columnNumbers + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve columns numbers.' + ex);
+                    }
+                });
+            }
+            else {
+                $("#ColumnNumberId").children().remove().end();
+            }
+			return false;
+		})
+    });
+</script>
 }

@@ -2,13 +2,16 @@
 @{
     ViewData["Title"] = "Create";
 }
+<style>
+    .country-select .selected-flag .arrow {
+        display: none;
+    }
+</style>
 
 <section class="services" id="services" style="margin-top:60px">
     <h1 class="heading">Reserve Tickets</h1>
     <hr />
 </section>
-
-
 
 <section class="form-container">
     <p>
@@ -20,7 +23,6 @@
         <table class="table">
             <thead>
                 <tr>
-
                     <th>
                         <div class="inputBox">
                             <span>@Html.DisplayNameFor(model => model.Flight.FlightApparatus)</span>
@@ -28,17 +30,22 @@
                     </th>
                     <th>
                         <div class="inputBox">
-                            <span>Price p/Ticket</span>
+                            <span>Price</span>
+                        </div>
+                    </th>
+                    <th style="width:20%">
+                        <div class="inputBox">
+                            <span>@Html.DisplayNameFor(model => model.FlightDestiny)</span>
                         </div>
                     </th>
                     <th>
                         <div class="inputBox">
-                            <span>@Html.DisplayNameFor(model => model.Quantity)</span>
+                            <span>@Html.DisplayNameFor(model => model.SeatName)</span>
                         </div>
                     </th>
                     <th>
                         <div class="inputBox">
-                            <span>@Html.DisplayNameFor(model => model.Value)</span>
+                            <span>@Html.DisplayNameFor(model => model.Passenger.FullName)</span>
                         </div>
                     </th>
                 </tr>
@@ -46,33 +53,49 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-    <tr>
-        <td>
-            <div class="inputBox">
-                <span>@Html.DisplayFor(modelItem => item.Flight.FlightApparatus)</span>
-            </div>
-        </td>
-        <td>
-            <div class="inputBox">
-                <span> @Html.DisplayFor(modelItem => item.Price)</span>
-            </div>
-        </td>
-        <td>
+                <tr>
+                    <td>
+                        <div class="inputBox">
+                            <span>@Html.DisplayFor(modelItem => item.Flight.FlightApparatus)</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="inputBox">
+                            <span> @Html.DisplayFor(modelItem => item.Price)</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="inputBox" style="position:relative; bottom:16px">
+                            <input style="background-color: transparent; font-size: 17px;" type="text" disabled="disabled" value="@Html.DisplayFor(modelItem => item.FlightDestiny)" />
+                            <span>&nbsp;	&nbsp;	&nbsp;	&nbsp; &nbsp; &nbsp;@Html.DisplayFor(modelItem => item.CityDestiny)</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="inputBox">
+                            <center><span>@Html.DisplayFor(modelItem => item.SeatName)</span></center>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="inputBox">
+                            <span>@Html.DisplayFor(modelItem => item.FirstName)&nbsp;@Html.DisplayFor(modelItem => item.LastName)</span>
+                        </div>
+                    </td>
+                    @*<td>
             <div class="inputBox">
                 <span>@Html.DisplayFor(modelItem => item.Quantity)</span>
             </div>
         </td>
         <td>
             <div class="inputBox">
-                <span>@Html.DisplayFor(modelItem => item.Value)</span>
+                <span>@Html.DisplayFor(modelItem => item.Value)€</span>
             </div>
-        </td>
-        <td id="@item.Id">
-            <a asp-action="Increase" asp-route-id="@item.Id" class="btn"><i class="fa fa-plus"></i></a>
-            <a asp-action="Decrease" asp-route-id="@item.Id" class="btn"><i class="fa fa-minus"></i></a>
-            <a  asp-action="DeleteItem" asp-route-id="@item.Id" class="btn" id="btnDeleteItem">Delete</a>
-        </td>
-    </tr>}
+        </td>*@
+                    <td id="@item.Id">
+                        @*<a asp-action="Increase" asp-route-id="@item.Id" class="btn"><i class="fa fa-plus"></i></a>
+            <a asp-action="Decrease" asp-route-id="@item.Id" class="btn"><i class="fa fa-minus"></i></a>*@
+                        <a asp-action="DeleteItem" asp-route-id="@item.Id" class="btn" id="btnDeleteItem">Delete</a>
+                    </td>
+                </tr>}
             </tbody>
         </table>
 
@@ -84,7 +107,7 @@
                         <button type="button" class="close" data-dismiss="modal"><i class="fa fa-window-close"></i></button>
                     </div>
                     <div class="modal-body">
-                        <p>Do you want to confirm the booking ?</p>
+                            <p>Do you want to confirm the booking ?</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn" id="btnYesConfirm">Yes</button>
@@ -102,7 +125,7 @@
                         <button type="button" class="close" data-dismiss="modal"><i class="fa fa-window-close"></i></button>
                     </div>
                     <div class="modal-body">
-                        <p>Do you want to delete this booking ?</p>
+                        <span>Do you want to delete this booking ?</span>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn" id="btnYesDelete">Yes</button>
@@ -114,10 +137,19 @@
     </form>
 </section>
 
+<script>
+    $('input[type=text]').each(function () {
+        $("input[type=text]").countrySelect({
+            preferredCountries: ['pt']
+        });
+        $("input[type=text]").attr("disabled", "disabled")
+    })
+</script>
+
 @section Scripts{
+
     <script type="text/javascript">
         $(document).ready(function(){
-
             var id = 0;
 
             $("#btnConfirm").click(function() {

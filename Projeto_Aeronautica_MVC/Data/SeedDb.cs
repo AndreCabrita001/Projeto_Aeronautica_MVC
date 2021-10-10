@@ -36,7 +36,6 @@ namespace Projeto_Aeronautica_MVC.Data
 
                 _context.Countries.Add(new Country
                 {
-                    
                     Cities = cities,
                     Name = "Portugal"
                 });
@@ -53,7 +52,6 @@ namespace Projeto_Aeronautica_MVC.Data
 
                 _context.Countries.Add(new Country
                 {
-
                     Cities = cities,
                     Name = "Spain"
                 });
@@ -74,7 +72,8 @@ namespace Projeto_Aeronautica_MVC.Data
                     UserName = "aandrecaldeira15@gmail.com",
                     PhoneNumber = "212343555",
                     Address = "Rua Jau 33",
-                    Country = "Portugal"
+                    Country = "Portugal",
+                    
                 };
 
                 user2 = new User
@@ -110,6 +109,8 @@ namespace Projeto_Aeronautica_MVC.Data
                 await _userHelper.ConfirmEmailAsync(user, token);
                 await _userHelper.ConfirmEmailAsync(user2, token2);
             }
+
+            
 
             var isInRole = await _userHelper.IsUserInRoleAsync(user, "Admin");
             var isInRole2 = await _userHelper.IsUserInRoleAsync(user2, "Employee");
@@ -148,11 +149,23 @@ namespace Projeto_Aeronautica_MVC.Data
             plane.ImageId = new Guid("f62027f2-3f94-4a01-980f-88da906190c1");
             plane.TotalSeats = 300;
             plane.AvaliableSeats = 300;
+            plane.SeatsPerColumn = 100;
             _context.Airplanes.Add(plane);
         }
 
         private void AddFlight(Airplane plane, User user)
         {
+            var passengers = new List<Passenger>();
+
+            passengers.Add(new Passenger {
+                FirstName = "André",
+                LastName = "Cabrita",
+                Address = "Avenida 123",
+                Country = "Portugal",
+                SeatName = "A1",
+                FlightId = 1
+            });
+
             _context.Flights.Add(new Flight
             {
                 IsAvailable = true,
@@ -161,9 +174,9 @@ namespace Projeto_Aeronautica_MVC.Data
                 FlightDestiny = "Spain",
                 ImageId = plane.ImageId,
                 DepartureDate = DateTime.Now.AddDays(20),
-                //ArrivalDate = DateTime.Now.AddDays(21),
                 Price = 300,
                 AvaliableSeats = plane.AvaliableSeats,
+                Passengers = passengers,
                 Airplane = plane,
                 CityOrigin = "Lisboa",
                 CityDestiny = "Madrid",

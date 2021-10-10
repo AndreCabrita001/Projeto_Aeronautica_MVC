@@ -103,7 +103,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 
                 if (result.Succeeded)
                 {
-
                     if (user.ImageId != Guid.Empty)
                     {
                         var imgId = user.ImageId.ToString();
@@ -161,7 +160,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
                     }
 
                     user = _converterHelper.ToUser(model, imageId, true);
-                    //user.City = city;
 
                     if (this.User.Identity.Name != null && this.User.IsInRole("Admin"))
                     {
@@ -196,6 +194,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
                     }
 
                     string myToken2 = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+
                     string tokenLink2 = Url.Action("ConfirmEmail", "Account", new
                     {
                         userid = user.Id,

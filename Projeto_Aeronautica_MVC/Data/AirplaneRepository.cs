@@ -28,12 +28,44 @@ namespace Projeto_Aeronautica_MVC.Data
             {
                 Text = p.Apparatus,
                 Value = p.Id.ToString()
-
             }).ToList();
 
             list.Insert(0, new SelectListItem
             {
                 Text = "(Select an airplane...)",
+                Value = "0"
+            });
+
+            return list;
+        }
+
+        public IEnumerable<SelectListItem> GetComboColumnLetters()
+        {
+            List<string> lettersList = new List<string>();
+
+            var ApparatusList = _context.Airplanes.Include(p => p.Apparatus);
+
+            var columnNumberlist = _context.Airplanes.Select(p => new SelectListItem
+            {
+                Text = p.NumberOfColumns.ToString(),
+                Value = p.Apparatus
+
+            }).ToList();
+
+            var columnNumber = 0;
+            foreach(var item in columnNumberlist)
+            {
+                columnNumber = Convert.ToInt32(item.Value);
+            }
+
+            var list = _context.Airplanes.Select(p => new SelectListItem
+            {
+              
+            }).ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "(Select a Column Letter)",
                 Value = "0"
             });
 

@@ -88,10 +88,11 @@ namespace Projeto_Aeronautica_MVC.Controllers
                     Apparatus = model.Apparatus,
                     NumberOfColumns = model.NumberOfColumns,
                     TotalSeats = model.TotalSeats,
-                    SeatsPerColumn = model.SeatsPerColumn,
                     AvaliableSeats = model.AvaliableSeats,
                     IsAvailable = model.IsAvailable
                 };
+
+                airplane.SeatsPerColumn = airplane.TotalSeats / airplane.NumberOfColumns;
 
                 await _airplaneRepository.CreateAsync(airplane);
 
@@ -146,6 +147,8 @@ namespace Projeto_Aeronautica_MVC.Controllers
                     }
 
                     var airplane = _converterHelper.ToPlane(model, imageId, false);
+
+                    airplane.SeatsPerColumn = airplane.TotalSeats / airplane.NumberOfColumns;
 
                     await _airplaneRepository.UpdateAsync(airplane);
 

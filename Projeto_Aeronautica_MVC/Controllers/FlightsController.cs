@@ -89,7 +89,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 Flights = _airplaneRepository.GetComboFlightApparatus(),
                 FlightsDestiny = _countryRepository.GetComboCountries(),
                 FlightsOrigin = _countryRepository.GetComboCountries(),
-                Cities = _countryRepository.GetComboCities(0),
+                //Cities = _countryRepository.GetComboCities(0),
             };
 
             return View(model);
@@ -312,7 +312,10 @@ namespace Projeto_Aeronautica_MVC.Controllers
         public async Task<JsonResult> GetCitiesAsync(int countryId)
         {
             var country = await _countryRepository.GetCountryWithCitiesAsync(countryId);
-            return Json(country.Cities.OrderBy(c => c.Name));
+
+            var json = country.Cities.OrderBy(c => c.Name);
+
+            return Json(json);
         }
 
     }

@@ -20,6 +20,8 @@ namespace Projeto_Aeronautica_MVC.Data
 
         public DbSet<Country> Countries { get; set; }
 
+        public DbSet<Passenger> Passengers { get; set; }
+
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
         }
