@@ -14,11 +14,6 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
 
         public Airplane Airplane { get; set; }
 
-        public ICollection<Passenger> Passengers { get; set; }
-
-        [Display(Name = "Number of cities")]
-        public int NumberPassengers => Passengers == null ? 0 : Passengers.Count;
-
         [Display(Name = "Flight Apparatus")]
         public string FlightApparatus { get; set; }
 

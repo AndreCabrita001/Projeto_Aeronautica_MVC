@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Projeto_Aeronautica_MVC.Data;
+using Projeto_Aeronautica_MVC.Data.Entities;
 using Projeto_Aeronautica_MVC.Models;
 using System;
 using System.Collections.Generic;
@@ -28,20 +29,41 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
         public async Task<IActionResult> Index()
         {
+            if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+            {
+                return RedirectToAction("Account", "NotAuthorized");
+            }
+
             var model = await _bookingRepository.GetBookingAsync(this.User.Identity.Name);
             return View(model);
         }
 
         public async Task<IActionResult> Create()
         {
+            if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+            {
+                return RedirectToAction("Account", "NotAuthorized");
+            }
+
             var model = await _bookingRepository.GetDetailTempsAsync(this.User.Identity.Name);
             return View(model);
         }
 
-        public IActionResult AddFlight()
+        public IActionResult AddFlight(int? id)
         {
+            if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+            {
+                return RedirectToAction("Account", "NotAuthorized");
+            }
+
             var model = new AddTicketViewModel();
+
             model.Quantity = 1;
+
+            if (id != null)
+            {
+                model.FlightId = id.Value;
+            }
             model.Flights = _flightRepository.GetComboFlightDestiny();
 
             return View(model);
@@ -61,11 +83,34 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
                 model.SeatName = $"{columnLetter}{model.ColumnNumberId}";
 
-                var bdt = _context.BookingDetailsTemp.Any(x => x.SeatName == model.SeatName);
-
+                var bdt = _context.BookingDetails.Any(x => x.SeatName == model.SeatName);
+                var bdt2 = _context.BookingDetailsTemp.Any(x => x.SeatName == model.SeatName && x.User.UserName == this.User.Identity.Name);
+                
                 if (bdt == true)
                 {
                     TempData["AddBookingError"] = "This Seat is taken!";
+
+                    return RedirectToAction("AddFlight");
+                }
+                else if (bdt2 == true )
+                {
+                    TempData["AddBookingError"] = "You have already picked this seat!";
+
+                    return RedirectToAction("AddFlight");
+                }
+
+                var flight = await _flightRepository.GetByIdAsync(model.FlightId);
+
+                if(flight.IsAvailable == false)
+                {
+                    TempData["AddBookingError"] = "This Flight is currently Unavaliable";
+
+                    return RedirectToAction("AddFlight");
+                }
+
+                if(flight.AvaliableSeats == 0)
+                {
+                    TempData["AddBookingError"] = "This Flight has no seats left!";
 
                     return RedirectToAction("AddFlight");
                 }
@@ -77,8 +122,45 @@ namespace Projeto_Aeronautica_MVC.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+            {
+                return RedirectToAction("Account", "NotAuthorized");
+            }
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var bookingContext = _context.BookingDetails;
+
+            if (bookingContext == null)
+            {
+                return NotFound();
+            }
+
+            List<BookingDetail> bookingDetails = new List<BookingDetail>().ToList();
+
+            foreach (var item in bookingContext)
+            {
+                if(item.BookingId == id.Value)
+                {
+                    bookingDetails.Add(item);
+                }
+            }
+
+            return View(bookingDetails);
+        }
+
         public async Task<IActionResult> DeleteItem(int? id)
         {
+            if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+            {
+                return RedirectToAction("Account", "NotAuthorized");
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -88,64 +170,21 @@ namespace Projeto_Aeronautica_MVC.Controllers
             return RedirectToAction("Create");
         }
 
-
-        public async Task<IActionResult> Increase(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            await _bookingRepository.ModifyBookingDetailTempQuantityAsync(id.Value, 1);
-            return RedirectToAction("Create");
-        }
-
-
-        public async Task<IActionResult> Decrease(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            await _bookingRepository.ModifyBookingDetailTempQuantityAsync(id.Value, -1);
-            return RedirectToAction("Create");
-        }
-
-
         public async Task<IActionResult> ConfirmBooking()
         {
+            if (this.User.IsInRole("Admin") || this.User.IsInRole("Employee"))
+            {
+                return RedirectToAction("Account", "NotAuthorized");
+            }
+
             var response = await _bookingRepository.ConfirmBookingAsync(this.User.Identity.Name);
+
             if (response)
             {
                 return RedirectToAction("Index");
             }
 
             return RedirectToAction("Create");
-        }
-
-
-        public async Task<IActionResult> Departure(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var order = await _bookingRepository.GetBookingAsync(id.Value);
-
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            var model = new DepartureViewModel
-            {
-                Id = order.Id,
-                DepartureDate = DateTime.Today
-            };
-
-            return View(model);
         }
 
         [HttpPost]
@@ -189,21 +228,13 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
             return Json(columnNumbers);
         }
-
-        [HttpPost]
-        public async Task<IActionResult> TakeOff(DepartureViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                await _bookingRepository.DepartureBooking(model);
-                return RedirectToAction("Index");
-            }
-
-            return View();
-        }
-
         public async Task<IActionResult> Delete(int? id)
         {
+            if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+            {
+                return RedirectToAction("Account", "NotAuthorized");
+            }
+
             if (id == null)
             {
                 return NotFound();

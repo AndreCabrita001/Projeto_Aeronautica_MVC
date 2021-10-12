@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace Projeto_Aeronautica_MVC.Controllers
 {
+    [Authorize (Roles ="Admin")]
     public class AirplaneController : Controller
     {
         private readonly IFlightRepository _flightRepository;
@@ -35,14 +36,12 @@ namespace Projeto_Aeronautica_MVC.Controllers
         }
 
         // GET: AirplaneController
-        [Authorize (Roles = "Admin")]
         public IActionResult Index()
         {
             return View(_airplaneRepository.GetAll().OrderBy(p => p.Apparatus));
         }
 
         // GET: AirplaneController/Details/5
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -61,7 +60,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
         }
 
         // GET: AirplaneController/Create
-        [Authorize(Roles="Admin")]
         public IActionResult Create()
         {
             return View();
@@ -74,6 +72,23 @@ namespace Projeto_Aeronautica_MVC.Controllers
         {
             if (ModelState.IsValid)
             {
+                if(model.AvaliableSeats > model.TotalSeats)
+                {
+                    TempData["AddAirplaneError"] = "The number of Avaliable Seats cannot be higher than the" +
+                        "Total Seats";
+
+                    return RedirectToAction("Create");
+                }
+
+                if(model.NumberOfColumns > 9)
+                {
+                    TempData["AddAirplaneError"] = "The maximum number of Columns for an airplane is 9";
+
+                    return RedirectToAction("Create");
+                }
+
+
+
                 Guid imageId = Guid.Empty;
 
                 if (model.ImageFile != null && model.ImageFile.Length > 0)
@@ -132,7 +147,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
         // POST: AirplaneController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(AirplaneViewModel model)
         {
             if (ModelState.IsValid)

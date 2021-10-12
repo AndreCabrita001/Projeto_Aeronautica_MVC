@@ -144,6 +144,7 @@ namespace Projeto_Aeronautica_MVC.Data
 
         private void AddPlane(Airplane plane)
         {
+            plane.IsAvailable = true;
             plane.Apparatus = "Airbus a330";
             plane.NumberOfColumns = 3;
             plane.ImageId = new Guid("f62027f2-3f94-4a01-980f-88da906190c1");
@@ -155,17 +156,6 @@ namespace Projeto_Aeronautica_MVC.Data
 
         private void AddFlight(Airplane plane, User user)
         {
-            var passengers = new List<Passenger>();
-
-            passengers.Add(new Passenger {
-                FirstName = "André",
-                LastName = "Cabrita",
-                Address = "Avenida 123",
-                Country = "Portugal",
-                SeatName = "A1",
-                FlightId = 1
-            });
-
             _context.Flights.Add(new Flight
             {
                 IsAvailable = true,
@@ -176,7 +166,6 @@ namespace Projeto_Aeronautica_MVC.Data
                 DepartureDate = DateTime.Now.AddDays(20),
                 Price = 300,
                 AvaliableSeats = plane.AvaliableSeats,
-                Passengers = passengers,
                 Airplane = plane,
                 CityOrigin = "Lisboa",
                 CityDestiny = "Madrid",

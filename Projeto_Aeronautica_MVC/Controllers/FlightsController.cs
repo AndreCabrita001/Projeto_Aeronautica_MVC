@@ -111,7 +111,16 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
                     return RedirectToAction("Create");
                 }
+
+
                 var airplane = await _airplaneRepository.GetByIdAsync(model.AirplaneId);
+
+                if(airplane.IsAvailable == false)
+                {
+                    TempData["CreateFlightError"] = "This airplane is currently unavaliable";
+
+                    return RedirectToAction("Create");
+                }
 
                 Guid imageId = airplane.ImageId;
 
@@ -145,6 +154,8 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 flight.CityDestiny = DestinyCity.Name;
 
                 flight.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+
+                airplane.IsAvailable = false;
 
                 await _flightRepository.CreateAsync(flight);
 
@@ -292,9 +303,13 @@ namespace Projeto_Aeronautica_MVC.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var flight = await _flightRepository.GetByIdAsync(id);
+
+            var airplane = await _airplaneRepository.GetByIdAsync(flight.AirplaneId);
             try
             {
                 await _flightRepository.DeleteAsync(flight);
+
+                airplane.IsAvailable = true;
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateException)

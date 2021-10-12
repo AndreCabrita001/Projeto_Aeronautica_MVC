@@ -15,10 +15,14 @@ namespace Projeto_Aeronautica_MVC.Data
     {
         private readonly DataContext _context;
         private readonly IUserHelper _userHelper;
-        public BookingRepository(DataContext context, IUserHelper userHelper) : base(context)
+        private readonly IFlightRepository _flightRepository;
+
+        public BookingRepository(DataContext context, IUserHelper userHelper,
+            IFlightRepository flightRepository) : base(context)
         {
             _context = context;
             _userHelper = userHelper;
+            _flightRepository = flightRepository;
         }
 
         public async Task AddTicketToBookingAsync(AddTicketViewModel model, string userName)
@@ -47,12 +51,14 @@ namespace Projeto_Aeronautica_MVC.Data
                     LastName = model.LastName,
                     SeatName = model.SeatName,
                     Address = model.Address,
-                    Country = model.Country,
+                    Nationality = model.Nationality,
                     PhoneNumber = model.PhoneNumber,
                     DepartureDate = flight.DepartureDate,
                     CityDestiny = flight.CityDestiny,
                     FlightDestiny = flight.FlightDestiny,
                     Price = flight.Price,
+                    Quantity = model.Quantity,
+                    FlightId = model.FlightId,
                     Flight = flight,
                     User = user
                 };
@@ -79,36 +85,61 @@ namespace Projeto_Aeronautica_MVC.Data
             {
                 return false;
             }
+            
+            int value = 0;
+            foreach (var item in bookingTmps)
+            {
+                value += Convert.ToInt32(item.Price);
+            }
 
             var details = bookingTmps.Select(o => new BookingDetail
             {
+                FirstName = o.FirstName,
+                LastName = o.LastName,
+                Address = o.Address,
+                Nationality = o.Nationality,
+                PhoneNumber = o.PhoneNumber,
+                SeatName = o.SeatName,
                 FlightDestiny = o.FlightDestiny,
                 CityDestiny = o.CityDestiny,
                 DepartureDate = o.DepartureDate,
                 Price = o.Price,
                 Flight = o.Flight,
-                //Quantity = o.Quantity
+                FlightId = o.FlightId,
+                Quantity = o.Quantity,
             }).ToList();
 
             var data = new DateTime?();
             var flightDestiny = "";
             var cityDestiny = "";
+            var flightId = 0;
+
             foreach (var item in details)
             {
                 data = item.DepartureDate;
                 flightDestiny = item.FlightDestiny;
                 cityDestiny = item.CityDestiny;
+                flightId = item.FlightId;
             }
+
+            var flight = await _flightRepository.GetByIdAsync(flightId);
 
             var booking = new Booking
             {
+                Value = value,
+                Quantity = bookingTmps.Count,
                 FlightDestiny = flightDestiny,
                 CityDestiny = cityDestiny,
                 DepartureDate = data,
                 BookingDate = DateTime.UtcNow,
                 User = user,
-                Tickets = details,
+                Tickets = details
             };
+
+            if (flight.AvaliableSeats < booking.Quantity)
+            {
+                return false;
+            }
 
             await CreateAsync(booking);
             _context.BookingDetailsTemp.RemoveRange(bookingTmps);
@@ -143,7 +174,6 @@ namespace Projeto_Aeronautica_MVC.Data
 
         public async Task<IQueryable<BookingDetailTemp>> GetDetailTempsAsync(string userName)
         {
-
             var user = await _userHelper.GetUserByEmailAsync(userName);
             if (user == null)
             {

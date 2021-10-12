@@ -1,5 +1,6 @@
 ﻿using Projeto_Aeronautica_MVC.Data.Entities;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Projeto_Aeronautica_MVC.Data.Entities
@@ -8,17 +9,28 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
     {
         public int Id { get; set; }
 
-        [Required]
-        public Flight Flight { get; set; }
+        public int BookingId { get; set; }
+        
+        [MaxLength(50, ErrorMessage = "The field {0} only can contain {1} characters length.")]
+        public string FirstName { get; set; }
 
-        [Range(1, int.MaxValue, ErrorMessage = "You must select a Flight Destiny.")]
-        public int FlightDestinyId { get; set; }
+        [MaxLength(50, ErrorMessage = "The field {0} only can contain {1} characters length.")]
+        public string LastName { get; set; }
+
+        [Display(Name = "Full Name")]
+        public string FullName => $"{FirstName} {LastName}";
+
+        [MaxLength(100, ErrorMessage = "The field {0} only can contain {1} characters length.")]
+        public string Address { get; set; }
+
+        [Display(Name = "Nationality")]
+        public string Nationality { get; set; }
+
+        [Display(Name = "Phone Number")]
+        public string PhoneNumber { get; set; }
 
         [Display(Name = "Flight Destiny")]
         public string FlightDestiny { get; set; }
-
-        [Range(1, int.MaxValue, ErrorMessage = "You must select a City Destiny.")]
-        public int CityDestinyId { get; set; }
 
         [Display(Name = "City Destiny")]
         public string CityDestiny { get; set; }
@@ -28,6 +40,8 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
 
         [Display(Name = "Seats per Column")]
         public int SeatsPerColumn { get; set; }
+
+        public List<BookingDetailTemp> Bookings { get; set; }
 
         [Display(Name = "Departure date")]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd hh:mm tt}", ApplyFormatInEditMode = false)]
@@ -39,6 +53,10 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
         [DisplayFormat(DataFormatString = "{0:N2}")]
         public double Quantity { get; set; }
 
-        //public decimal Value => Price * (decimal)Quantity;
+        public int Value { get; set; }
+
+        public int FlightId { get; set; }
+
+        public Flight Flight { get; set; }
     }
 }

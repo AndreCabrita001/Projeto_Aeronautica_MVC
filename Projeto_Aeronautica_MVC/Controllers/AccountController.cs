@@ -403,8 +403,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
             return View();
         }
 
-
-
         [HttpPost]
         public async Task<IActionResult> RecoverPassword(RecoverPasswordViewModel model)
         {
@@ -445,7 +443,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
             return View();
         }
 
-
         [HttpPost]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
@@ -474,19 +471,9 @@ namespace Projeto_Aeronautica_MVC.Controllers
             return View(model);
         }
 
-
         public IActionResult NotAuthorized()
         {
             return View();
         }
-
-
-        //[HttpPost]
-        //[Route("Account/GetCitiesAsync")]
-        //public async Task<JsonResult> GetCitiesAsync(int countryId)
-        //{
-        //    var country = await _countryRepository.GetCountryWithCitiesAsync(countryId);
-        //    return Json(country.Cities.OrderBy(c => c.Name));
-        //}
     }
 }

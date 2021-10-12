@@ -1,0 +1,99 @@
+﻿@model IEnumerable<Projeto_Aeronautica_MVC.Data.Entities.BookingDetail>
+@{
+    ViewData["Title"] = "Details";
+}
+
+<style>
+    .country-select .selected-flag .arrow {
+        display: none;
+    }
+</style>
+
+<section class="services" id="services" style="margin-top:60px">
+
+    <h1 class="heading">Booking Details</h1>
+    <hr />
+</section>
+
+<section class="form-container">
+    <p>
+        <a asp-action="Index" class="btn">Back to List</a>
+    </p>
+    <form action="" style="zoom:90%">
+
+        <table class="table">
+
+            <thead>
+                <tr>
+                    <th>
+                        <div class="inputBox">
+                            <span>Full Name</span>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="inputBox">
+                            <span>@Html.DisplayNameFor(model => model.Address)</span>
+                        </div>
+
+                    </th>
+                    <th>
+                        <div class="inputBox">
+                            <span>@Html.DisplayNameFor(model => model.PhoneNumber)</span>
+                        </div>
+                    </th>
+                    <th style="width:15%">
+                        <div class="inputBox">
+                            <span>@Html.DisplayNameFor(model => model.Nationality)</span>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="inputBox">
+                            <span>@Html.DisplayNameFor(model => model.SeatName)</span>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td>
+                        <div class="inputBox">
+                            <span>@Html.DisplayFor(modelItem => item.FullName)</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="inputBox">
+                            <span>@Html.DisplayFor(modelItem => item.Address)</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="inputBox">
+                            <span>@Html.DisplayFor(modelItem => item.PhoneNumber)</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="inputBox" style="position:relative; bottom:16px; text-align:left">
+                            <input style="background-color: transparent; font-size: 17px;" type="text" disabled="disabled" value="@Html.DisplayFor(modelItem => item.Nationality)" />
+                        </div>
+                    </td>
+                    <td>
+                        <div class="inputBox">
+                            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Html.DisplayFor(modelItem => item.SeatName)</span>
+                        </div>
+                    </td>
+                </tr>
+}
+            </tbody>
+        </table>
+    </form>
+</section>
+
+<script>
+    $('input[type=text]').each(function () {
+        $("input[type=text]").countrySelect({
+            preferredCountries: ['pt']
+        });
+        $("input[type=text]").attr("disabled", "disabled")
+    })
+</script>

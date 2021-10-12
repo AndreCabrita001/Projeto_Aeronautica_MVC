@@ -52,9 +52,9 @@
 
                 <div class="inputBox">
                     <span>Nationality</span>
-                    <input id="country_selector" asp-for="Country" class="form-control" type="text" />
+                    <input id="country_selector" asp-for="Nationality" class="form-control" type="text" />
                 </div>
-                <h3><span asp-validation-for="Country" class="text-warning"></span></h3>
+                <h3><span asp-validation-for="Nationality" class="text-warning"></span></h3>
                 <br />
                 <div class="inputBox">
                     <input asp-for="Quantity" hidden="hidden" class="form-control" />
@@ -64,7 +64,7 @@
                     <span>Phone Number</span>
                     <input asp-for="PhoneNumber" class="form-control" />
                 </div>
-                <h3><span asp-validation-for="PhoneNumber" class="text-warning"></span></h3>
+                <h3><span asp-validation-for="PhoneNumber" id="PhoneNumber" class="text-warning"></span></h3>
                 <br />
                 <br />
                 @*<div class="inputBox">
@@ -95,6 +95,66 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 <script type="text/javascript">
+
+     $(document).ready(function () {
+         var flightValue = $("#FlightId").val();
+             if (flightValue != 0) {
+                 $("#ColumnId").empty();
+                 $.ajax({
+                     url: '@Url.Action("GetColumnsAsync", "Bookings")',
+                     type: 'POST',
+                     dataType: 'json',
+                     data: { flightId: $("#FlightId").val() },
+                     success: function (columns) {
+                         $("#ColumnId").append('<option value="0">(Select a seat column...)</option>');
+                         $.each(columns, function (counter, columnLetters) {
+                             counter++;
+                             $("#ColumnId").append('<option value="'
+                                 + counter + '">'
+                                 + columnLetters + '</option>');
+                         });
+                     },
+                     error: function (ex) {
+                         alert('Failed to retrieve columns.' + ex);
+                     }
+                 });
+             }
+             else {
+                 $("#ColumnId").children().remove().end();
+             }
+			return false;
+     });
+
+    $(document).ready(function () {
+            var flightValue = $("#FlightId").val();
+            if (flightValue != 0) {
+                $("#ColumnNumberId").empty();
+                $.ajax({
+                    url: '@Url.Action("GetColumnNumbersAsync", "Bookings")',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: { flightId: $("#FlightId").val() },
+                    success: function (columns) {
+                        $("#ColumnNumberId").append('<option value="0">(select a seat column number...)</option>');
+                        $.each(columns, function (i, columnNumbers) {
+                            i++;
+                            $("#ColumnNumberId").append('<option value="'
+                                + i + '">'
+                                + columnNumbers + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve columns numbers.' + ex);
+                    }
+                });
+            }
+            else {
+                $("#ColumnNumberId").children().remove().end();
+            }
+			return false;
+    });
+
+
             $(document).ready(function () {
                 $("#FlightId").change(function () {
                     var flightValue = $("#FlightId").val();

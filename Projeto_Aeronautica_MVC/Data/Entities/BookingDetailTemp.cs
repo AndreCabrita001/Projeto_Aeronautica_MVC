@@ -23,7 +23,8 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
         [MaxLength(100, ErrorMessage = "The field {0} only can contain {1} characters length.")]
         public string Address { get; set; }
 
-        public string Country { get; set; }
+        [Display(Name = "Nationality")]
+        public string Nationality { get; set; }
 
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
@@ -40,9 +41,7 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
 
         public string SeatName { get; set; }
 
-        public Passenger Passenger { get; set; }
-
-        [Required]
+        public int FlightId { get; set; }
         public Flight Flight { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:C2}")]
@@ -51,6 +50,6 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
         [DisplayFormat(DataFormatString = "{0:N2}")]
         public double Quantity { get; set; }
 
-        //public decimal Value => Price * (decimal)Quantity;
+        public int Value { get; set; }
     }
 }

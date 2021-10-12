@@ -17,18 +17,19 @@
     <p>
         <a asp-action="AddFlight" class="btn">Buy Ticket</a>
         <a asp-action="ConfirmBooking" class="btn" id="btnConfirm">Confirm Booking</a>
+        <a asp-action="Index" class="btn">Back to List</a>
     </p>
 
     <form action="">
         <table class="table">
             <thead>
                 <tr>
-                    <th>
+                    <th style="width:20%">
                         <div class="inputBox">
                             <span>@Html.DisplayNameFor(model => model.Flight.FlightApparatus)</span>
                         </div>
                     </th>
-                    <th>
+                    <th style="width:10%">
                         <div class="inputBox">
                             <span>Price</span>
                         </div>
@@ -38,14 +39,14 @@
                             <span>@Html.DisplayNameFor(model => model.FlightDestiny)</span>
                         </div>
                     </th>
-                    <th>
+                    <th style="width:15%">
                         <div class="inputBox">
                             <span>@Html.DisplayNameFor(model => model.SeatName)</span>
                         </div>
                     </th>
                     <th>
                         <div class="inputBox">
-                            <span>@Html.DisplayNameFor(model => model.Passenger.FullName)</span>
+                            <span>@Html.DisplayNameFor(model => model.FullName)</span>
                         </div>
                     </th>
                 </tr>
@@ -107,7 +108,7 @@
                         <button type="button" class="close" data-dismiss="modal"><i class="fa fa-window-close"></i></button>
                     </div>
                     <div class="modal-body">
-                            <p>Do you want to confirm the booking ?</p>
+                        <h3>Do you want to confirm the booking ?</h3>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn" id="btnYesConfirm">Yes</button>
@@ -162,8 +163,9 @@
                 return false;
             });
 
-            $("#btnYesConfirm").click(function() {
-                window.location.href = "/Bookings/ConfirmBooking";
+            $("#btnYesConfirm").click(function () {
+
+               window.location.href = "/Bookings/ConfirmBooking";
             });
 
             $("a[id*=btnDeleteItem]").click(function() {
