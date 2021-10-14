@@ -18,7 +18,7 @@ namespace Projeto_Aeronautica_MVC.Helpers
                 FlightOrigin = model.FlightOrigin,
                 FlightDestiny = model.FlightDestiny,
                 DepartureDate = model.DepartureDate,
-                AvaliableSeats = model.AvaliableSeats,
+                AvailableSeats = model.AvailableSeats,
                 Price = model.Price,
                 User = model.User
             };
@@ -37,7 +37,7 @@ namespace Projeto_Aeronautica_MVC.Helpers
                 DepartureDate = flight.DepartureDate,
                 CityOriginId = flight.CityOriginId,
                 CityDestinyId = flight.CityDestinyId,
-                AvaliableSeats = flight.AvaliableSeats,
+                AvailableSeats = flight.AvailableSeats,
                 Price = flight.Price,
                 User = flight.User
             };
@@ -53,7 +53,6 @@ namespace Projeto_Aeronautica_MVC.Helpers
                 NumberOfColumns = model.NumberOfColumns,
                 TotalSeats = model.TotalSeats,
                 SeatsPerColumn = model.SeatsPerColumn,
-                AvaliableSeats = model.AvaliableSeats,
                 IsAvailable = model.IsAvailable
             };
         }
@@ -67,7 +66,6 @@ namespace Projeto_Aeronautica_MVC.Helpers
                 NumberOfColumns = airplane.NumberOfColumns,
                 TotalSeats = airplane.TotalSeats,
                 SeatsPerColumn = airplane.SeatsPerColumn,
-                AvaliableSeats = airplane.AvaliableSeats,
                 IsAvailable = airplane.IsAvailable
             };
         }

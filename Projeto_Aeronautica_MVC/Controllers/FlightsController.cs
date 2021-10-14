@@ -14,27 +14,33 @@ namespace Projeto_Aeronautica_MVC.Controllers
 {
     public class FlightsController : Controller
     {
+        private readonly DataContext _context;
         private readonly IFlightRepository _flightRepository;
         private readonly IAirplaneRepository _airplaneRepository;
         private readonly ICountryRepository _countryRepository;
         private readonly IUserHelper _userHelper;
         private readonly IBlobHelper _blobHelper;
         private readonly IConverterHelper _converterHelper;
+        private readonly IBookingRepository _bookingRepository;
 
         public FlightsController(
             IFlightRepository flightRepository,
+             IBookingRepository bookingRepository,
             IAirplaneRepository airplaneRepository,
             ICountryRepository countryRepository,
             IUserHelper userHelper,
             IBlobHelper blobHelper,
-            IConverterHelper converterHelper)
+            IConverterHelper converterHelper,
+            DataContext context)
         {
             _flightRepository = flightRepository;
             _airplaneRepository = airplaneRepository;
             _countryRepository = countryRepository;
             _userHelper = userHelper;
             _blobHelper = blobHelper;
+            _bookingRepository = bookingRepository;
             _converterHelper = converterHelper;
+            _context = context;
         }
 
         // GET: Flights
@@ -55,7 +61,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 flightQuery = flightQuery.Where(x => x.FlightApparatus.Contains(flightSearch) ||
                 x.Price.ToString().Contains(flightSearch) || x.FlightOrigin.Contains(flightSearch) ||
                 x.FlightDestiny.Contains(flightSearch) || x.DepartureDate.ToString().Contains(flightSearch) ||
-                x.AvaliableSeats.ToString().Contains(flightSearch) || x.CityOrigin.Contains(flightSearch) ||
+                x.AvailableSeats.ToString().Contains(flightSearch) || x.CityOrigin.Contains(flightSearch) ||
                 x.CityDestiny.Contains(flightSearch));
             }
 
@@ -132,7 +138,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 var flight = _converterHelper.ToFlight(model, imageId, true);
 
                 flight.FlightApparatus = airplane.Apparatus;
-                flight.AvaliableSeats = airplane.AvaliableSeats;
+                //flight.AvaliableSeats = airplane.AvaliableSeats;
 
                 var OriginCity = await _countryRepository.GetCityAsync(model.CityOriginId);
                 var DestinyCity = await _countryRepository.GetCityAsync(model.CityDestinyId);
@@ -210,7 +216,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
                 {
                     TempData["EditFlightError"] = "The departure cannot occur in the past.";
 
-                    return RedirectToAction("Create");
+                    return RedirectToAction("Edit");
                 }
 
                 try
@@ -228,7 +234,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
                     {
                         Id = isNew ? 0 : model.Id,
                         FlightApparatus = airplane.Apparatus,
-                        AvaliableSeats = airplane.AvaliableSeats,
+                        AvailableSeats = model.AvailableSeats,
                         IsAvailable = model.IsAvailable,
                         ImageId = imageId,
                         AirplaneId = model.AirplaneId,
@@ -246,7 +252,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
                     {
                         TempData["EditFlightError"] = "The Flight Origin cannot be the same as it's Destiny.";
 
-                        return RedirectToAction("Create");
+                        return RedirectToAction("Edit");
                     }
 
                     var flightOrigin = await _countryRepository.GetByIdAsync(model.FlightOriginId);
@@ -305,10 +311,18 @@ namespace Projeto_Aeronautica_MVC.Controllers
             var flight = await _flightRepository.GetByIdAsync(id);
 
             var airplane = await _airplaneRepository.GetByIdAsync(flight.AirplaneId);
+
+            var bookings = _context.Bookings.Where(o => o.FlightId == flight.Id);
             try
             {
                 await _flightRepository.DeleteAsync(flight);
+                
+                foreach(var item in bookings)
+                {
+                    _context.Remove(item);
+                }
 
+                await _context.SaveChangesAsync();
                 airplane.IsAvailable = true;
                 return RedirectToAction(nameof(Index));
             }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Projeto_Aeronautica_MVC.Data;
@@ -47,18 +48,93 @@ namespace Projeto_Aeronautica_MVC.Controllers
         [Authorize (Roles = "Admin")]
         public IActionResult Index()
         {
-            return View(_userRepository.GetAllUsers().OrderBy(p => p.FirstName));
+            return View(_userRepository.GetAllUsers().OrderBy(p => p.FirstName).Where(p => p.RoleId == 3));
         }
 
-        // GET: Users/Details/5
-        public async Task<IActionResult> Details(int? id)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var user = await _userHelper.GetUserByIdAsync(id.Value.ToString());
+            var user = await _userHelper.GetUserByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var model = new AddClientViewModel();
+
+            Guid imageId = user.ImageId;
+
+            if (model.ImageFile != null && model.ImageFile.Length > 0)
+            {
+                imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "users");
+            }
+
+            model.FirstName = user.FirstName;
+            model.LastName = user.LastName;
+            model.Address = user.Address;
+            model.PhoneNumber = user.PhoneNumber;
+            model.Country = user.Country;
+            model.ImageId = imageId;
+
+            return View(model);
+        }
+
+        // POST: AirplaneController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(AddClientViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserByIdAsync(model.Id);
+
+                if (user != null)
+                {
+                    Guid imageId = user.ImageId;
+
+                    if (model.ImageFile != null && model.ImageFile.Length > 0)
+                    {
+                        imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "users");
+                    }
+
+                    user.FirstName = model.FirstName;
+                    user.LastName = model.LastName;
+                    user.ImageId = imageId;
+                    user.Address = model.Address;
+                    user.PhoneNumber = model.PhoneNumber;
+                    user.Country = model.Country;
+
+                    var response = await _userHelper.UpdateUserAsync(user);
+
+                    if (response.Succeeded)
+                    {
+                        return RedirectToAction("Index", "Account");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, response.Errors.FirstOrDefault().Description);
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(model);
+        }
+
+        // GET: Flights/Delete/5
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _userHelper.GetUserByIdAsync(id);
 
             if (user == null)
             {
@@ -66,6 +142,90 @@ namespace Projeto_Aeronautica_MVC.Controllers
             }
 
             return View(user);
+        }
+
+        // GET: AirplaneController/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: AirplaneController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(RegisterNewUserViewModel model)
+        {
+            var user = await _userHelper.GetUserByEmailAsync(model.Username);
+
+            if (user == null)
+            {
+                Guid imageId = Guid.Empty;
+
+                if (model.ImageFile != null && model.ImageFile.Length > 0)
+                {
+                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "users");
+                }
+
+                user = _converterHelper.ToUser(model, imageId, true);
+                user.RoleId = 3;
+
+                var result = await _userHelper.AddUserAsync(user, model.Password);
+
+                if (result != IdentityResult.Success)
+                {
+                    ModelState.AddModelError(string.Empty, "The user couldn't be created.");
+                    return View(model);
+                }
+
+                string myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+
+                string tokenLink = Url.Action("ConfirmEmail", "Account", new
+                {
+                    userid = user.Id,
+                    token = myToken
+                }, protocol: HttpContext.Request.Scheme);
+
+                Response response = _mailHelper.SendEmail(model.Username, "Email confirmation", $"<h1>Email Confirmation</h1>" +
+                    $"To activate your account, " +
+                    $"please click this link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
+
+                if (response.IsSuccess)
+                {
+                    ViewBag.Message = "The instructions to activate this account have been sent to the client's email";
+                    return View(model);
+                }
+
+                ModelState.AddModelError(string.Empty, "The user couldn't be logged.");
+            }
+            else
+            {
+                ViewBag.Message = "This user already exists.";
+                return View(model);
+            }
+            return View(model);
+        }
+
+        // POST: Flights/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(string id)
+        {
+            var user = await _userHelper.GetUserByIdAsync(id);
+
+            try
+            {
+                await _userHelper.DeleteUserAsync(user);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException)
+            {
+                ViewBag.ErrorTitle = $"";
+                ViewBag.ErrorMessage = $"Unable to delete this user.<br>" +
+                    $"Try to remove its usage components...";
+            }
+
+            return View("Error");
         }
 
         public async Task<IActionResult> Login()
@@ -84,7 +244,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
                     }
                     else
                     {
-                        TempData["ImageId"] = "https://projetoaeronauticamvc.azurewebsites.net/images/noimage.png";
+                        TempData["ImageId"] = "https://projetoaeronauticamvc123.azurewebsites.net/images/noimage.png";
                     }
                 }
                 return RedirectToAction("Index", "Home");
@@ -136,8 +296,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
         {
             var model = new RegisterNewUserViewModel
             {
-                //Countries = _countryRepository.GetComboCountries(),
-                //Cities = _countryRepository.GetComboCities(0),
+
             };
 
             return View(model);
@@ -160,9 +319,11 @@ namespace Projeto_Aeronautica_MVC.Controllers
                     }
 
                     user = _converterHelper.ToUser(model, imageId, true);
-
+                    user.RoleId = 3;
                     if (this.User.Identity.Name != null && this.User.IsInRole("Admin"))
                     {
+                        user.RoleId = 2;
+
                         var result = await _userHelper.AddUserAsync(user, model.Password);
                         await _userHelper.AddUserToRoleAsync(user, "Employee");
 
@@ -279,7 +440,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
                     }
                     else
                     {
-                        TempData["ImageId"] = "https://projetoaeronauticamvc.azurewebsites.net/images/noimage.png";
+                        TempData["ImageId"] = "https://projetoaeronauticamvc123.azurewebsites.net/images/noimage.png";
                     }
 
                     var response = await _userHelper.UpdateUserAsync(user);

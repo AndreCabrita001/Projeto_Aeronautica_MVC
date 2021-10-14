@@ -31,6 +31,8 @@ namespace Projeto_Aeronautica_MVC.Helpers
 
         Task<IdentityResult> ConfirmEmailAsync(User user, string token);
 
+        Task<IdentityResult> DeleteUserAsync(User user);
+
         Task<User> GetUserByIdAsync(string userId);
 
         Task<string> GeneratePasswordResetTokenAsync(User user);

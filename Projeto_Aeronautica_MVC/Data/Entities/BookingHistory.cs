@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Projeto_Aeronautica_MVC.Data.Entities
 {
-    public class Booking : IEntity
+    public class BookingHistory : IEntity
     {
         public int Id { get; set; }
 

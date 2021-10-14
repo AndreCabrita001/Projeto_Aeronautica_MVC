@@ -53,10 +53,9 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
         [DisplayFormat(DataFormatString = "{0:N2}")]
         public double Quantity { get; set; }
 
-        public int Value { get; set; }
-
         public int FlightId { get; set; }
-
         public Flight Flight { get; set; }
+
+        public int Value { get; set; }
     }
 }

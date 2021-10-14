@@ -16,6 +16,8 @@ namespace Projeto_Aeronautica_MVC.Data
 
         public DbSet <BookingDetailTemp> BookingDetailsTemp { get; set; }
 
+        public DbSet<BookingHistory> BookingsHistory { get; set; }
+
         public DbSet<City> Cities { get; set; }
 
         public DbSet<Country> Countries { get; set; }

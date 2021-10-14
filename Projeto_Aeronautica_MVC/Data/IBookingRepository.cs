@@ -9,6 +9,8 @@ namespace Projeto_Aeronautica_MVC.Data
     {
         Task<IQueryable<Booking>> GetBookingAsync(string userName);
 
+        Task<IQueryable<BookingHistory>> GetBookingHistoryAsync(string userName);
+
         Task<IQueryable<BookingDetailTemp>> GetDetailTempsAsync(string userName);
 
         Task AddTicketToBookingAsync(AddTicketViewModel model, string userName);
@@ -22,5 +24,7 @@ namespace Projeto_Aeronautica_MVC.Data
         Task DepartureBooking(DepartureViewModel model);
 
         Task<Booking> GetBookingAsync(int id);
+
+        Task<BookingHistory> GetBookingHistoryAsync(int id);
     }
 }

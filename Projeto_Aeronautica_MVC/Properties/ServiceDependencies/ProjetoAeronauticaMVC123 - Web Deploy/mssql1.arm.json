@@ -4,7 +4,7 @@
   "parameters": {
     "resourceGroupName": {
       "type": "string",
-      "defaultValue": "ProjetoAeronauticaMVCResourceGroup",
+      "defaultValue": "ProjetoAeronauticaMVC123ResourceGroup",
       "metadata": {
         "_parameterType": "resourceGroup",
         "description": "Name of the resource group for the resource. It is recommended to put resources under same resource group for better tracking."
@@ -36,7 +36,7 @@
     },
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "[concat(parameters('resourceGroupName'), 'Deployment', uniqueString(concat('projaerostoragemvc', subscription().subscriptionId)))]",
+      "name": "[concat(parameters('resourceGroupName'), 'Deployment', uniqueString(concat('Projeto_Aeronautica_MVC_db', subscription().subscriptionId)))]",
       "resourceGroup": "[parameters('resourceGroupName')]",
       "apiVersion": "2019-10-01",
       "dependsOn": [
@@ -49,15 +49,26 @@
           "contentVersion": "1.0.0.0",
           "resources": [
             {
-              "sku": {
-                "name": "Standard_RAGRS",
-                "tier": "Standard"
-              },
-              "kind": "StorageV2",
-              "name": "projaerostoragemvc",
-              "type": "Microsoft.Storage/storageAccounts",
+              "kind": "v12.0",
               "location": "[parameters('resourceLocation')]",
-              "apiVersion": "2017-10-01"
+              "name": "projeto-aeronautica-mvcdbserver",
+              "type": "Microsoft.Sql/servers",
+              "apiVersion": "2017-10-01-preview"
+            },
+            {
+              "sku": {
+                "name": "Standard",
+                "tier": "Standard",
+                "capacity": 10
+              },
+              "kind": "v12.0,user",
+              "location": "[parameters('resourceLocation')]",
+              "name": "projeto-aeronautica-mvcdbserver/Projeto_Aeronautica_MVC_db",
+              "type": "Microsoft.Sql/servers/databases",
+              "apiVersion": "2017-10-01-preview",
+              "dependsOn": [
+                "projeto-aeronautica-mvcdbserver"
+              ]
             }
           ]
         }
@@ -65,6 +76,6 @@
     }
   ],
   "metadata": {
-    "_dependencyType": "storage.azure"
+    "_dependencyType": "mssql.azure"
   }
 }

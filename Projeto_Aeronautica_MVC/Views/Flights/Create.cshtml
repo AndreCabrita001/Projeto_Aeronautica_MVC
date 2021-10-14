@@ -28,11 +28,22 @@
     </div>
 </section>
 
+<script>
+    // initialize DatePicker component
+    var datepicker = new ej.calendars.DatePicker({
+        placeholder: "Select a date",
+        width: "250px",
+        format: "dd-MMM-yyyy"
+    });
+    // Render initialized DatePicker.
+    datepicker.appendTo('#datePicker')
+</script>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
+	
     <script type="text/javascript">
-        
             $(document).ready(function () {
                 $("#FlightOriginId").change(function () {
 			$("#CityOriginId").empty();

@@ -16,6 +16,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
     [Authorize (Roles ="Admin")]
     public class AirplaneController : Controller
     {
+        private readonly DataContext _context;
         private readonly IFlightRepository _flightRepository;
         private readonly IAirplaneRepository _airplaneRepository;
         private readonly IUserHelper _userHelper;
@@ -26,13 +27,15 @@ namespace Projeto_Aeronautica_MVC.Controllers
             IAirplaneRepository airplaneRepository,
             IUserHelper userHelper,
             IBlobHelper blobHelper,
-            IConverterHelper converterHelper)
+            IConverterHelper converterHelper,
+            DataContext context)
         {
             _flightRepository = flightRepository;
             _airplaneRepository = airplaneRepository;
             _userHelper = userHelper;
             _blobHelper = blobHelper;
             _converterHelper = converterHelper;
+            _context = context;
         }
 
         // GET: AirplaneController
@@ -72,13 +75,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                if(model.AvaliableSeats > model.TotalSeats)
-                {
-                    TempData["AddAirplaneError"] = "The number of Avaliable Seats cannot be higher than the" +
-                        "Total Seats";
-
-                    return RedirectToAction("Create");
-                }
 
                 if(model.NumberOfColumns > 9)
                 {
@@ -86,8 +82,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
                     return RedirectToAction("Create");
                 }
-
-
 
                 Guid imageId = Guid.Empty;
 
@@ -103,7 +97,6 @@ namespace Projeto_Aeronautica_MVC.Controllers
                     Apparatus = model.Apparatus,
                     NumberOfColumns = model.NumberOfColumns,
                     TotalSeats = model.TotalSeats,
-                    AvaliableSeats = model.AvaliableSeats,
                     IsAvailable = model.IsAvailable
                 };
 
@@ -209,9 +202,31 @@ namespace Projeto_Aeronautica_MVC.Controllers
         {
             var airplane = await _airplaneRepository.GetByIdAsync(id);
 
+            var flight = _context.Flights.Where(o => o.AirplaneId == airplane.Id);
+
+            var flightId = 0;
+            
+            foreach (var item in flight)
+            {
+                flightId = item.Id;
+            }
+
+            var booking = _context.Bookings.Where(o => o.FlightId == flightId);
             try
             {
                 await _airplaneRepository.DeleteAsync(airplane);
+
+                foreach (var item in flight)
+                {
+                    _context.Remove(item);
+                }
+
+                foreach (var item in booking)
+                {
+                    _context.Remove(item);
+                }
+
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateException)

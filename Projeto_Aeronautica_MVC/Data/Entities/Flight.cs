@@ -52,7 +52,7 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
         public string CityDestiny { get; set; }
 
         [Display(Name = "Avaliable Seats")]
-        public int AvaliableSeats { get; set; }
+        public int AvailableSeats { get; set; }
 
         [Display(Name = "Is Available")]
         public bool IsAvailable { get; set; }
@@ -60,7 +60,7 @@ namespace Projeto_Aeronautica_MVC.Data.Entities
         [Display(Name = "Image")]
         public Guid ImageId { get; set; }
         public string ImageFullPath => ImageId == Guid.Empty
-            ? $"https://projetoaeronauticamvc.azurewebsites.net/images/noimage.png"
+            ? $"https://projetoaeronauticamvc123.azurewebsites.net/images/noimage.png"
             : $"https://projaerostoragemvc.blob.core.windows.net/airplanes/{ImageId}";
         public User User { get; set; }
     }

@@ -16,12 +16,12 @@
     <hr />
 
 </section>
-<section class="form-container" style="zoom:90%">
+<section class="form-container" style="zoom:88%">
     @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Employee"))
     {
-        <p>
-            <a asp-action="Create" class="btn">Create New</a>
-        </p>
+    <p>
+        <a asp-action="Create" class="btn">Create New</a>
+    </p>
     }
 
 <form method="get">
@@ -72,7 +72,7 @@
 
                 <th>
                     <div class="inputBox">
-                        <span>@Html.DisplayNameFor(model => model.AvaliableSeats)</span>
+                        <span>@Html.DisplayNameFor(model => model.AvailableSeats)</span>
                     </div>
                 </th>
 
@@ -118,10 +118,10 @@
                 </td>
                 <td>
                     <div class="inputBox">
-                        <span>@Html.DisplayFor(modelItem => item.AvaliableSeats)</span>
+                        <span>@Html.DisplayFor(modelItem => item.AvailableSeats)</span>
                     </div>
                 </td>
-                <td>
+                <td style="zoom:110%">
                     @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Employee"))
                     {
                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn">Edit</a>

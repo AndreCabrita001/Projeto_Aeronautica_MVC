@@ -73,7 +73,7 @@ namespace Projeto_Aeronautica_MVC.Data
                     PhoneNumber = "212343555",
                     Address = "Rua Jau 33",
                     Country = "Portugal",
-                    
+                    RoleId = 1,
                 };
 
                 user2 = new User
@@ -84,7 +84,8 @@ namespace Projeto_Aeronautica_MVC.Data
                     UserName = "aandrecaldeira30@gmail.com",
                     PhoneNumber = "424686000",
                     Address = "Rua Jau 66",
-                    Country = "Portugal"
+                    Country = "Portugal",
+                    RoleId = 2
                 };
 
                 var result = await _userHelper.AddUserAsync(user, "123456");
@@ -147,15 +148,16 @@ namespace Projeto_Aeronautica_MVC.Data
             plane.IsAvailable = true;
             plane.Apparatus = "Airbus a330";
             plane.NumberOfColumns = 3;
-            plane.ImageId = new Guid("f62027f2-3f94-4a01-980f-88da906190c1");
+            plane.ImageId = new Guid("54adccc9-621f-4188-8947-0a9523336bbc");
             plane.TotalSeats = 300;
-            plane.AvaliableSeats = 300;
             plane.SeatsPerColumn = 100;
             _context.Airplanes.Add(plane);
         }
 
         private void AddFlight(Airplane plane, User user)
         {
+            Booking booking = new Booking();
+
             _context.Flights.Add(new Flight
             {
                 IsAvailable = true,
@@ -165,7 +167,7 @@ namespace Projeto_Aeronautica_MVC.Data
                 ImageId = plane.ImageId,
                 DepartureDate = DateTime.Now.AddDays(20),
                 Price = 300,
-                AvaliableSeats = plane.AvaliableSeats,
+                AvailableSeats = 300,
                 Airplane = plane,
                 CityOrigin = "Lisboa",
                 CityDestiny = "Madrid",

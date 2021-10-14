@@ -56,10 +56,9 @@ namespace Projeto_Aeronautica_MVC.Data
                     DepartureDate = flight.DepartureDate,
                     CityDestiny = flight.CityDestiny,
                     FlightDestiny = flight.FlightDestiny,
+                    FlightId = flight.Id,
                     Price = flight.Price,
                     Quantity = model.Quantity,
-                    FlightId = model.FlightId,
-                    Flight = flight,
                     User = user
                 };
 
@@ -104,8 +103,8 @@ namespace Projeto_Aeronautica_MVC.Data
                 CityDestiny = o.CityDestiny,
                 DepartureDate = o.DepartureDate,
                 Price = o.Price,
-                Flight = o.Flight,
                 FlightId = o.FlightId,
+                Flight = o.Flight,
                 Quantity = o.Quantity,
             }).ToList();
 
@@ -126,6 +125,7 @@ namespace Projeto_Aeronautica_MVC.Data
 
             var booking = new Booking
             {
+                FlightId = flight.Id,
                 Value = value,
                 Quantity = bookingTmps.Count,
                 FlightDestiny = flightDestiny,
@@ -136,14 +136,34 @@ namespace Projeto_Aeronautica_MVC.Data
                 Tickets = details
             };
 
-            if (flight.AvaliableSeats < booking.Quantity)
+            var bookingHistory = new BookingHistory
+            {
+                FlightId = flight.Id,
+                Value = value,
+                Quantity = bookingTmps.Count,
+                FlightDestiny = flightDestiny,
+                CityDestiny = cityDestiny,
+                DepartureDate = data,
+                BookingDate = DateTime.UtcNow,
+                User = user,
+            };
+
+            if (flight.AvailableSeats < booking.Quantity)
             {
                 return false;
             }
 
+            flight.AvailableSeats = flight.AvailableSeats - Convert.ToInt32(booking.Quantity);
+
+            var group = _context.Flights.First(g => g.Id == flightId);;
+
+            _context.Entry(group).CurrentValues.SetValues(flight);
+
             await CreateAsync(booking);
+            _context.BookingsHistory.Add(bookingHistory);
             _context.BookingDetailsTemp.RemoveRange(bookingTmps);
             await _context.SaveChangesAsync();
+
             return true;
         }
 
@@ -199,13 +219,13 @@ namespace Projeto_Aeronautica_MVC.Data
                 return _context.Bookings
                     .Include(o => o.User)
                     .Include(o => o.Tickets)
-                    .ThenInclude(p => p.Flight)
+                    .ThenInclude(o => o.Flight)
                     .OrderByDescending(o => o.BookingDate);
             }
 
             return _context.Bookings
                 .Include(o => o.Tickets)
-                .ThenInclude(p => p.Flight)
+                .ThenInclude(o => o.Flight)
                 .Where(o => o.User == user)
                 .OrderByDescending(o => o.BookingDate);
         }
@@ -215,6 +235,32 @@ namespace Projeto_Aeronautica_MVC.Data
             return await _context.Bookings.FindAsync(id);
         }
 
+        public async Task<IQueryable<BookingHistory>> GetBookingHistoryAsync(string userName)
+        {
+            var user = await _userHelper.GetUserByEmailAsync(userName);
+            if (user == null)
+            {
+                return null;
+            }
+
+            if (await _userHelper.IsUserInRoleAsync(user, "Admin"))
+            {
+                return _context.BookingsHistory
+                    .Include(o => o.User)
+                    .Include(o => o.Tickets)
+                    .OrderByDescending(o => o.BookingDate);
+            }
+
+            return _context.BookingsHistory
+                .Include(o => o.Tickets)
+                .Where(o => o.User == user)
+                .OrderByDescending(o => o.BookingDate);
+        }
+
+        public async Task<BookingHistory> GetBookingHistoryAsync(int id)
+        {
+            return await _context.BookingsHistory.FindAsync(id);
+        }
 
         public async Task ModifyBookingDetailTempQuantityAsync(int id, double quantity)
         {

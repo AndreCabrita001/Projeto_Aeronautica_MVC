@@ -36,25 +36,31 @@
 <br />
 
 <div class="inputBox">
+    <span>Available Seats</span>
+    <input asp-for="AvailableSeats" class="form-control" />
+</div>
+<h3><span asp-validation-for="Price" class="text-danger"></span></h3>
+<br />
+
+<div class="inputBox">
     <span>Price p/Ticket</span>
     <input asp-for="Price" class="form-control" />
-
 </div>
 <h3><span asp-validation-for="Price" class="text-danger"></span></h3>
 <br />
 
 <div class="inputBox">
     <span>Departure Date</span>
-    <div class="input-group date" data-provide="datepicker">
-        <input asp-for="DepartureDate" class="form-control" />
+    <div class="input-group date">
+        <input asp-for="DepartureDate" id="datePicker" />
     </div>
-    </div>
-    <h3><span asp-validation-for="DepartureDate" class="text-danger"></span></h3>
+</div>
+<h3><span asp-validation-for="DepartureDate" class="text-danger"></span></h3>
 
-    <div class="inputBox">
-        <div class="form-group form-check">
-            <label class="form-check-label">
-                <input class="form-check-input" asp-for="IsAvailable" /> <span>Is Avaliable?</span>
-            </label>
-        </div>
+<div class="inputBox">
+    <div class="form-group form-check">
+        <label class="form-check-label">
+            <input class="form-check-input" asp-for="IsAvailable" /> <span>Is Avaliable?</span>
+        </label>
     </div>
+</div>

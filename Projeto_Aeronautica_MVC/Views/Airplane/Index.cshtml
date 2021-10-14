@@ -33,12 +33,12 @@
                     </th>
                     <th>
                         <div class="inputBox">
-                            <b><span>@Html.DisplayNameFor(model => model.TotalSeats)</span></b>
+                            <span>@Html.DisplayNameFor(model => model.SeatsPerColumn)</span>
                         </div>
                     </th>
                     <th>
                         <div class="inputBox">
-                            <b><span>@Html.DisplayNameFor(model => model.AvaliableSeats)</span></b>
+                            <b><span>@Html.DisplayNameFor(model => model.TotalSeats)</span></b>
                         </div>
                     </th>
                 </tr>
@@ -46,38 +46,38 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td>
-                            <div class="inputBox">
-                                <span>@Html.DisplayFor(modelItem => item.Apparatus)</span>
-
-                                <img src="@Url.Content(item.ImageFullPath)" alt="Image" style="width:100px;height:150px;max-width:100%;height:auto">
-                            </div>
-                        </td>
-                        <td>
-                            <div class="inputBox">
-                                <span>@Html.DisplayFor(modelItem => item.NumberOfColumns)</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="inputBox">
-                                <span>@Html.DisplayFor(modelItem => item.TotalSeats)</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="inputBox">
-                                <span>@Html.DisplayFor(modelItem => item.AvaliableSeats)</span>
-                            </div>
-                        </td>
-                        <td>
-                            @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
-                            {
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn">Edit</a>
-                                <a asp-action="Details" asp-route-id="@item.Id" class="btn">Details</a>
-                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn">Delete</a>
-                            }
-                        </td>
-                    </tr>
+                <tr>
+                    <td>
+                        <div class="inputBox">
+                            <span>@Html.DisplayFor(modelItem => item.Apparatus)</span>
+                            <br />
+                            <img src="@Url.Content(item.ImageFullPath)" alt="Image" style="width:100px;height:150px;max-width:100%;height:auto">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="inputBox">
+                            <span>@Html.DisplayFor(modelItem => item.NumberOfColumns)</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="inputBox">
+                            <span>@Html.DisplayFor(modelItem => item.SeatsPerColumn)</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="inputBox">
+                            <span>@Html.DisplayFor(modelItem => item.TotalSeats)</span>
+                        </div>
+                    </td>
+                    <td>
+                        @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn">Edit</a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn">Details</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn">Delete</a>
+                        }
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>

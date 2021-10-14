@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Projeto_Aeronautica_MVC.Data;
 using Projeto_Aeronautica_MVC.Data.Entities;
+using Projeto_Aeronautica_MVC.Helpers;
 using Projeto_Aeronautica_MVC.Models;
 using System;
 using System.Collections.Generic;
@@ -17,19 +18,21 @@ namespace Projeto_Aeronautica_MVC.Controllers
         private readonly IBookingRepository _bookingRepository;
         private readonly IFlightRepository _flightRepository;
         private readonly IAirplaneRepository _airplaneRepository;
+        private readonly IUserHelper _userHelper;
 
         public BookingsController(DataContext context, IBookingRepository bookingRepository, IFlightRepository flightRepository,
-            IAirplaneRepository airplaneRepository)
+            IAirplaneRepository airplaneRepository, IUserHelper userHelper)
         {
             _context = context;
             _bookingRepository = bookingRepository;
             _flightRepository = flightRepository;
             _airplaneRepository = airplaneRepository;
+            _userHelper = userHelper;
         }
 
         public async Task<IActionResult> Index()
         {
-            if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+            if (User.IsInRole("Admin") || User.IsInRole("Employee") || !this.User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Account", "NotAuthorized");
             }
@@ -38,9 +41,20 @@ namespace Projeto_Aeronautica_MVC.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> History()
+        {
+            if (User.IsInRole("Admin") || User.IsInRole("Employee") || !this.User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Account", "NotAuthorized");
+            }
+
+            var model = await _bookingRepository.GetBookingHistoryAsync(this.User.Identity.Name);
+            return View(model);
+        }
+
         public async Task<IActionResult> Create()
         {
-            if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+            if (User.IsInRole("Admin") || User.IsInRole("Employee") || !this.User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Account", "NotAuthorized");
             }
@@ -51,7 +65,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
 
         public IActionResult AddFlight(int? id)
         {
-            if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+            if (User.IsInRole("Admin") || User.IsInRole("Employee") || !this.User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Account", "NotAuthorized");
             }
@@ -108,7 +122,7 @@ namespace Projeto_Aeronautica_MVC.Controllers
                     return RedirectToAction("AddFlight");
                 }
 
-                if(flight.AvaliableSeats == 0)
+                if(flight.AvailableSeats == 0)
                 {
                     TempData["AddBookingError"] = "This Flight has no seats left!";
 
@@ -241,14 +255,24 @@ namespace Projeto_Aeronautica_MVC.Controllers
             }
 
             var booking = await _bookingRepository.GetByIdAsync(id.Value);
+
             if (booking == null)
             {
                 return NotFound();
             }
 
+            var flight = await _flightRepository.GetByIdAsync(booking.FlightId);
+
+            flight.AvailableSeats = flight.AvailableSeats + Convert.ToInt32(booking.Quantity);
             try
             {
                 await _bookingRepository.DeleteAsync(booking);
+
+                var group = _context.Flights.First(g => g.Id == flight.Id);
+
+                _context.Entry(group).CurrentValues.SetValues(flight);
+
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateException)

@@ -4,9 +4,9 @@
       "type": "mssql",
       "connectionId": "DefaultConnection"
     },
-    "storage2": {
+    "storage1": {
       "type": "storage",
-      "connectionId": "Blob:ConnectionString"
+      "connectionId": "Blob/ConnectionString"
     }
   }
 }

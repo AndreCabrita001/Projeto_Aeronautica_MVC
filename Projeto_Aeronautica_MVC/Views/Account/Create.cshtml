@@ -1,18 +1,11 @@
 ﻿@model Projeto_Aeronautica_MVC.Models.RegisterNewUserViewModel
+
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Create";
 }
 
 <section class="services" id="services" style="margin-top:60px">
-
-    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
-    {
-        <h1 class="heading"> Register New Employee</h1>
-    }
-    else
-    {
-        <h1 class="heading"> Register</h1>
-    }
+        <h1 class="heading"> Register New Client</h1>
     <hr />
 </section>
 

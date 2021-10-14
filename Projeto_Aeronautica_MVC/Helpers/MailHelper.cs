@@ -56,7 +56,6 @@ namespace Projeto_Aeronautica_MVC.Helpers
                 {
                     IsSuccess = false,
                     Message = ex.ToString()
-
                 };
             }
 

@@ -34,6 +34,11 @@
                             <span>Price</span>
                         </div>
                     </th>
+                    <th>
+                        <div class="inputBox">
+                            <span>@Html.DisplayNameFor(model => model.DepartureDate)</span>
+                        </div>
+                    </th>
                     <th style="width:20%">
                         <div class="inputBox">
                             <span>@Html.DisplayNameFor(model => model.FlightDestiny)</span>
@@ -66,6 +71,11 @@
                         </div>
                     </td>
                     <td>
+                        <div class="inputBox">
+                            <span>@Html.DisplayFor(modelItem => item.DepartureDate)</span>
+                        </div>
+                    </td>
+                    <td>
                         <div class="inputBox" style="position:relative; bottom:16px">
                             <input style="background-color: transparent; font-size: 17px;" type="text" disabled="disabled" value="@Html.DisplayFor(modelItem => item.FlightDestiny)" />
                             <span>&nbsp;	&nbsp;	&nbsp;	&nbsp; &nbsp; &nbsp;@Html.DisplayFor(modelItem => item.CityDestiny)</span>
@@ -81,19 +91,7 @@
                             <span>@Html.DisplayFor(modelItem => item.FirstName)&nbsp;@Html.DisplayFor(modelItem => item.LastName)</span>
                         </div>
                     </td>
-                    @*<td>
-            <div class="inputBox">
-                <span>@Html.DisplayFor(modelItem => item.Quantity)</span>
-            </div>
-        </td>
-        <td>
-            <div class="inputBox">
-                <span>@Html.DisplayFor(modelItem => item.Value)€</span>
-            </div>
-        </td>*@
                     <td id="@item.Id">
-                        @*<a asp-action="Increase" asp-route-id="@item.Id" class="btn"><i class="fa fa-plus"></i></a>
-            <a asp-action="Decrease" asp-route-id="@item.Id" class="btn"><i class="fa fa-minus"></i></a>*@
                         <a asp-action="DeleteItem" asp-route-id="@item.Id" class="btn" id="btnDeleteItem">Delete</a>
                     </td>
                 </tr>}
@@ -126,7 +124,7 @@
                         <button type="button" class="close" data-dismiss="modal"><i class="fa fa-window-close"></i></button>
                     </div>
                     <div class="modal-body">
-                        <span>Do you want to delete this booking ?</span>
+                        <h3>Do you want to delete this booking ?</h3>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn" id="btnYesDelete">Yes</button>
@@ -164,7 +162,6 @@
             });
 
             $("#btnYesConfirm").click(function () {
-
                window.location.href = "/Bookings/ConfirmBooking";
             });
 

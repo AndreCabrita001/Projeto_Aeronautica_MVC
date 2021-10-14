@@ -15,7 +15,6 @@
         <div class="box">
             <p><b>@Html.DisplayNameFor(model => model.Apparatus)</b> : @Html.DisplayFor(model => model.Apparatus)</p>
             <p><b>@Html.DisplayNameFor(model => model.TotalSeats)</b> : @Html.DisplayFor(model => model.TotalSeats)</p>
-            <p><b>@Html.DisplayNameFor(model => model.AvaliableSeats)</b> : @Html.DisplayFor(model => model.AvaliableSeats)</p>
 
             <div>
                 @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
